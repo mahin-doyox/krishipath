@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কৃষিপথ - সময় এখন কৃষকের</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%232d6a1e'/><text x='32' y='42' text-anchor='middle' font-size='28' font-weight='bold' fill='white'>🌾</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        :root {
+            --green-900: #1a3c0d;
+            --green-800: #1f4f0f;
+            --green-700: #2d6a1e;
+            --green-600: #3d8b2a;
+            --green-500: #4ca832;
+            --green-400: #6cc255;
+            --green-300: #8fd87a;
+            --green-200: #b8e8a8;
+            --green-100: #d9f2d0;
+            --green-50: #eef9e8;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --radius: 0.75rem;
+            --radius-sm: 0.5rem;
+            --radius-full: 9999px;
+            --transition: all 0.3s ease;
+            --max-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        body {
+            font-family: 'Segoe UI', 'Noto Sans Bengali', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            border-bottom: 3px solid var(--green-500);
+        }
+        .navbar .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1.5rem;
+            flex-wrap: wrap;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--green-800);
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: -0.5px;
+        }
+        .nav-brand img,
+        .nav-brand .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius-sm);
+            object-fit: contain;
+            background: var(--green-100);
+            padding: 4px;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--gray-700);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            background: var(--green-50);
+            color: var(--green-700);
+        }
+        .nav-links .btn-login {
+            background: var(--green-600) !important;
+            color: white !important;
+            padding: 0.5rem 1.4rem !important;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+        }
+        .nav-links .btn-login:hover {
+            background: var(--green-700) !important;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .nav-links .btn-profile {
+            background: var(--green-100) !important;
+            color: var(--green-800) !important;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            cursor: pointer;
+            border: 2px solid var(--green-400);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        .nav-links .btn-profile:hover {
+            background: var(--green-200) !important;
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 6px;
+            z-index: 1001;
+        }
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: var(--green-700);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        /* POPUP */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .popup-overlay.hidden {
+            display: none;
+        }
+        .popup-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            border-top: 5px solid var(--green-500);
+        }
+        .popup-box h3 {
+            color: var(--green-800);
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+        .popup-box p {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .popup-box .btn-close-popup {
+            background: var(--green-600);
+            color: white;
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .popup-box .btn-close-popup:hover {
+            background: var(--green-700);
+        }
+        .popup-close-x {
+            position: absolute;
+            top: 10px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* MAIN SECTIONS */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .page-section.active {
+            display: block;
+        }
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #f0fdf4 0%, #e8f5e9 30%, #ffffff 70%, #f1f8e9 100%);
+            padding: 4rem 0;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+        }
+        .hero .container {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        .hero-text {
+            flex: 1 1 400px;
+        }
+        .hero-text h1 {
+            font-size: 2.8rem;
+            color: var(--green-900);
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 1.2rem;
+        }
+        .hero-text h1 span {
+            color: var(--green-600);
+            display: block;
+        }
+        .hero-text p {
+            font-size: 1.15rem;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .hero-btns a {
+            text-decoration: none;
+            padding: 0.85rem 2rem;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background: var(--green-600);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-primary:hover {
+            background: var(--green-700);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-outline {
+            border: 2px solid var(--green-500);
+            color: var(--green-700);
+            background: transparent;
+        }
+        .btn-outline:hover {
+            background: var(--green-50);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .hero-image {
+            flex: 1 1 350px;
+            text-align: center;
+        }
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* SECTION TITLES */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--green-800);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .section-title .underline {
+            width: 70px;
+            height: 4px;
+            background: var(--green-500);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        /* SERVICES */
+        .services-section {
+            padding: 4rem 0;
+            background: white;
+        }
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+        }
+        .service-card {
+            background: var(--green-50);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .service-card:hover {
+            border-color: var(--green-400);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            background: white;
+        }
+        .service-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .service-card h4 {
+            color: var(--green-800);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .service-card p {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+
+        /* WHY SECTION */
+        .why-section {
+            padding: 4rem 0;
+            background: var(--gray-50);
+        }
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .why-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--green-500);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .why-item:hover {
+            box-shadow: var(--shadow-md);
+            border-left-color: var(--green-700);
+        }
+        .why-item h4 {
+            color: var(--green-800);
+            margin-bottom: 0.5rem;
+        }
+        .why-item p {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+
+        /* FAQ */
+        .faq-section {
+            padding: 4rem 0;
+            background: white;
+        }
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 0;
+            cursor: pointer;
+        }
+        .faq-question {
+            font-weight: 700;
+            color: var(--green-800);
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .faq-question .arrow {
+            transition: var(--transition);
+            font-size: 1.2rem;
+            color: var(--green-600);
+        }
+        .faq-item.open .faq-question .arrow {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+            padding-top: 0.8rem;
+        }
+
+        /* MARKET */
+        .market-section {
+            padding: 3rem 0;
+        }
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .crop-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+        }
+        .crop-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+        .crop-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .crop-card .crop-info {
+            padding: 1rem;
+        }
+        .crop-card .crop-info h4 {
+            color: var(--green-800);
+            margin-bottom: 0.3rem;
+        }
+        .crop-card .crop-info .price {
+            font-weight: 700;
+            color: var(--green-600);
+            font-size: 1.1rem;
+        }
+        .crop-card .crop-info .meta {
+            color: var(--gray-500);
+            font-size: 0.85rem;
+        }
+        .crop-card .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.7rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* PRICE TABLE */
+        .price-section {
+            padding: 3rem 0;
+            background: white;
+        }
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .price-table th {
+            background: var(--green-700);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+        }
+        .price-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .price-table tr:hover td {
+            background: var(--green-50);
+        }
+        .price-up {
+            color: #16a34a;
+            font-weight: 700;
+        }
+        .price-down {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.hidden {
+            display: none;
+        }
+        .modal-box {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 500px;
+            width: 92%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+        .modal-box h3 {
+            color: var(--green-800);
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+        .modal-box .form-group {
+            margin-bottom: 1rem;
+        }
+        .modal-box label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+            color: var(--gray-700);
+        }
+        .modal-box input,
+        .modal-box select,
+        .modal-box textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .modal-box input:focus,
+        .modal-box select:focus,
+        .modal-box textarea:focus {
+            outline: none;
+            border-color: var(--green-500);
+            box-shadow: 0 0 0 3px rgba(76, 168, 50, 0.15);
+        }
+        .modal-box .btn-submit {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--green-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal-box .btn-submit:hover {
+            background: var(--green-700);
+        }
+        .modal-close-x {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        .tab-switch {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+        .tab-switch button {
+            padding: 0.5rem 1.2rem;
+            border: 2px solid var(--green-400);
+            background: transparent;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            color: var(--green-700);
+        }
+        .tab-switch button.active-tab {
+            background: var(--green-600);
+            color: white;
+            border-color: var(--green-600);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--green-900);
+            color: #d9f2d0;
+            padding: 3rem 0 1rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .footer a {
+            color: #b8e8a8;
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .footer a:hover {
+            color: white;
+        }
+        .footer input[type="email"] {
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            width: 100%;
+            margin-top: 0.5rem;
+            font-family: inherit;
+        }
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #b8e8a8;
+        }
+
+        /* PROFILE */
+        .profile-section {
+            padding: 2rem 0;
+        }
+        .profile-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .profile-card h3 {
+            color: var(--green-800);
+        }
+
+        /* ADMIN */
+        .admin-section {
+            padding: 2rem 0;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .admin-table th {
+            background: var(--gray-800);
+            color: white;
+            padding: 0.8rem;
+            text-align: left;
+        }
+        .admin-table td {
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-full);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+        .btn-approve {
+            background: #16a34a;
+            color: white;
+        }
+        .btn-approve:hover {
+            background: #15803d;
+        }
+        .btn-reject {
+            background: #dc2626;
+            color: white;
+        }
+        .btn-reject:hover {
+            background: #b91c1c;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: white;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                box-shadow: var(--shadow-lg);
+                padding: 1rem;
+                border-radius: 0 0 var(--radius) var(--radius);
+                gap: 0.5rem;
+            }
+            .nav-links.show {
+                display: flex;
+            }
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            .hero-image {
+                display: none;
+            }
+            .price-table {
+                font-size: 0.85rem;
+            }
+            .price-table th,
+            .price-table td {
+                padding: 0.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 1.6rem;
+            }
+            .hero-btns {
+                flex-direction: column;
+            }
+            .hero-btns a {
+                text-align: center;
+            }
+            .service-cards {
+                grid-template-columns: 1fr;
+            }
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== POPUP ==================== -->
+    <div class="popup-overlay" id="welcomePopup">
+        <div class="popup-box">
+            <button class="popup-close-x" onclick="closePopup()">&times;</button>
+            <span style="font-size:3rem;">🌾</span>
+            <h3>স্বাগতম কৃষিপথে!</h3>
+            <p>কৃষিপথ একটি আধুনিক প্ল্যাটফর্ম যা কৃষকদের যন্ত্রপাতি বিক্রি, ফসলের বাজারমূল্য জানা, কৃষি প্রশিক্ষণ এবং আয় বাড়ানোর সুযোগ প্রদান করে।</p>
+            <button class="btn-close-popup" onclick="closePopup()">চলুন শুরু করি 🚀</button>
+        </div>
+    </div>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="nav-brand" onclick="navigateTo('home')">
+                <span class="logo-icon">🌾</span> কৃষিপথ
+            </a>
+            <button class="hamburger" id="hamburger" aria-label="মেনু">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="navigateTo('home')" class="active" data-page="home">হোম</a></li>
+                <li><a href="#" onclick="navigateTo('market')" data-page="market">কৃষি বাজার</a></li>
+                <li><a href="#" onclick="navigateTo('services')" data-page="services">সেবাসমূহ</a></li>
+                <li><a href="#" onclick="navigateTo('about')" data-page="about">আমাদের সম্পর্কে</a></li>
+                <li><a href="#" onclick="navigateTo('contact')" data-page="contact">যোগাযোগ</a></li>
+                <li><a href="#" onclick="navigateTo('faq')" data-page="faq">সাধারণ জিজ্ঞাসা</a></li>
+                <li><a href="#" class="btn-login" id="btnLoginNav" onclick="openAuthModal()">লগইন</a></li>
+                <li><a href="#" class="btn-profile hidden" id="btnProfileNav" onclick="navigateTo('profile')">আমার প্রোফাইল</a></li>
+                <li><a href="#" class="btn-profile hidden" id="btnAdminNav" onclick="navigateTo('admin')" style="background:#fef3c7!important;color:#92400e!important;border-color:#f59e0b;">অ্যাডমিন প্যানেল</a></li>
+                <li><a href="#" class="hidden" id="btnLogoutNav" onclick="handleLogout()" style="color:#dc2626!important;font-weight:700;">লগআউট</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ==================== HOME PAGE ==================== -->
+    <section class="page-section active" id="page-home">
+        <div class="hero">
+            <div class="container">
+                <div class="hero-text">
+                    <h1>সময় এখন <span>কৃষকের</span></h1>
+                    <p>কৃষিপথ একটি আধুনিক প্ল্যাটফর্ম যা কৃষকদের যন্ত্রপাতি বিক্রি, ফসলের বাজারমূল্য জানা, কৃষি প্রশিক্ষণ এবং আয় বাড়ানোর সুযোগ প্রদান করে।</p>
+                    <div class="hero-btns">
+                        <a href="#" class="btn-primary" onclick="navigateTo('services')">আমাদের সেবা দেখুন</a>
+                        <a href="#" class="btn-outline" onclick="navigateTo('about')">আমাদের সম্পর্কে জানুন</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 400'><rect width='500' height='400' fill='%23e8f5e9' rx='20'/><circle cx='250' cy='130' r='60' fill='%23fbbf24'/><rect x='200' y='200' width='100' height='140' fill='%232d6a1e' rx='8'/><rect x='140' y='260' width='220' height='12' fill='%234ca832' rx='6'/><rect x='150' y='285' width='200' height='12' fill='%234ca832' rx='6'/><text x='250' y='360' text-anchor='middle' font-size='22' fill='%231f4f0f' font-weight='bold'>🌱 কৃষিপথ 🌾</text></svg>" alt="কৃষিপথ - কৃষক ও প্রযুক্তি" width="500" height="400">
+                </div>
+            </div>
+        </div>
+
+        <!-- WHY KRISHIPATH -->
+        <div class="why-section" id="why">
+            <div class="container">
+                <div class="section-title"><h2>কেন কৃষিপথ?</h2><div class="underline"></div></div>
+                <div class="why-grid">
+                    <div class="why-item"><h4>🌾 সহজবোধ্য তথ্য</h4><p>KrishiPath শুধু তথ্য নয়, সেটা এমনভাবে দেয় যেন একজন গ্রামীণ কৃষকও সহজে বুঝতে পারেন।</p></div>
+                    <div class="why-item"><h4>📊 সব এক জায়গায়</h4><p>এক জায়গায় বাজারদর, আবহাওয়া, পরামর্শ, সহায়ক সংস্থা — সব কিছু একসাথে।</p></div>
+                    <div class="why-item"><h4>🏛️ সরকারি তথ্য সমন্বয়</h4><p>স্থানীয় প্রতিনিধি, বাজার বিশ্লেষণ ও সঠিক খবর।</p></div>
+                    <div class="why-item"><h4>💡 বাস্তব সিদ্ধান্ত</h4><p>তথ্য নয়, বাস্তব উপযোগী সিদ্ধান্ত তৈরির সুযোগ।</p></div>
+                    <div class="why-item"><h4>🤖 AI ফিচার (Upcoming)</h4><p>AI সহ ফসলের দাম প্রেডিকশন, চার্ট-বট ইত্যাদি আধুনিক ফিচার।</p></div>
+                    <div class="why-item"><h4>🇧🇩 বাংলাদেশের জন্য</h4><p>নিজের ভাষায়, নিজের পরিসরে — বাংলাদেশের জন্য ডিজাইনকৃত।</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SERVICES PAGE ==================== -->
+    <section class="page-section" id="page-services">
+        <div class="services-section">
+            <div class="container">
+                <div class="section-title"><h2>আমাদের সেবা</h2><div class="underline"></div></div>
+                <div class="service-cards">
+                    <a href="#" class="service-card" onclick="navigateTo('market')">
+                        <div class="icon">🌾</div><h4>কৃষি বাজার</h4><p>কৃষক ও এজেন্ট ফসল পোস্ট করতে পারে, ব্যবসায়ী দেখতে পারে।</p>
+                    </a>
+                    <a href="#" class="service-card" onclick="navigateTo('prices')">
+                        <div class="icon">📈</div><h4>লাইভ বাজারদর</h4><p>রিয়েল টাইমে সকল ফসলের বাজার মূল্য দেখুন।</p>
+                    </a>
+                    <a href="#" class="service-card" onclick="navigateTo('market')">
+                        <div class="icon">💼</div><h4>কর্মসংস্থান</h4><p>কৃষি সংশ্লিষ্ট কাজের সুযোগ ও সংযোগ।</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MARKET PAGE ==================== -->
+    <section class="page-section" id="page-market">
+        <div class="market-section">
+            <div class="container">
+                <div class="section-title"><h2>কৃষি বাজার</h2><div class="underline"></div></div>
+                <div style="text-align:center;margin-bottom:1.5rem;">
+                    <button class="btn-primary" style="padding:0.7rem 2rem;border:none;cursor:pointer;border-radius:var(--radius-full);font-weight:700;" onclick="openPostCropModal()">📝 ফসল পোস্ট করুন</button>
+                </div>
+                <div class="market-grid" id="cropGrid">
+                    <!-- Dynamically filled -->
+                </div>
+                <p id="noCropMsg" style="text-align:center;color:var(--gray-500);margin-top:2rem;">এখনো কোনো অনুমোদিত ফসলের পোস্ট নেই।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PRICES PAGE ==================== -->
+    <section class="page-section" id="page-prices">
+        <div class="price-section">
+            <div class="container">
+                <div class="section-title"><h2>লাইভ বাজার দর</h2><div class="underline"></div></div>
+                <div style="overflow-x:auto;">
+                    <table class="price-table" id="priceTable">
+                        <thead><tr><th>ফসল</th><th>জাত</th><th>দাম (টাকা/কেজি)</th><th>পরিবর্তন</th><th>তারিখ</th></tr></thead>
+                        <tbody id="priceTableBody"></tbody>
+                    </table>
+                </div>
+                <p style="text-align:center;margin-top:1rem;color:var(--gray-500);font-size:0.9rem;">* দাম প্রতিদিন আপডেট করা হয় স্থানীয় বাজারদর অনুযায়ী।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FAQ PAGE ==================== -->
+    <section class="page-section" id="page-faq">
+        <div class="faq-section">
+            <div class="container">
+                <div class="section-title"><h2>সাধারণ জিজ্ঞাসা (FAQ)</h2><div class="underline"></div></div>
+                <div class="faq-list" id="faqList"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ABOUT PAGE ==================== -->
+    <section class="page-section" id="page-about">
+        <div class="container" style="padding:3rem 1.5rem;">
+            <div class="section-title"><h2>আমাদের সম্পর্কে</h2><div class="underline"></div></div>
+            <div style="max-width:800px;margin:0 auto;line-height:2;">
+                <p><strong>কৃষিপথ</strong> — বালিয়াডাঙ্গী থেকে শুরু হওয়া একটি শিক্ষার্থী-নিযুক্ত ডিজিটাল কৃষি উদ্যোগ। মূল ফোকাস: <strong>Krishi Bazar</strong> প্ল্যাটফর্ম, যেখানে কৃষক ও ব্যবসায়ী সরাসরি ন্যায্য দামে লেনদেন করতে পারেন এবং বাজারদর রিয়েল টাইমে দেখতে পারেন।</p>
+                <h3 style="color:var(--green-800);margin-top:1.5rem;">🎯 আমাদের লক্ষ্য</h3>
+                <ul style="padding-left:1.5rem;">
+                    <li>প্রতিটি উপজেলায় স্টক হাউস গড়ে তোলা।</li>
+                    <li>লাইভ বাজারদর ও চাহিদা-যোগানের তথ্য দিয়ে ন্যায্য দাম নিশ্চিত করা।</li>
+                    <li>AI মডেল ব্যবহার করে ভবিষ্যৎ দামের পূর্বাভাস তৈরি করা।</li>
+                </ul>
+                <h3 style="color:var(--green-800);margin-top:1.5rem;">💎 আমাদের মূল্যবোধ</h3>
+                <p><strong>সততা:</strong> দামের স্বচ্ছতা ও তথ্যের নির্ভুলতা। <strong>উদ্ভাবন:</strong> ঘরোয়া সমাধান ও AI প্রযুক্তি। <strong>কৃষক কেন্দ্রিকতা:</strong> কৃষকের স্বার্থ সর্বোচ্চ অগ্রাধিকার। <strong>সহযোগিতা:</strong> স্থানীয় কমিউনিটির সাথে টেকসই উন্নয়ন।</p>
+                <h3 style="color:var(--green-800);margin-top:1.5rem;">👥 আমাদের টিম</h3>
+                <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:200px;background:var(--green-50);padding:1.5rem;border-radius:var(--radius);text-align:center;">
+                        <strong>মোঃ রিফাত আল মাহামুদ</strong><br>প্রকল্প পরিচালক<br>📞 01581483444
+                    </div>
+                    <div style="flex:1;min-width:200px;background:var(--green-50);padding:1.5rem;border-radius:var(--radius);text-align:center;">
+                        <strong>মোঃ মুনতাছির মাহিন</strong><br>সহকারী পরিচালক<br>📞 01897950236
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT PAGE ==================== -->
+    <section class="page-section" id="page-contact">
+        <div class="container" style="padding:3rem 1.5rem;">
+            <div class="section-title"><h2>যোগাযোগ করুন</h2><div class="underline"></div></div>
+            <div style="max-width:600px;margin:0 auto;">
+                <p style="text-align:center;color:var(--gray-600);margin-bottom:2rem;">আপনার যেকোনো প্রশ্ন, পরামর্শ বা মন্তব্য আমাদের সাথে শেয়ার করুন।</p>
+                <form id="contactForm" style="display:flex;flex-direction:column;gap:1rem;">
+                    <input type="text" placeholder="আপনার নাম লিখুন" required style="padding:0.8rem;border:2px solid var(--gray-300);border-radius:var(--radius-sm);font-family:inherit;">
+                    <input type="email" placeholder="আপনার ইমেল ঠিকানা লিখুন" required style="padding:0.8rem;border:2px solid var(--gray-300);border-radius:var(--radius-sm);font-family:inherit;">
+                    <textarea rows="4" placeholder="আপনার বার্তা লিখুন" required style="padding:0.8rem;border:2px solid var(--gray-300);border-radius:var(--radius-sm);font-family:inherit;"></textarea>
+                    <button type="submit" class="btn-primary" style="padding:0.8rem;border:none;cursor:pointer;border-radius:var(--radius-full);font-weight:700;font-size:1rem;">📩 পাঠান</button>
+                </form>
+                <div style="margin-top:2rem;text-align:center;line-height:2;color:var(--gray-700);">
+                    <p>📞 ফোন: +8801796 015069</p>
+                    <p>📧 ইমেল: krishipathbd@gmail.com</p>
+                    <p>📍 ঠিকানা: বালিয়াডাঙ্গী সদর, ঠাকুরগাঁও, বাংলাদেশ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PROFILE PAGE ==================== -->
+    <section class="page-section" id="page-profile">
+        <div class="profile-section">
+            <div class="container">
+                <div class="profile-card">
+                    <h3>👤 আমার প্রোফাইল</h3>
+                    <div id="profileInfo" style="margin-top:1rem;">
+                        <p style="color:var(--gray-500);">লগইন করা হয়নি। উপরে লগইন বাটনে ক্লিক করুন।</p>
+                    </div>
+                    <h4 style="margin-top:1.5rem;color:var(--green-800);">আমার পোস্ট</h4>
+                    <div id="myPosts" style="margin-top:0.5rem;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== ADMIN PAGE ==================== -->
+    <section class="page-section" id="page-admin">
+        <div class="admin-section">
+            <div class="container">
+                <div class="section-title"><h2>🔧 অ্যাডমিন প্যানেল</h2><div class="underline"></div></div>
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+                    <button class="btn-sm" style="background:var(--green-600);color:white;" onclick="showAdminTab('pending')">অনুমোদন অপেক্ষায়</button>
+                    <button class="btn-sm" style="background:var(--gray-600);color:white;" onclick="showAdminTab('agents')">এজেন্ট তালিকা</button>
+                    <button class="btn-sm" style="background:var(--green-700);color:white;" onclick="sendSimulatedEmail()">📧 ক্যাটাগরি ইমেইল (সিমুলেটেড)</button>
+                    <button class="btn-sm" style="background:#f59e0b;color:white;" onclick="sendPushNotification()">🔔 পুশ নোটিফিকেশন</button>
+                </div>
+                <div id="adminContent">
+                    <h4 style="color:var(--green-800);">অনুমোদন অপেক্ষায় পোস্ট</h4>
+                    <table class="admin-table" id="adminPendingTable">
+                        <thead><tr><th>পোস্ট</th><th>কৃষক</th><th>ফসল</th><th>দাম</th><th>অ্যাকশন</th></tr></thead>
+                        <tbody id="adminPendingBody"></tbody>
+                    </table>
+                    <p id="noPendingMsg" style="text-align:center;color:var(--gray-500);margin-top:1rem;">কোনো পেন্ডিং পোস্ট নেই।</p>
+                </div>
+                <div id="adminAgentsContent" style="display:none;">
+                    <h4 style="color:var(--green-800);">এজেন্ট তালিকা</h4>
+                    <table class="admin-table" id="adminAgentsTable">
+                        <thead><tr><th>নাম</th><th>ইমেল</th><th>ফোন</th><th>অবস্থা</th></tr></thead>
+                        <tbody id="adminAgentsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>🌾 কৃষিপথ</h4>
+                    <p style="color:#b8e8a8;">সময় এখন কৃষকের</p>
+                </div>
+                <div>
+                    <h4>আরও কিছু</h4>
+                    <a href="#" onclick="navigateTo('prices')">সরাসরি বাজার দর</a>
+                    <a href="#">আবহাওয়া সেবা</a>
+                    <a href="#" onclick="navigateTo('contact')">আমাদের সাথে যুক্ত হন</a>
+                    <a href="#" onclick="navigateTo('contact')">যোগাযোগ</a>
+                </div>
+                <div>
+                    <h4>খবর</h4>
+                    <p style="font-size:0.9rem;">খাদ্য উৎপাদন শহরে ফিরিয়ে আনা — জুলাই ৫, ২০২৫</p>
+                    <p style="font-size:0.85rem;margin-top:0.5rem;">নিয়মিত খবর পেতে আপনার ইমেইল ঠিকানা দিন</p>
+                    <input type="email" placeholder="আপনার ইমেল ঠিকানা" id="newsletterEmail">
+                </div>
+                <div>
+                    <h4>যোগাযোগ</h4>
+                    <p>📞 +8801796015069</p>
+                    <p>📧 krishipathbd@gmail.com</p>
+                    <p>📍 বালিয়াডাঙ্গী সদর, ঠাকুরগাঁও, রংপুর, বাংলাদেশ</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© সমস্ত কপিরাইট 2026 কৃষি পথ | শর্তাবলী | গোপনীয়তা নীতি</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== AUTH MODAL ==================== -->
+    <div class="modal-overlay hidden" id="authModal">
+        <div class="modal-box">
+            <button class="modal-close-x" onclick="closeAuthModal()">&times;</button>
+            <div class="tab-switch">
+                <button id="tabLogin" class="active-tab" onclick="switchAuthTab('login')">লগইন</button>
+                <button id="tabRegister" onclick="switchAuthTab('register')">রেজিস্ট্রেশন</button>
+            </div>
+            <!-- LOGIN FORM -->
+            <form id="loginForm">
+                <h3>লগইন</h3>
+                <div class="form-group"><label>অ্যাকাউন্ট টাইপ</label><select id="loginRole"><option value="farmer">কৃষক</option><option value="agent">এজেন্ট</option><option value="business">ব্যবসায়ী</option><option value="admin">অ্যাডমিন</option></select></div>
+                <div class="form-group"><label>ইমেল</label><input type="email" id="loginEmail" placeholder="আপনার ইমেল" required></div>
+                <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="loginPassword" placeholder="পাসওয়ার্ড" required></div>
+                <button type="submit" class="btn-submit">লগইন করুন</button>
+                <p style="text-align:center;margin-top:0.8rem;font-size:0.9rem;"><a href="#" style="color:var(--green-600);" onclick="alert('পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে (সিমুলেটেড)।')">পাসওয়ার্ড ভুলে গেছেন?</a></p>
+            </form>
+            <!-- REGISTER FORM -->
+            <form id="registerForm" style="display:none;">
+                <h3>রেজিস্ট্রেশন</h3>
+                <div class="form-group"><label>অ্যাকাউন্ট টাইপ</label><select id="regRole"><option value="farmer">কৃষক</option><option value="agent">এজেন্ট</option><option value="business">ব্যবসায়ী</option></select></div>
+                <div class="form-group"><label>নাম</label><input type="text" id="regName" placeholder="আপনার নাম" required></div>
+                <div class="form-group"><label>ইমেল</label><input type="email" id="regEmail" placeholder="ইমেল ঠিকানা" required></div>
+                <div class="form-group"><label>মোবাইল নম্বর</label><input type="tel" id="regPhone" placeholder="মোবাইল নম্বর" required></div>
+                <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="regPassword" placeholder="পাসওয়ার্ড" required minlength="6"></div>
+                <button type="submit" class="btn-submit">রেজিস্ট্রেশন করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== POST CROP MODAL ==================== -->
+    <div class="modal-overlay hidden" id="postCropModal">
+        <div class="modal-box">
+            <button class="modal-close-x" onclick="closePostCropModal()">&times;</button>
+            <h3>📝 ফসল পোস্ট করুন</h3>
+            <form id="postCropForm">
+                <div class="form-group"><label>ফসলের নাম</label><input type="text" id="cropName" placeholder="যেমন: ধান, আলু, পেঁয়াজ" required></div>
+                <div class="form-group"><label>পরিমাণ</label><input type="text" id="cropQty" placeholder="যেমন: ১০০ কেজি" required></div>
+                <div class="form-group"><label>প্রত্যাশিত দাম (টাকা)</label><input type="number" id="cropPrice" placeholder="প্রতি কেজি দাম" required></div>
+                <div class="form-group"><label>ছবি (URL বা ফাইল)</label><input type="file" id="cropImage" accept="image/*"><small style="color:var(--gray-500);">অথবা নিচে URL দিন</small><input type="url" id="cropImageUrl" placeholder="ছবির URL (https://...)"></div>
+                <div class="form-group"><label>বিবরণ</label><textarea id="cropDesc" rows="2" placeholder="ফসল সম্পর্কে বিস্তারিত"></textarea></div>
+                <button type="submit" class="btn-submit">পোস্ট করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ==================== SUPABASE & EMAILJS INIT ====================
+        // আপনার নিজস্ব Supabase URL ও Anon Key বসান
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key-here';
+        let supabase;
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase initialized');
+        } catch (e) {
+            console.warn('⚠️ Supabase not configured. Using localStorage fallback.');
+            supabase = null;
+        }
+
+        // আপনার নিজস্ব EmailJS Public Key বসান
+        try {
+            emailjs.init('YOUR_EMAILJS_PUBLIC_KEY');
+            console.log('✅ EmailJS initialized');
+        } catch (e) {
+            console.warn('⚠️ EmailJS not configured.');
+        }
+
+        // ==================== STATE ====================
+        let currentUser = JSON.parse(localStorage.getItem('krishipath_user') || 'null');
+        let allUsers = JSON.parse(localStorage.getItem('krishipath_users') || '[]');
+        let allCrops = JSON.parse(localStorage.getItem('krishipath_crops') || '[]');
+        let allPrices = JSON.parse(localStorage.getItem('krishipath_prices') || '[]');
+
+        // Seed default prices if empty
+        if (allPrices.length === 0) {
+            allPrices = [
+                { id: 1, crop: 'ধান', variety: 'স্বর্ণা', price: 36, change: '+2', date: '2026-05-08' },
+                { id: 2, crop: 'আলু', variety: 'ডায়মন্ড', price: 22, change: '-1', date: '2026-05-08' },
+                { id: 3, crop: 'পেঁয়াজ', variety: 'স্থানীয়', price: 45, change: '+5', date: '2026-05-08' },
+                { id: 4, crop: 'টমেটো', variety: 'হাইব্রিড', price: 30, change: '0', date: '2026-05-08' },
+                { id: 5, crop: 'ভুট্টা', variety: 'হাইব্রিড', price: 28, change: '+1', date: '2026-05-08' },
+            ];
+            localStorage.setItem('krishipath_prices', JSON.stringify(allPrices));
+        }
+
+        // Seed demo users
+        if (allUsers.length === 0) {
+            allUsers = [
+                { id: 'u1', name: 'রহিম কৃষক', email: 'farmer@test.com', password: '123456', role: 'farmer',
+                    phone: '01712345678' },
+                { id: 'u2', name: 'করিম এজেন্ট', email: 'agent@test.com', password: '123456', role: 'agent',
+                    phone: '01798765432' },
+                { id: 'u3', name: 'ব্যবসায়ী আলী', email: 'business@test.com', password: '123456', role: 'business',
+                    phone: '01811111111' },
+                { id: 'admin1', name: 'অ্যাডমিন', email: 'admin@krishipath.com', password: 'admin123', role: 'admin',
+                    phone: '01581483444' },
+            ];
+            localStorage.setItem('krishipath_users', JSON.stringify(allUsers));
+        }
+
+        // Seed demo crops
+        if (allCrops.length === 0) {
+            allCrops = [
+                { id: 'c1', cropName: 'ধান', qty: '৫০০ কেজি', price: 35, desc: 'স্বর্ণা ধান, ভালো মানের',
+                    imageUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23fef3c7"/><text x="150" y="110" text-anchor="middle" font-size="50">🌾</text></svg>',
+                    postedBy: 'u1', postedByName: 'রহিম কৃষক', status: 'approved', createdAt: '2026-05-01' },
+                { id: 'c2', cropName: 'আলু', qty: '২০০ কেজি', price: 20, desc: 'ডায়মন্ড আলু, তাজা',
+                    imageUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23ede9d0"/><text x="150" y="110" text-anchor="middle" font-size="50">🥔</text></svg>',
+                    postedBy: 'u1', postedByName: 'রহিম কৃষক', status: 'pending', createdAt: '2026-05-06' },
+            ];
+            localStorage.setItem('krishipath_crops', JSON.stringify(allCrops));
+        }
+
+        function saveState() {
+            localStorage.setItem('krishipath_user', JSON.stringify(currentUser));
+            localStorage.setItem('krishipath_users', JSON.stringify(allUsers));
+            localStorage.setItem('krishipath_crops', JSON.stringify(allCrops));
+            localStorage.setItem('krishipath_prices', JSON.stringify(allPrices));
+        }
+
+        // ==================== NAVIGATION ====================
+        function navigateTo(page) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            // Update nav active
+            document.querySelectorAll('.nav-links a[data-page]').forEach(a => a.classList.remove('active'));
+            const navLink = document.querySelector(`.nav-links a[data-page="${page}"]`);
+            if (navLink) navLink.classList.add('active');
+            // Close mobile menu
+            document.getElementById('navLinks').classList.remove('show');
+            // Scroll top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Render dynamic content
+            if (page === 'market') renderMarket();
+            if (page === 'prices') renderPrices();
+            if (page === 'profile') renderProfile();
+            if (page === 'admin') renderAdmin();
+            if (page === 'faq') renderFAQ();
+        }
+
+        // ==================== POPUP ====================
+        function closePopup() {
+            document.getElementById('welcomePopup').classList.add('hidden');
+            localStorage.setItem('krishipath_popup_closed', 'true');
+        }
+        if (localStorage.getItem('krishipath_popup_closed') === 'true') {
+            document.getElementById('welcomePopup').classList.add('hidden');
+        }
+
+        // ==================== HAMBURGER ====================
+        document.getElementById('hamburger').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('show');
+        });
+
+        // ==================== AUTH MODAL ====================
+        function openAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+            switchAuthTab('login');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function switchAuthTab(tab) {
+            document.getElementById('tabLogin').classList.toggle('active-tab', tab === 'login');
+            document.getElementById('tabRegister').classList.toggle('active-tab', tab === 'register');
+            document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+        }
+
+        // LOGIN
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const role = document.getElementById('loginRole').value;
+            const user = allUsers.find(u => u.email === email && u.password === password && u.role === role);
+            if (user) {
+                currentUser = user;
+                saveState();
+                updateNavUI();
+                closeAuthModal();
+                alert('✅ লগইন সফল! স্বাগতম, ' + user.name);
+                navigateTo('home');
+            } else {
+                alert('❌ ইমেল, পাসওয়ার্ড অথবা অ্যাকাউন্ট টাইপ ভুল। আবার চেষ্টা করুন।');
+            }
+        });
+
+        // REGISTER
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const role = document.getElementById('regRole').value;
+            if (allUsers.find(u => u.email === email)) {
+                alert('❌ এই ইমেলটি ইতিমধ্যে রেজিস্ট্রার্ড।');
+                return;
+            }
+            const newUser = { id: 'u' + Date.now(), name, email, password, role, phone };
+            allUsers.push(newUser);
+            currentUser = newUser;
+            saveState();
+            updateNavUI();
+            closeAuthModal();
+            alert('✅ রেজিস্ট্রেশন সফল! স্বাগতম, ' + name);
+            navigateTo('home');
+        });
+
+        function handleLogout() {
+            currentUser = null;
+            saveState();
+            updateNavUI();
+            alert('👋 আপনি লগআউট করেছেন।');
+            navigateTo('home');
+        }
+
+        function updateNavUI() {
+            const btnLogin = document.getElementById('btnLoginNav');
+            const btnProfile = document.getElementById('btnProfileNav');
+            const btnAdmin = document.getElementById('btnAdminNav');
+            const btnLogout = document.getElementById('btnLogoutNav');
+            if (currentUser) {
+                btnLogin.classList.add('hidden');
+                btnProfile.classList.remove('hidden');
+                btnLogout.classList.remove('hidden');
+                if (currentUser.role === 'admin') {
+                    btnAdmin.classList.remove('hidden');
+                } else {
+                    btnAdmin.classList.add('hidden');
+                }
+            } else {
+                btnLogin.classList.remove('hidden');
+                btnProfile.classList.add('hidden');
+                btnAdmin.classList.add('hidden');
+                btnLogout.classList.add('hidden');
+            }
+        }
+
+        // ==================== POST CROP ====================
+        function openPostCropModal() {
+            if (!currentUser) {
+                alert('❌ ফসল পোস্ট করতে আগে লগইন করুন।');
+                openAuthModal();
+                return;
+            }
+            if (currentUser.role === 'business') {
+                alert('❌ ব্যবসায়ী অ্যাকাউন্ট থেকে ফসল পোস্ট করা যায় না।');
+                return;
+            }
+            document.getElementById('postCropModal').classList.remove('hidden');
+        }
+
+        function closePostCropModal() {
+            document.getElementById('postCropModal').classList.add('hidden');
+            document.getElementById('postCropForm').reset();
+        }
+
+        document.getElementById('postCropForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const cropName = document.getElementById('cropName').value.trim();
+            const qty = document.getElementById('cropQty').value.trim();
+            const price = parseInt(document.getElementById('cropPrice').value);
+            const desc = document.getElementById('cropDesc').value.trim();
+            let imageUrl = document.getElementById('cropImageUrl').value.trim();
+            const fileInput = document.getElementById('cropImage');
+            if (fileInput.files && fileInput.files[0]) {
+                // For demo, use a data URL or placeholder
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    imageUrl = ev.target.result;
+                    createCropPost(cropName, qty, price, desc, imageUrl);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                if (!imageUrl) {
+                    imageUrl =
+                        'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23e8f5e9"/><text x="150" y="110" text-anchor="middle" font-size="50">🌱</text></svg>';
+                }
+                createCropPost(cropName, qty, price, desc, imageUrl);
+            }
+        });
+
+        function createCropPost(cropName, qty, price, desc, imageUrl) {
+            const newCrop = {
+                id: 'c' + Date.now(),
+                cropName,
+                qty,
+                price,
+                desc,
+                imageUrl,
+                postedBy: currentUser.id,
+                postedByName: currentUser.name,
+                status: currentUser.role === 'admin' ? 'approved' : 'pending',
+                createdAt: new Date().toISOString().split('T')[0],
+            };
+            allCrops.push(newCrop);
+            saveState();
+            closePostCropModal();
+            alert('✅ ফসল পোস্ট সফল! ' + (newCrop.status === 'pending' ? 'অ্যাডমিন অনুমোদন সাপেক্ষে এটি প্রদর্শিত হবে।' :
+                'এটি এখন বাজারে দেখা যাচ্ছে।'));
+            renderMarket();
+        }
+
+        // ==================== RENDER MARKET ====================
+        function renderMarket() {
+            const grid = document.getElementById('cropGrid');
+            const noMsg = document.getElementById('noCropMsg');
+            const approvedCrops = allCrops.filter(c => c.status === 'approved' || (currentUser && (currentUser.role ===
+                'admin' || c.postedBy === currentUser.id)));
+            // For public view, only approved
+            const publicCrops = allCrops.filter(c => c.status === 'approved');
+            const displayCrops = (currentUser && currentUser.role === 'admin') ? allCrops : publicCrops;
+            if (displayCrops.length === 0) {
+                grid.innerHTML = '';
+                noMsg.style.display = 'block';
+            } else {
+                noMsg.style.display = 'none';
+                grid.innerHTML = displayCrops.map(c => `
+                <div class="crop-card">
+                  <img src="${c.imageUrl}" alt="${c.cropName}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23e8f5e9%22/><text x=%22150%22 y=%22110%22 text-anchor=%22middle%22 font-size=%2250%22>🌱</text></svg>'">
+                  <div class="crop-info">
+                    <h4>${c.cropName} - ${c.qty}</h4>
+                    <p class="price">💰 ${c.price} টাকা/কেজি</p>
+                    <p class="meta">👤 ${c.postedByName} | 📅 ${c.createdAt}</p>
+                    <p style="font-size:0.9rem;color:var(--gray-600);">${c.desc || ''}</p>
+                    <span class="status-badge ${c.status==='approved'?'status-approved':'status-pending'}">${c.status==='approved'?'✅ অনুমোদিত':'⏳ অপেক্ষমাণ'}</span>
+                  </div>
+                </div>
+              `).join('');
+            }
+        }
+
+        // ==================== RENDER PRICES ====================
+        function renderPrices() {
+            const tbody = document.getElementById('priceTableBody');
+            tbody.innerHTML = allPrices.map(p => `
+              <tr>
+                <td>${p.crop}</td>
+                <td>${p.variety}</td>
+                <td><strong>${p.price} ৳</strong></td>
+                <td class="${parseInt(p.change)>0?'price-up':parseInt(p.change)<0?'price-down':''}">${parseInt(p.change)>=0?'▲':'▼'} ${p.change}</td>
+                <td>${p.date}</td>
+              </tr>
+            `).join('');
+        }
+
+        // ==================== RENDER FAQ ====================
+        function renderFAQ() {
+            const faqs = [
+                { q: 'KrishiPath Bazar কী?', a: 'KrishiPath Bazar একটি অনলাইন কৃষিপণ্য বাজার যেখানে কৃষকরা সরাসরি ব্যবসায়ীদের সাথে যোগাযোগ করে ফসল বিক্রি করতে পারেন। এতে থাকে লাইভ বাজারদর, দরপত্র পদ্ধতি, এবং কৃষিপণ্য বিক্রির সহজতর ডিজিটাল সুবিধা।' },
+                { q: 'KrishiPath কি শুধু বড় কৃষকদের জন্য?', a: 'না, এই প্ল্যাটফর্ম ক্ষুদ্র, মাঝারি ও বড় — সব ধরনের কৃষকদের জন্য উন্মুক্ত। বিশেষ করে ক্ষুদ্র কৃষকদের ন্যায্য দাম ও ডিজিটাল প্রবেশাধিকারের সুবিধা দেওয়াই আমাদের অন্যতম লক্ষ্য।' },
+                { q: 'KrishiPath কি কৃষিপণ্য কিনে নেয়?', a: 'হ্যাঁ, বিশেষ ক্ষেত্রে আমরা নিজস্ব Stock House থেকে সরাসরি ক্ষুদ্র কৃষকদের কাছ থেকে ন্যায্য দামে ফসল ক্রয় করি এবং তা পরবর্তীতে পাইকারি বা খুচরা বাজারে পুনরায় বিক্রি করি।' },
+                { q: 'আমি কীভাবে এই প্ল্যাটফর্মে ফসল বিক্রি করতে পারি?',
+                    a: '১. প্রথমে KrishiPath-এ একটি অ্যাকাউন্ট খুলুন। ২. আপনার প্রোফাইল তৈরি করুন। ৩. বিক্রয়ের জন্য ফসলের তথ্য, ছবি, পরিমাণ এবং প্রত্যাশিত দাম যুক্ত করুন। ৪. বিভিন্ন ব্যবসায়ীর প্রস্তাব পর্যালোচনা করে পছন্দের ক্রেতাকে বেছে নিন।' },
+                { q: 'আমি কীভাবে বাজারের বর্তমান দাম জানতে পারি?',
+                    a: 'আমাদের ওয়েবসাইটে "লাইভ বাজারদর" সেকশনে গিয়ে আপনার এলাকার বর্তমান ফসলের দাম দেখতে পারবেন। আমরা প্রতিদিন তথ্য আপডেট করি স্থানীয় বাজারদর অনুযায়ী।' },
+                { q: 'এই প্ল্যাটফর্মে কোন ধরনের ফসল বিক্রি করা যায়?', a: 'ধান, গম, ভুট্টা, আলু, পেঁয়াজ, টমেটো, শাকসবজি, ফলমূল, মসলা জাতীয় পণ্যসহ সকল কৃষিপণ্যই এই প্ল্যাটফর্মে বিক্রি করা যায়।' },
+                { q: 'KrishiPath Bazar ব্যবহারের জন্য কোনো খরচ আছে কি?', a: 'সাধারণ কৃষকদের জন্য রেজিস্ট্রেশন ও ব্যবহার সম্পূর্ণ ফ্রি। তবে যারা বড় পরিসরে লেনদেন করেন, তাদের জন্য বিশেষ পরিষেবায় নামমাত্র সার্ভিস ফি নির্ধারিত হতে পারে।' },
+                { q: 'আমি ফসল বিক্রি করার পরে পেমেন্ট কীভাবে পাবো?', a: 'পেমেন্ট পদ্ধতি চুক্তি অনুযায়ী নির্ধারিত হয় — নগদ, বিকাশ, নগদ ডেলিভারি অথবা ব্যাংক ট্রান্সফার। সব ধরনের লেনদেনে আমরা নিরাপত্তা ও স্বচ্ছতা নিশ্চিত করি।' },
+                { q: 'যদি কোনো সমস্যায় পড়ি, তাহলে কার সঙ্গে যোগাযোগ করব?', a: 'আপনি আমাদের হেল্পলাইন নম্বরে (📞 01581483444 অথবা 01796015069) কল করতে পারেন, অথবা ইমেল করুন: 📩 krishipathbd@gmail.com।' },
+                { q: 'আমি কিভাবে আমার পাসওয়ার্ড রিসেট করতে পারি?', a: '১. লগইন পেইজে যান। ২. "পাসওয়ার্ড ভুলে গেছেন?" অপশনটিতে ক্লিক করুন। ৩. আপনার মোবাইল নম্বর বা ইমেইল লিখুন। ৪. একটি ওটিপি কোড বা লিংক পাবেন, সেটি দিয়ে নতুন পাসওয়ার্ড সেট করুন।' },
+            ];
+            document.getElementById('faqList').innerHTML = faqs.map((f, i) => `
+              <div class="faq-item" onclick="this.classList.toggle('open')">
+                <div class="faq-question">${f.q} <span class="arrow">▼</span></div>
+                <div class="faq-answer">${f.a}</div>
+              </div>
+            `).join('');
+        }
+
+        // ==================== RENDER PROFILE ====================
+        function renderProfile() {
+            const info = document.getElementById('profileInfo');
+            const posts = document.getElementById('myPosts');
+            if (!currentUser) {
+                info.innerHTML = '<p style="color:var(--gray-500);">লগইন করা হয়নি। উপরে লগইন বাটনে ক্লিক করুন।</p>';
+                posts.innerHTML = '';
+                return;
+            }
+            info.innerHTML = `
+              <p><strong>নাম:</strong> ${currentUser.name}</p>
+              <p><strong>ইমেল:</strong> ${currentUser.email}</p>
+              <p><strong>ফোন:</strong> ${currentUser.phone || 'N/A'}</p>
+              <p><strong>অ্যাকাউন্ট টাইপ:</strong> ${currentUser.role==='farmer'?'কৃষক':currentUser.role==='agent'?'এজেন্ট':currentUser.role==='business'?'ব্যবসায়ী':'অ্যাডমিন'}</p>
+            `;
+            const myCrops = allCrops.filter(c => c.postedBy === currentUser.id);
+            if (myCrops.length === 0) {
+                posts.innerHTML = '<p style="color:var(--gray-500);">আপনার কোনো পোস্ট নেই।</p>';
+            } else {
+                posts.innerHTML = myCrops.map(c => `
+                <div style="background:var(--green-50);padding:1rem;border-radius:var(--radius-sm);margin-bottom:0.8rem;">
+                  <strong>${c.cropName}</strong> - ${c.qty} | ${c.price} টাকা/কেজি
+                  <span class="status-badge ${c.status==='approved'?'status-approved':'status-pending'}">${c.status==='approved'?'✅ অনুমোদিত':'⏳ অপেক্ষমাণ'}</span>
+                  <br><small>${c.desc}</small>
+                </div>
+              `).join('');
+            }
+        }
+
+        // ==================== RENDER ADMIN ====================
+        function renderAdmin() {
+            if (!currentUser || currentUser.role !== 'admin') {
+                document.getElementById('adminContent').innerHTML =
+                    '<p style="color:#dc2626;text-align:center;">⛔ অ্যাক্সেস অস্বীকৃত। শুধুমাত্র অ্যাডমিন এই প্যানেল দেখতে পারবেন।</p>';
+                return;
+            }
+            showAdminTab('pending');
+        }
+
+        function showAdminTab(tab) {
+            document.getElementById('adminContent').style.display = tab === 'pending' ? 'block' : 'none';
+            document.getElementById('adminAgentsContent').style.display = tab === 'agents' ? 'block' : 'none';
+            if (tab === 'pending') {
+                const pendingCrops = allCrops.filter(c => c.status === 'pending');
+                const tbody = document.getElementById('adminPendingBody');
+                const noMsg = document.getElementById('noPendingMsg');
+                if (pendingCrops.length === 0) {
+                    tbody.innerHTML = '';
+                    noMsg.style.display = 'block';
+                } else {
+                    noMsg.style.display = 'none';
+                    tbody.innerHTML = pendingCrops.map(c => `
+                    <tr>
+                      <td>${c.cropName}</td>
+                      <td>${c.postedByName}</td>
+                      <td>${c.qty} - ${c.price}৳</td>
+                      <td>${c.createdAt}</td>
+                      <td>
+                        <button class="btn-sm btn-approve" onclick="approveCrop('${c.id}')">অনুমোদন</button>
+                        <button class="btn-sm btn-reject" onclick="rejectCrop('${c.id}')">বাতিল</button>
+                      </td>
+                    </tr>
+                  `).join('');
+                }
+            }
+            if (tab === 'agents') {
+                const agents = allUsers.filter(u => u.role === 'agent');
+                document.getElementById('adminAgentsBody').innerHTML = agents.map(a => `
+                  <tr><td>${a.name}</td><td>${a.email}</td><td>${a.phone||'N/A'}</td><td>✅ সক্রিয়</td></tr>
+                `).join('');
+            }
+        }
+
+        function approveCrop(cropId) {
+            const crop = allCrops.find(c => c.id === cropId);
+            if (crop) { crop.status = 'approved';
+                saveState();
+                renderAdmin();
+                renderMarket();
+                alert('✅ পোস্ট অনুমোদিত হয়েছে।'); }
+        }
+
+        function rejectCrop(cropId) {
+            allCrops = allCrops.filter(c => c.id !== cropId);
+            saveState();
+            renderAdmin();
+            renderMarket();
+            alert('🗑️ পোস্ট বাতিল করা হয়েছে।');
+        }
+
+        function sendSimulatedEmail() {
+            alert(
+                '📧 সিমুলেটেড ইমেইল:\n\nপ্রিয় কৃষকবৃন্দ,\n\nআপনার আগ্রহের ক্যাটাগরি অনুযায়ী নতুন ফসলের পোস্ট ও বাজারদর আপডেট এসেছে। কৃষিপথ ভিজিট করুন।\n\nধন্যবাদ,\nকৃষিপথ টিম');
+            console.log('EmailJS would send here. Configure your EmailJS template.');
+        }
+
+        function sendPushNotification() {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('কৃষিপথ', { body: '🔔 নতুন বাজারদর আপডেট! লাইভ দাম দেখতে ক্লিক করুন।' });
+            } else if ('Notification' in window && Notification.permission !== 'denied') {
+                Notification.requestPermission().then(perm => {
+                    if (perm === 'granted') {
+                        new Notification('কৃষিপথ', { body: '🔔 নতুন বাজারদর আপডেট!' });
+                    }
+                });
+            }
+            alert('🔔 পুশ নোটিফিকেশন সিমুলেটেড: "নতুন বাজারদর আপডেট! লাইভ দাম দেখতে ক্লিক করুন।"');
+        }
+
+        // ==================== CONTACT FORM ====================
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inputs = this.querySelectorAll('input, textarea');
+            const name = inputs[0].value.trim();
+            const email = inputs[1].value.trim();
+            const message = inputs[2].value.trim();
+            // Try EmailJS
+            try {
+                emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+                    from_name: name,
+                    from_email: email,
+                    message: message,
+                }).then(() => {
+                    alert('✅ আপনার বার্তা সফলভাবে পাঠানো হয়েছে!');
+                }).catch(() => {
+                    alert('✅ আপনার বার্তা গৃহীত হয়েছে (সিমুলেটেড)।');
+                });
+            } catch (e) {
+                alert('✅ আপনার বার্তা গৃহীত হয়েছে! আমরা শীঘ্রই যোগাযোগ করব।');
+            }
+            this.reset();
+        });
+
+        // ==================== NEWSLETTER ====================
+        document.getElementById('newsletterEmail').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (this.value.trim()) {
+                    alert('✅ সাবস্ক্রাইব সফল! নিয়মিত খবর পাবেন: ' + this.value);
+                    this.value = '';
+                }
+            }
+        });
+
+        // ==================== INITIAL SETUP ====================
+        updateNavUI();
+        renderMarket();
+        renderPrices();
+        renderFAQ();
+        if (currentUser) {
+            document.getElementById('btnLoginNav').classList.add('hidden');
+            document.getElementById('btnProfileNav').classList.remove('hidden');
+            document.getElementById('btnLogoutNav').classList.remove('hidden');
+            if (currentUser.role === 'admin') document.getElementById('btnAdminNav').classList.remove('hidden');
+        }
+
+        console.log('🌾 কৃষিপথ - সম্পূর্ণরূপে লোড হয়েছে।');
+        console.log('📋 ডেমো অ্যাকাউন্ট: farmer@test.com / 123456 (কৃষক)');
+        console.log('📋 ডেমো অ্যাকাউন্ট: agent@test.com / 123456 (এজেন্ট)');
+        console.log('📋 ডেমো অ্যাকাউন্ট: business@test.com / 123456 (ব্যবসায়ী)');
+        console.log('📋 ডেমো অ্যাকাউন্ট: admin@krishipath.com / admin123 (অ্যাডমিন)');
+        console.log('⚠️ Supabase ও EmailJS এর নিজস্ব ক্রেডেনশিয়াল বসাতে ভুলবেন না।');
+    </script>
+</body>
+</html>
