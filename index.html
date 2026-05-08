@@ -1133,13 +1133,14 @@
         // আপনার নিজস্ব Supabase URL ও Anon Key বসান
         const SUPABASE_URL = 'https://ospcrmsfcknjprfjgvtv.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcGNybXNmY2tuanByZmpndnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTE5NjgsImV4cCI6MjA5MzgyNzk2OH0.2jWeCDobdey7tZSWuK4wQE_Ukdyjg444EKWwV8gbuCI';
-        let supabase;
+        
+        // FIX: Use supabaseClient instead of supabase to avoid conflict with the global Supabase SDK
+        let supabaseClient = null;
         try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log('✅ Supabase initialized');
         } catch (e) {
             console.warn('⚠️ Supabase not configured. Using localStorage fallback.');
-            supabase = null;
         }
 
         // আপনার নিজস্ব EmailJS Public Key বসান
@@ -1395,8 +1396,6 @@
         function renderMarket() {
             const grid = document.getElementById('cropGrid');
             const noMsg = document.getElementById('noCropMsg');
-            const approvedCrops = allCrops.filter(c => c.status === 'approved' || (currentUser && (currentUser.role ===
-                'admin' || c.postedBy === currentUser.id)));
             // For public view, only approved
             const publicCrops = allCrops.filter(c => c.status === 'approved');
             const displayCrops = (currentUser && currentUser.role === 'admin') ? allCrops : publicCrops;
