@@ -1134,7 +1134,6 @@
         const SUPABASE_URL = 'https://ospcrmsfcknjprfjgvtv.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9zcGNybXNmY2tuanByZmpndnR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTE5NjgsImV4cCI6MjA5MzgyNzk2OH0.2jWeCDobdey7tZSWuK4wQE_Ukdyjg444EKWwV8gbuCI';
         
-        // FIX: Use supabaseClient instead of supabase to avoid conflict with the global Supabase SDK
         let supabaseClient = null;
         try {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1151,51 +1150,11 @@
             console.warn('⚠️ EmailJS not configured.');
         }
 
-        // ==================== STATE ====================
+        // ==================== STATE (starts empty) ====================
         let currentUser = JSON.parse(localStorage.getItem('krishipath_user') || 'null');
         let allUsers = JSON.parse(localStorage.getItem('krishipath_users') || '[]');
         let allCrops = JSON.parse(localStorage.getItem('krishipath_crops') || '[]');
         let allPrices = JSON.parse(localStorage.getItem('krishipath_prices') || '[]');
-
-        // Seed default prices if empty
-        if (allPrices.length === 0) {
-            allPrices = [
-                { id: 1, crop: 'ধান', variety: 'স্বর্ণা', price: 36, change: '+2', date: '2026-05-08' },
-                { id: 2, crop: 'আলু', variety: 'ডায়মন্ড', price: 22, change: '-1', date: '2026-05-08' },
-                { id: 3, crop: 'পেঁয়াজ', variety: 'স্থানীয়', price: 45, change: '+5', date: '2026-05-08' },
-                { id: 4, crop: 'টমেটো', variety: 'হাইব্রিড', price: 30, change: '0', date: '2026-05-08' },
-                { id: 5, crop: 'ভুট্টা', variety: 'হাইব্রিড', price: 28, change: '+1', date: '2026-05-08' },
-            ];
-            localStorage.setItem('krishipath_prices', JSON.stringify(allPrices));
-        }
-
-        // Seed demo users
-        if (allUsers.length === 0) {
-            allUsers = [
-                { id: 'u1', name: 'রহিম কৃষক', email: 'farmer@test.com', password: '123456', role: 'farmer',
-                    phone: '01712345678' },
-                { id: 'u2', name: 'করিম এজেন্ট', email: 'agent@test.com', password: '123456', role: 'agent',
-                    phone: '01798765432' },
-                { id: 'u3', name: 'ব্যবসায়ী আলী', email: 'business@test.com', password: '123456', role: 'business',
-                    phone: '01811111111' },
-                { id: 'admin1', name: 'অ্যাডমিন', email: 'admin@krishipath.com', password: 'admin123', role: 'admin',
-                    phone: '01581483444' },
-            ];
-            localStorage.setItem('krishipath_users', JSON.stringify(allUsers));
-        }
-
-        // Seed demo crops
-        if (allCrops.length === 0) {
-            allCrops = [
-                { id: 'c1', cropName: 'ধান', qty: '৫০০ কেজি', price: 35, desc: 'স্বর্ণা ধান, ভালো মানের',
-                    imageUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23fef3c7"/><text x="150" y="110" text-anchor="middle" font-size="50">🌾</text></svg>',
-                    postedBy: 'u1', postedByName: 'রহিম কৃষক', status: 'approved', createdAt: '2026-05-01' },
-                { id: 'c2', cropName: 'আলু', qty: '২০০ কেজি', price: 20, desc: 'ডায়মন্ড আলু, তাজা',
-                    imageUrl: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23ede9d0"/><text x="150" y="110" text-anchor="middle" font-size="50">🥔</text></svg>',
-                    postedBy: 'u1', postedByName: 'রহিম কৃষক', status: 'pending', createdAt: '2026-05-06' },
-            ];
-            localStorage.setItem('krishipath_crops', JSON.stringify(allCrops));
-        }
 
         function saveState() {
             localStorage.setItem('krishipath_user', JSON.stringify(currentUser));
@@ -1355,7 +1314,6 @@
             let imageUrl = document.getElementById('cropImageUrl').value.trim();
             const fileInput = document.getElementById('cropImage');
             if (fileInput.files && fileInput.files[0]) {
-                // For demo, use a data URL or placeholder
                 const reader = new FileReader();
                 reader.onload = function(ev) {
                     imageUrl = ev.target.result;
@@ -1364,8 +1322,7 @@
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
                 if (!imageUrl) {
-                    imageUrl =
-                        'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23e8f5e9"/><text x="150" y="110" text-anchor="middle" font-size="50">🌱</text></svg>';
+                    imageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23e8f5e9"/><text x="150" y="110" text-anchor="middle" font-size="50">🌱</text></svg>';
                 }
                 createCropPost(cropName, qty, price, desc, imageUrl);
             }
@@ -1387,16 +1344,17 @@
             allCrops.push(newCrop);
             saveState();
             closePostCropModal();
-            alert('✅ ফসল পোস্ট সফল! ' + (newCrop.status === 'pending' ? 'অ্যাডমিন অনুমোদন সাপেক্ষে এটি প্রদর্শিত হবে।' :
-                'এটি এখন বাজারে দেখা যাচ্ছে।'));
+            alert('✅ ফসল পোস্ট সফল! ' + (newCrop.status === 'pending' ? 'অ্যাডমিন অনুমোদন সাপেক্ষে এটি প্রদর্শিত হবে।' : 'এটি এখন বাজারে দেখা যাচ্ছে।'));
             renderMarket();
         }
 
         // ==================== RENDER MARKET ====================
+        // Fallback image (transparent pixel, avoids SVG encoding errors)
+        const FALLBACK_IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
         function renderMarket() {
             const grid = document.getElementById('cropGrid');
             const noMsg = document.getElementById('noCropMsg');
-            // For public view, only approved
             const publicCrops = allCrops.filter(c => c.status === 'approved');
             const displayCrops = (currentUser && currentUser.role === 'admin') ? allCrops : publicCrops;
             if (displayCrops.length === 0) {
@@ -1406,7 +1364,7 @@
                 noMsg.style.display = 'none';
                 grid.innerHTML = displayCrops.map(c => `
                 <div class="crop-card">
-                  <img src="${c.imageUrl}" alt="${c.cropName}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 200%22><rect width=%22300%22 height=%22200%22 fill=%22%23e8f5e9%22/><text x=%22150%22 y=%22110%22 text-anchor=%22middle%22 font-size=%2250%22>🌱</text></svg>'">
+                  <img src="${c.imageUrl}" alt="${c.cropName}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">
                   <div class="crop-info">
                     <h4>${c.cropName} - ${c.qty}</h4>
                     <p class="price">💰 ${c.price} টাকা/কেজি</p>
@@ -1422,6 +1380,10 @@
         // ==================== RENDER PRICES ====================
         function renderPrices() {
             const tbody = document.getElementById('priceTableBody');
+            if (allPrices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--gray-500);">এখনো কোনো দাম তালিকা নেই।</td></tr>';
+                return;
+            }
             tbody.innerHTML = allPrices.map(p => `
               <tr>
                 <td>${p.crop}</td>
@@ -1439,17 +1401,15 @@
                 { q: 'KrishiPath Bazar কী?', a: 'KrishiPath Bazar একটি অনলাইন কৃষিপণ্য বাজার যেখানে কৃষকরা সরাসরি ব্যবসায়ীদের সাথে যোগাযোগ করে ফসল বিক্রি করতে পারেন। এতে থাকে লাইভ বাজারদর, দরপত্র পদ্ধতি, এবং কৃষিপণ্য বিক্রির সহজতর ডিজিটাল সুবিধা।' },
                 { q: 'KrishiPath কি শুধু বড় কৃষকদের জন্য?', a: 'না, এই প্ল্যাটফর্ম ক্ষুদ্র, মাঝারি ও বড় — সব ধরনের কৃষকদের জন্য উন্মুক্ত। বিশেষ করে ক্ষুদ্র কৃষকদের ন্যায্য দাম ও ডিজিটাল প্রবেশাধিকারের সুবিধা দেওয়াই আমাদের অন্যতম লক্ষ্য।' },
                 { q: 'KrishiPath কি কৃষিপণ্য কিনে নেয়?', a: 'হ্যাঁ, বিশেষ ক্ষেত্রে আমরা নিজস্ব Stock House থেকে সরাসরি ক্ষুদ্র কৃষকদের কাছ থেকে ন্যায্য দামে ফসল ক্রয় করি এবং তা পরবর্তীতে পাইকারি বা খুচরা বাজারে পুনরায় বিক্রি করি।' },
-                { q: 'আমি কীভাবে এই প্ল্যাটফর্মে ফসল বিক্রি করতে পারি?',
-                    a: '১. প্রথমে KrishiPath-এ একটি অ্যাকাউন্ট খুলুন। ২. আপনার প্রোফাইল তৈরি করুন। ৩. বিক্রয়ের জন্য ফসলের তথ্য, ছবি, পরিমাণ এবং প্রত্যাশিত দাম যুক্ত করুন। ৪. বিভিন্ন ব্যবসায়ীর প্রস্তাব পর্যালোচনা করে পছন্দের ক্রেতাকে বেছে নিন।' },
-                { q: 'আমি কীভাবে বাজারের বর্তমান দাম জানতে পারি?',
-                    a: 'আমাদের ওয়েবসাইটে "লাইভ বাজারদর" সেকশনে গিয়ে আপনার এলাকার বর্তমান ফসলের দাম দেখতে পারবেন। আমরা প্রতিদিন তথ্য আপডেট করি স্থানীয় বাজারদর অনুযায়ী।' },
+                { q: 'আমি কীভাবে এই প্ল্যাটফর্মে ফসল বিক্রি করতে পারি?', a: '১. প্রথমে KrishiPath-এ একটি অ্যাকাউন্ট খুলুন। ২. আপনার প্রোফাইল তৈরি করুন। ৩. বিক্রয়ের জন্য ফসলের তথ্য, ছবি, পরিমাণ এবং প্রত্যাশিত দাম যুক্ত করুন। ৪. বিভিন্ন ব্যবসায়ীর প্রস্তাব পর্যালোচনা করে পছন্দের ক্রেতাকে বেছে নিন।' },
+                { q: 'আমি কীভাবে বাজারের বর্তমান দাম জানতে পারি?', a: 'আমাদের ওয়েবসাইটে "লাইভ বাজারদর" সেকশনে গিয়ে আপনার এলাকার বর্তমান ফসলের দাম দেখতে পারবেন। আমরা প্রতিদিন তথ্য আপডেট করি স্থানীয় বাজারদর অনুযায়ী।' },
                 { q: 'এই প্ল্যাটফর্মে কোন ধরনের ফসল বিক্রি করা যায়?', a: 'ধান, গম, ভুট্টা, আলু, পেঁয়াজ, টমেটো, শাকসবজি, ফলমূল, মসলা জাতীয় পণ্যসহ সকল কৃষিপণ্যই এই প্ল্যাটফর্মে বিক্রি করা যায়।' },
                 { q: 'KrishiPath Bazar ব্যবহারের জন্য কোনো খরচ আছে কি?', a: 'সাধারণ কৃষকদের জন্য রেজিস্ট্রেশন ও ব্যবহার সম্পূর্ণ ফ্রি। তবে যারা বড় পরিসরে লেনদেন করেন, তাদের জন্য বিশেষ পরিষেবায় নামমাত্র সার্ভিস ফি নির্ধারিত হতে পারে।' },
                 { q: 'আমি ফসল বিক্রি করার পরে পেমেন্ট কীভাবে পাবো?', a: 'পেমেন্ট পদ্ধতি চুক্তি অনুযায়ী নির্ধারিত হয় — নগদ, বিকাশ, নগদ ডেলিভারি অথবা ব্যাংক ট্রান্সফার। সব ধরনের লেনদেনে আমরা নিরাপত্তা ও স্বচ্ছতা নিশ্চিত করি।' },
                 { q: 'যদি কোনো সমস্যায় পড়ি, তাহলে কার সঙ্গে যোগাযোগ করব?', a: 'আপনি আমাদের হেল্পলাইন নম্বরে (📞 01581483444 অথবা 01796015069) কল করতে পারেন, অথবা ইমেল করুন: 📩 krishipathbd@gmail.com।' },
                 { q: 'আমি কিভাবে আমার পাসওয়ার্ড রিসেট করতে পারি?', a: '১. লগইন পেইজে যান। ২. "পাসওয়ার্ড ভুলে গেছেন?" অপশনটিতে ক্লিক করুন। ৩. আপনার মোবাইল নম্বর বা ইমেইল লিখুন। ৪. একটি ওটিপি কোড বা লিংক পাবেন, সেটি দিয়ে নতুন পাসওয়ার্ড সেট করুন।' },
             ];
-            document.getElementById('faqList').innerHTML = faqs.map((f, i) => `
+            document.getElementById('faqList').innerHTML = faqs.map(f => `
               <div class="faq-item" onclick="this.classList.toggle('open')">
                 <div class="faq-question">${f.q} <span class="arrow">▼</span></div>
                 <div class="faq-answer">${f.a}</div>
@@ -1532,11 +1492,7 @@
 
         function approveCrop(cropId) {
             const crop = allCrops.find(c => c.id === cropId);
-            if (crop) { crop.status = 'approved';
-                saveState();
-                renderAdmin();
-                renderMarket();
-                alert('✅ পোস্ট অনুমোদিত হয়েছে।'); }
+            if (crop) { crop.status = 'approved'; saveState(); renderAdmin(); renderMarket(); alert('✅ পোস্ট অনুমোদিত হয়েছে।'); }
         }
 
         function rejectCrop(cropId) {
@@ -1548,8 +1504,7 @@
         }
 
         function sendSimulatedEmail() {
-            alert(
-                '📧 সিমুলেটেড ইমেইল:\n\nপ্রিয় কৃষকবৃন্দ,\n\nআপনার আগ্রহের ক্যাটাগরি অনুযায়ী নতুন ফসলের পোস্ট ও বাজারদর আপডেট এসেছে। কৃষিপথ ভিজিট করুন।\n\nধন্যবাদ,\nকৃষিপথ টিম');
+            alert('📧 সিমুলেটেড ইমেইল:\n\nপ্রিয় কৃষকবৃন্দ,\n\nআপনার আগ্রহের ক্যাটাগরি অনুযায়ী নতুন ফসলের পোস্ট ও বাজারদর আপডেট এসেছে। কৃষিপথ ভিজিট করুন।\n\nধন্যবাদ,\nকৃষিপথ টিম');
             console.log('EmailJS would send here. Configure your EmailJS template.');
         }
 
@@ -1558,9 +1513,7 @@
                 new Notification('কৃষিপথ', { body: '🔔 নতুন বাজারদর আপডেট! লাইভ দাম দেখতে ক্লিক করুন।' });
             } else if ('Notification' in window && Notification.permission !== 'denied') {
                 Notification.requestPermission().then(perm => {
-                    if (perm === 'granted') {
-                        new Notification('কৃষিপথ', { body: '🔔 নতুন বাজারদর আপডেট!' });
-                    }
+                    if (perm === 'granted') new Notification('কৃষিপথ', { body: '🔔 নতুন বাজারদর আপডেট!' });
                 });
             }
             alert('🔔 পুশ নোটিফিকেশন সিমুলেটেড: "নতুন বাজারদর আপডেট! লাইভ দাম দেখতে ক্লিক করুন।"');
@@ -1573,7 +1526,6 @@
             const name = inputs[0].value.trim();
             const email = inputs[1].value.trim();
             const message = inputs[2].value.trim();
-            // Try EmailJS
             try {
                 emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
                     from_name: name,
@@ -1612,13 +1564,8 @@
             document.getElementById('btnLogoutNav').classList.remove('hidden');
             if (currentUser.role === 'admin') document.getElementById('btnAdminNav').classList.remove('hidden');
         }
-
-        console.log('🌾 কৃষিপথ - সম্পূর্ণরূপে লোড হয়েছে।');
-        console.log('📋 ডেমো অ্যাকাউন্ট: farmer@test.com / 123456 (কৃষক)');
-        console.log('📋 ডেমো অ্যাকাউন্ট: agent@test.com / 123456 (এজেন্ট)');
-        console.log('📋 ডেমো অ্যাকাউন্ট: business@test.com / 123456 (ব্যবসায়ী)');
-        console.log('📋 ডেমো অ্যাকাউন্ট: admin@krishipath.com / admin123 (অ্যাডমিন)');
-        console.log('⚠️ Supabase ও EmailJS এর নিজস্ব ক্রেডেনশিয়াল বসাতে ভুলবেন না।');
+        console.log('🌾 কৃষিপথ – সম্পূর্ণরূপে লোড হয়েছে।');
+        console.log('⚠️  Supabase ও EmailJS এর নিজস্ব ক্রেডেনশিয়াল বসাতে ভুলবেন না।');
     </script>
 </body>
 </html>
