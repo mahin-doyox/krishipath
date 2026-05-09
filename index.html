@@ -421,7 +421,7 @@
       document.getElementById('phoneField').style.display = mode === 'register' ? 'block' : 'none';
       document.getElementById('roleField').style.display = mode === 'register' ? 'block' : 'none';
       document.getElementById('forgotPasswordForm').style.display = 'none';
-      document.getElementById('authLinks').style.display = (mode === 'login' || mode === 'login') ? 'block' : 'none';
+      document.getElementById('authLinks').style.display = (mode === 'login' || mode === 'register') ? 'block' : 'none';
       modal.style.display = 'flex';
     };
     window.closeAuthModal = function() { modal.style.display = 'none'; };
