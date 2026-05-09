@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>কৃষিপথ</title>
+  <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
   <meta name="theme-color" content="#0d2e1d">
   <link rel="icon" type="image/png" href="https://i.ibb.co.com/N2fHrxQd/Screenshot-2026-05-09-1-50-43-PM-removebg-preview.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,7 +78,7 @@
     .policy-section { background:rgba(255,255,255,0.1); border-radius:12px; padding:1rem; margin:1rem 0; }
     .policy-section summary { font-weight:600; color:var(--gold); cursor:pointer; }
     .footer-bottom { text-align:center; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.2); padding-top:1rem; }
-    /* হিরো নতুন স্টাইল */
+    /* হিরো ইমেজ */
     .hero { background:linear-gradient(145deg, #e6f5e6, #fff); padding:0; }
     .hero-container { max-width:1300px; margin:0 auto; display:flex; flex-direction:column; }
     .hero-image { width:100%; max-height:450px; object-fit:contain; display:block; border-radius:0 0 60px 60px; box-shadow:var(--shadow-lg); border-bottom:5px solid white; }
@@ -140,7 +140,6 @@
   <!-- Home Page -->
   <div id="home" class="page active">
     <section class="hero">
-      <!-- ✅ হিরো ইমেজ এখানে আপডেট করা হয়েছে -->
       <img class="hero-image" src="https://i.ibb.co.com/tPMYJzkC/Add-Text-05-09-11-01-49.png" alt="কৃষিপথ ব্যানার">
       <div class="hero-container">
         <div class="hero-text">
@@ -337,7 +336,7 @@
     var SUPABASE_URL = 'https://uskcutjjmtcbgezcfbfm.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    emailjs.init('eY3d-EgKy8WSlW0LN');
+    emailjs.init('eY3d-EgKy8WSlW0LN'); // আপনার পাবলিক কী
 
     var currentUser = null, currentProfile = null;
     var currentBlogCat = 'all';
@@ -366,7 +365,6 @@
       else if (pageId === 'bazar') loadBazar();
       else if (pageId === 'prices') {
         loadLocations();
-        // reset dashboard
         document.getElementById('priceDashboard').style.display = 'none';
         document.getElementById('cropFilter').style.display = 'none';
         document.getElementById('cropFilter').innerHTML = '<option value="">ফসল নির্বাচন করুন</option>';
@@ -407,10 +405,12 @@
       document.getElementById('notifBell').querySelector('.count').style.display = count ? 'flex' : 'none';
     }
 
+    // ✅ currentProfile null চেক সহ renderUploadForms
     function renderUploadForms() {
       var bUp = document.getElementById('blogUpload'), fUp = document.getElementById('forumUpload'), bazarUp = document.getElementById('bazarUpload'), priceUp = document.getElementById('priceUpload');
       if (currentUser) {
-        if (currentProfile.role === 'expert' || currentProfile.role === 'admin') {
+        var role = currentProfile ? currentProfile.role : '';
+        if (role === 'expert' || role === 'admin') {
           bUp.innerHTML = '<div class="form-card"><h3>ব্লগ লিখুন</h3>' +
             '<input id="blogTitle" placeholder="শিরোনাম" class="form-control">' +
             '<select id="blogCat" class="form-control mt-3"><option value="ফসল">ফসল</option><option value="মৎস্য">মৎস্য</option><option value="পশুপালন">পশুপালন</option><option value="জৈব সার">জৈব সার</option></select>' +
@@ -425,7 +425,7 @@
           '<textarea id="qBody" rows="4" class="form-control mt-3" placeholder="বিস্তারিত"></textarea>' +
           '<button class="btn btn-primary w-100 mt-3" onclick="askQuestion()">জিজ্ঞাসা করুন</button></div>';
 
-        if (currentProfile.role === 'farmer' || currentProfile.role === 'admin') {
+        if (role === 'farmer' || role === 'admin') {
           bazarUp.innerHTML = '<div class="form-card"><h3>পণ্য বিক্রি করুন</h3>' +
             '<input id="prodName" placeholder="পণ্যের নাম" class="form-control">' +
             '<textarea id="prodDesc" rows="3" class="form-control mt-3" placeholder="বিবরণ"></textarea>' +
@@ -435,7 +435,7 @@
           bazarUp.innerHTML = '<p class="text-center">শুধুমাত্র কৃষকগণ পণ্য বিক্রির পোস্ট দিতে পারেন।</p>';
         }
 
-        if (currentProfile.role === 'agent' || currentProfile.role === 'admin') {
+        if (role === 'agent' || role === 'admin') {
           priceUp.innerHTML = '<div class="form-card"><h3>বাজার দর যোগ করুন</h3>' +
             '<input id="agentLocation" placeholder="এলাকা (যেমন: বালিয়াডাঙ্গী)" class="form-control">' +
             '<input id="agentCrop" placeholder="ফসলের নাম" class="form-control mt-3">' +
@@ -552,6 +552,7 @@
       }
     }
     async function uploadBlog() {
+      if (!currentProfile) return alert('প্রোফাইল লোড হয়নি, অপেক্ষা করুন।');
       if (currentProfile.role !== 'expert' && currentProfile.role !== 'admin') return alert('আপনার এই কাজের অনুমতি নেই।');
       var title = document.getElementById('blogTitle').value, cat = document.getElementById('blogCat').value, content = document.getElementById('blogContent').value;
       if (!title || !content) return alert('শিরোনাম ও লেখা দিন');
@@ -596,11 +597,12 @@
     async function askQuestion() {
       var title = document.getElementById('qTitle').value, body = document.getElementById('qBody').value;
       if (!title || !body) return alert('বিষয় ও বিবরণ দিন');
-      await supabase.from('forum_questions').insert([{ title: title, body: body, user_id: currentUser.id, user_name: currentProfile.name, approved: true }]);
+      await supabase.from('forum_questions').insert([{ title: title, body: body, user_id: currentUser.id, user_name: currentProfile ? currentProfile.name : '', approved: true }]);
       alert('প্রশ্ন জমা হয়েছে'); loadForum();
     }
     window.openAnswerModal = function(questionId) {
       if (!currentUser) { alert('উত্তর দিতে লগইন করুন।'); return; }
+      if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       if (currentProfile.role !== 'expert' && currentProfile.role !== 'admin') { alert('শুধুমাত্র কৃষিবিদ ও অ্যাডমিন উত্তর দিতে পারেন।'); return; }
       currentAnswerQuestionId = questionId;
       document.getElementById('answerModal').style.display = 'flex';
@@ -613,8 +615,9 @@
     window.submitAnswer = async function() {
       var body = document.getElementById('answerText').value.trim();
       if (!body) return;
+      if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       await supabase.from('forum_answers').insert([{ question_id: currentAnswerQuestionId, user_id: currentUser.id, user_name: currentProfile.name, answer: body, approved: false }]);
-      alert('উত্তর জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
+      alert('উত্তর জমা হয়েছে, অ্য়াডমিন অনুমোদনের অপেক্ষায়।');
       closeAnswerModal();
       loadForum();
     };
@@ -637,6 +640,7 @@
       if (!data.length) grid.innerHTML = '<p>কোনো পণ্য নেই</p>';
     }
     async function uploadProduct() {
+      if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       if (currentProfile.role !== 'farmer' && currentProfile.role !== 'admin') return alert('আপনার এই কাজের অনুমতি নেই।');
       var name = document.getElementById('prodName').value, desc = document.getElementById('prodDesc').value;
       var file = document.getElementById('prodImage').files[0];
@@ -681,7 +685,6 @@
         return;
       }
       currentLocation = loc;
-      // fetch distinct crops for this location
       var _a = await supabase.from('agent_prices').select('crop', { distinct: true }).eq('location', loc);
       var crops = _a.data || [];
       var cropSelect = document.getElementById('cropFilter');
@@ -703,7 +706,6 @@
 
     async function loadPriceDashboard(location, crop) {
       document.getElementById('priceDashboard').style.display = 'block';
-      // fetch all approved prices for location & crop, ordered by date ascending
       var _a = await supabase.from('agent_prices').select('*').eq('location', location).eq('crop', crop).eq('approved', true).order('created_at', { ascending: true });
       var data = _a.data || [];
       if (data.length === 0) {
@@ -721,7 +723,6 @@
       var max = Math.max.apply(null, prices);
       var min = Math.min.apply(null, prices);
       var avg = (prices.reduce(function(a,b){return a+b;}, 0) / prices.length).toFixed(2);
-      // trend
       var trend = '';
       if (prices.length >= 2) {
         var diff = prices[prices.length-1] - prices[prices.length-2];
@@ -735,7 +736,6 @@
       document.getElementById('avgPrice').textContent = avg + ' টাকা';
       document.getElementById('priceTrend').textContent = trend;
 
-      // Chart
       var ctx = document.getElementById('priceChart').getContext('2d');
       if (priceChartInstance) priceChartInstance.destroy();
       priceChartInstance = new Chart(ctx, {
@@ -769,12 +769,12 @@
     }
 
     async function uploadAgentPrice() {
+      if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       if (currentProfile.role !== 'agent' && currentProfile.role !== 'admin') return alert('শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যোগ করতে পারেন।');
       var location = document.getElementById('agentLocation').value, crop = document.getElementById('agentCrop').value, price = document.getElementById('agentPrice').value;
       if (!location || !crop || !price) return alert('সব তথ্য পূরণ করুন');
       await supabase.from('agent_prices').insert([{ location: location, crop: crop, price: parseFloat(price), user_id: currentUser.id, user_name: currentProfile.name, approved: false }]);
       alert('জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
-      // Refresh if currently displaying this location/crop
       if (currentLocation === location && currentCrop === crop) loadPriceDashboard(location, crop);
       loadLocations();
     }
@@ -782,7 +782,7 @@
     // Profile
     async function loadProfile() {
       if (!currentUser) return navigateTo('home');
-      document.getElementById('profileInfo').innerHTML = '<p><strong>নাম:</strong> ' + (currentProfile.name || '') + '</p><p><strong>ইমেইল:</strong> ' + currentUser.email + '</p><p><strong>ফোন:</strong> ' + (currentProfile.phone || 'N/A') + '</p><p><strong>রোল:</strong> ' + currentProfile.role + '</p>';
+      document.getElementById('profileInfo').innerHTML = '<p><strong>নাম:</strong> ' + (currentProfile ? currentProfile.name : '') + '</p><p><strong>ইমেইল:</strong> ' + currentUser.email + '</p><p><strong>ফোন:</strong> ' + (currentProfile ? currentProfile.phone || 'N/A' : 'N/A') + '</p><p><strong>রোল:</strong> ' + (currentProfile ? currentProfile.role : '') + '</p>';
       var _a = await supabase.from('notifications').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(3);
       var notifs = _a.data || [];
       var notifList = document.getElementById('notifList');
@@ -793,7 +793,7 @@
       updateNotifBadge();
     }
 
-    // Admin Panel (same)
+    // Admin Panel
     async function loadAdminPanel() {
       if (!currentProfile || currentProfile.role !== 'admin') return navigateTo('home');
       var container = document.getElementById('adminContent');
@@ -932,7 +932,8 @@
         var u = users[i];
         if (!u.email) continue;
         try {
-          await emailjs.send('service_z2zwlm2', 'template_3asxotb', {
+          // আপনার ইমেইল জেএস কনফিগ (service_k8w9o6b, template_ejptxnx) ব্যবহার করছি
+          await emailjs.send('service_k8w9o6b', 'template_ejptxnx', {
             to_email: u.email,
             to_name: u.name || 'কৃষিপথ সদস্য',
             message: msg
