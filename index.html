@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="data:application/json,%7B%22name%22:%22%E0%A6%95%E0%A7%83%E0%A6%B7%E0%A6%BF%E0%A6%AA%E0%A6%A5%22,%22short_name%22:%22krishipath%22,%22start_url%22:%22.%2F%22,%22display%22:%22standalone%22,%22background_color%22:%22%230a2f1f%22,%22theme_color%22:%22%232d6a4f%22,%22icons%22:%5B%7B%22src%22:%22https://i.ibb.co/album/krishipath-logo.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22%7D%5D%7D">
+  <!-- PWA Manifest (fixed encoding) -->
+  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%95%E0%A7%83%E0%A6%B7%E0%A6%BF%E0%A6%AA%E0%A6%A5%22%2C%22short_name%22%3A%22krishipath%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a2f1f%22%2C%22theme_color%22%3A%22%232d6a4f%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fi.ibb.co%2Falbum%2Fkrishipath-logo.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
   <meta name="theme-color" content="#2d6a4f">
   <link rel="apple-touch-icon" href="https://i.ibb.co/album/krishipath-logo.png">
   <!-- Favicon -->
@@ -300,6 +300,7 @@
 </footer>
 
 <script>
+  // Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); });
   }
@@ -309,13 +310,14 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    emailjs.init('YOUR_PUBLIC_KEY');
+    emailjs.init('YOUR_PUBLIC_KEY'); // আপনার নিজস্ব পাবলিক কী দিন
 
     let currentUser = null, currentProfile = null;
     let currentBlogCat = 'all';
     let activeAdminTab = 'blog';
     let currentAnswerQuestionId = null;
 
+    // Mobile menu toggle
     document.getElementById('menuToggle').addEventListener('click', ()=> document.getElementById('navLinks').classList.toggle('active'));
     document.querySelectorAll('#navLinks a, #navLinks button, .notification-badge').forEach(el=> el.addEventListener('click', ()=>{
       if(window.innerWidth<=768) document.getElementById('navLinks').classList.remove('active');
@@ -389,7 +391,7 @@
       document.getElementById('phoneField').style.display = mode==='register'?'block':'none';
       document.getElementById('roleField').style.display = mode==='register'?'block':'none';
       document.getElementById('forgotPasswordForm').style.display = 'none';
-      document.getElementById('authLinks').style.display = mode==='register'||mode==='login'?'block':'none';
+      document.getElementById('authLinks').style.display = (mode==='login'||mode==='register')?'block':'none';
       modal.style.display='flex';
     };
     window.closeAuthModal = ()=> modal.style.display='none';
@@ -464,7 +466,7 @@
       checkAnnouncement();
     });
 
-    // Blog
+    // ========== Blog ==========
     async function loadBlogs() {
       let query = supabase.from('blogs').select('*').eq('approved', true).order('created_at', {ascending:false});
       if(currentBlogCat!=='all') query = query.eq('category', currentBlogCat);
@@ -487,7 +489,7 @@
       }
     });
 
-    // Forum
+    // ========== Forum ==========
     async function loadForum() {
       const { data: questions } = await supabase.from('forum_questions').select('*').eq('approved', true).order('created_at', {ascending:false});
       const list = document.getElementById('forumList');
@@ -535,7 +537,7 @@
       loadForum();
     };
 
-    // Krishibazar (Products)
+    // ========== Krishibazar (Products) ==========
     async function loadBazar() {
       const { data } = await supabase.from('products').select('*').eq('approved', true).order('created_at', {ascending:false});
       document.getElementById('bazarGrid').innerHTML = data?.map(p=>`<div class="feature-card"><img src="${p.image_url||''}" style="width:100%; height:200px; object-fit:cover; border-radius:16px; margin-bottom:1rem;"><h4>${p.name}</h4><p>${p.description || ''}</p><small>বিক্রেতা: ${p.user_name}</small><br><button class="btn btn-outline btn-sm mt-2" onclick="expressInterest('${p.id}')">আগ্রহী</button></div>`).join('')||'<p>কোনো পণ্য নেই</p>';
@@ -565,7 +567,7 @@
       alert('আগ্রহ প্রকাশ করা হয়েছে! কৃষক অবহিত হবেন।');
     };
 
-    // Bazar Dor (Agent Prices)
+    // ========== Bazar Dor (Agent Prices) ==========
     async function loadLocations() {
       const { data } = await supabase.from('agent_prices').select('location', { distinct: true });
       const locFilter = document.getElementById('locationFilter');
@@ -587,7 +589,7 @@
       alert('জমা হয়েছে'); loadPrices();
     }
 
-    // Profile
+    // ========== Profile ==========
     async function loadProfile() {
       if(!currentUser) return navigateTo('home');
       document.getElementById('profileInfo').innerHTML = `<p><strong>নাম:</strong> ${currentProfile.name}</p><p><strong>ইমেইল:</strong> ${currentUser.email}</p><p><strong>ফোন:</strong> ${currentProfile.phone||'N/A'}</p><p><strong>রোল:</strong> ${currentProfile.role}</p>`;
@@ -597,7 +599,7 @@
       updateNotifBadge();
     }
 
-    // Admin Panel
+    // ========== Admin Panel ==========
     async function loadAdminPanel() {
       if(!currentProfile||currentProfile.role!=='admin') return navigateTo('home');
       const container = document.getElementById('adminContent');
@@ -627,6 +629,7 @@
       this.classList.add('active'); activeAdminTab = this.dataset.tab; loadAdminPanel();
     }));
 
+    // Approve / Cancel
     window.approveItem = async (table, id) => {
       const { data: item } = await supabase.from(table).select('*').eq('id', id).single();
       if (!item) return;
@@ -722,6 +725,7 @@
     }
     window.closeAnnouncement = () => { document.getElementById('announcePopup').style.display = 'none'; };
 
+    // Expose global
     window.navigateTo = navigateTo;
     window.uploadBlog = uploadBlog;
     window.uploadProduct = uploadProduct;
