@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
-  <meta name="theme-color" content="#2d6a4f">
-  <link rel="icon" type="image/png" href="https://i.ibb.co/album/krishipath-logo.png">
+  <meta name="theme-color" content="#0d2e1d">
+  <link rel="icon" type="image/png" href="https://i.ibb.co.com/V0tGG8j0/Screenshot-2026-05-09-1-50-43-PM.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,9 +14,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Noto Sans Bengali', sans-serif; background:#f0fdf4; color:#0a2f1f; line-height:1.6; }
+    body { font-family:'Noto Sans Bengali', sans-serif; background:#f0fdf4; color:#0a1f1a; line-height:1.6; }
     :root {
-      --primary: #2d6a4f; --primary-light: #40916c; --gold: #d4a373;
+      --primary: #0d2e1d; --primary-light: #1b4a30; --gold: #d4a373;
       --gold-light: #faedcd; --white: #ffffff; --gray-bg: #f8faf5;
       --shadow-sm: 0 10px 25px -5px rgba(0,0,0,0.05),0 8px 10px -6px rgba(0,0,0,0.02);
       --shadow-md: 0 20px 30px -10px rgba(0,0,0,0.08),0 10px 15px -8px rgba(0,0,0,0.05);
@@ -29,14 +29,14 @@
     .section-title::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:90px; height:4px; background:linear-gradient(90deg,var(--primary),var(--gold)); border-radius:4px; }
     .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-weight:600; padding:14px 32px; border-radius:60px; font-size:1rem; cursor:pointer; transition:all 0.25s; border:none; text-decoration:none; white-space:nowrap; box-shadow:var(--shadow-sm); min-height:52px; }
     .btn-primary { background:var(--primary); color:white; }
-    .btn-primary:hover { background:#1e4a35; transform:translateY(-2px); }
+    .btn-primary:hover { background:#0a1f14; transform:translateY(-2px); }
     .btn-outline { background:transparent; border:2px solid var(--primary); color:var(--primary); }
     .btn-outline:hover { background:var(--primary); color:white; }
     .btn-gold { background:var(--gold); color:white; }
     .btn-sm { padding:10px 20px; font-size:0.9rem; min-height:44px; }
     .container { max-width:1300px; margin:0 auto; padding:0 5%; }
     .navbar { background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:1000; padding:0.8rem 5%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; border-bottom:1px solid rgba(0,0,0,0.05); }
-    .logo { display:flex; align-items:center; gap:12px; }
+    .logo { display:flex; align-items:center; gap:12px; cursor:pointer; }
     .logo-icon { background:var(--primary); color:white; width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; }
     .logo-text { font-weight:800; font-size:1.5rem; color:var(--primary); }
     .logo-text span { color:var(--gold); }
@@ -47,7 +47,7 @@
     .auth-buttons { display:flex; gap:12px; }
     .menu-toggle { display:none; background:none; border:none; font-size:1.8rem; color:var(--primary); cursor:pointer; }
     .notification-badge { position:relative; cursor:pointer; }
-    .notification-badge .count { position:absolute; top:-8px; right:-10px; background:var(--gold); color:white; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+    .notification-badge .count { position:absolute; top:-8px; right:-10px; background:var(--gold); color:white; border-radius:50%; width:20px; height:20px; display:none; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
     .page { display:none; animation:fadeUp 0.4s; }
     .page.active { display:block; }
     .card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:2rem; margin:2rem 0; }
@@ -57,7 +57,7 @@
     .form-group { margin-bottom:1.5rem; }
     .form-group label { display:block; margin-bottom:8px; font-weight:600; color:var(--primary); }
     .form-control { width:100%; padding:16px 18px; border:2px solid #d1e7dd; border-radius:24px; font-size:1rem; background:#fafcff; }
-    .form-control:focus { border-color:var(--primary); outline:none; box-shadow:0 0 0 4px rgba(45,106,79,0.1); }
+    .form-control:focus { border-color:var(--primary); outline:none; box-shadow:0 0 0 4px rgba(13,46,29,0.1); }
     .admin-tabs { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
     .admin-tab { background:none; border:none; padding:0.8rem 1.8rem; font-weight:600; color:#64748b; border-radius:40px; cursor:pointer; }
     .admin-tab.active { background:#d4edda; color:var(--primary); }
@@ -78,18 +78,31 @@
     .policy-section { background:rgba(255,255,255,0.1); border-radius:12px; padding:1rem; margin:1rem 0; }
     .policy-section summary { font-weight:600; color:var(--gold); cursor:pointer; }
     .footer-bottom { text-align:center; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.2); padding-top:1rem; }
+    /* Hero modern */
+    .hero { background:linear-gradient(145deg, #e6f5e6, #fff); padding:0; }
+    .hero-container { max-width:1300px; margin:0 auto; display:flex; flex-direction:column; }
+    .hero-image { width:100%; height:350px; background:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=1200') center/cover no-repeat; border-radius:0 0 60px 60px; box-shadow:var(--shadow-lg); border-bottom:5px solid white; }
+    .hero-text { padding:3rem 5%; text-align:center; }
+    .hero-text h1 { font-size:clamp(2.5rem,8vw,4rem); color:var(--primary); }
+    .hero-text p { font-size:1.2rem; margin:1.5rem 0; max-width:700px; margin-left:auto; margin-right:auto; }
     @media (max-width:768px) {
+      .hero-image { height:250px; }
       .menu-toggle { display:block; }
       .nav-links { display:none; width:100%; flex-direction:column; padding:1.5rem 0; }
       .nav-links.active { display:flex; }
       .btn { width:100%; justify-content:center; }
     }
+    .quick-nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1.5rem; margin:2rem 0; }
+    .quick-nav-card { background:var(--white); padding:1.8rem 1rem; border-radius:28px; box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); text-align:center; cursor:pointer; transition:0.25s; }
+    .quick-nav-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); border-color:var(--gold-light); }
+    .quick-nav-card i { font-size:2.2rem; color:var(--primary); margin-bottom:1rem; }
+    .quick-nav-card h3 { font-size:1.1rem; }
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <div class="logo">
+  <div class="logo" onclick="location.reload()">
     <div class="logo-icon">কৃ</div>
     <div class="logo-text">কৃষিপথ <span>• krishipath</span></div>
   </div>
@@ -117,31 +130,37 @@
 <main id="app">
   <!-- Home Page -->
   <div id="home" class="page active">
-    <section style="background:linear-gradient(135deg,#e6f5e6,#fff); padding:3rem 5%; border-radius:0 0 60px 60px;">
-      <div style="max-width:1300px; margin:0 auto; display:flex; align-items:center; gap:3rem; flex-wrap:wrap;">
-        <div style="flex:1">
-          <h1 style="font-size:clamp(2.2rem,8vw,4rem); color:var(--primary);">কৃষির ডিজিটাল <span style="color:var(--gold); border-bottom:4px dotted var(--gold-light);">পথচলা</span><br>এখন শুরু</h1>
-          <p style="font-size:1.1rem; margin:1.5rem 0;">কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের এক অনন্য প্ল্যাটফর্ম।</p>
-          <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    <section class="hero">
+      <div class="hero-image"></div>
+      <div class="hero-container">
+        <div class="hero-text">
+          <h1>কৃষির ডিজিটাল <span style="color:var(--gold); border-bottom:4px dotted var(--gold-light);">পথচলা</span><br>এখন শুরু</h1>
+          <p>কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের এক অনন্য প্ল্যাটফর্ম।</p>
+          <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
             <button class="btn btn-primary" onclick="openAuth('register')"><i class="fas fa-seedling"></i> যুক্ত হোন</button>
             <button class="btn btn-outline" onclick="navigateTo('bazar')"><i class="fas fa-store"></i> বাজার দেখুন</button>
           </div>
         </div>
-        <div style="flex:1; min-height:300px; border-radius:40px; background:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800') center/cover; border:5px solid white; box-shadow:var(--shadow-lg);"></div>
       </div>
     </section>
-    <div class="container" style="margin:3rem auto;">
+    <div class="container">
+      <div class="quick-nav-grid">
+        <div class="quick-nav-card" onclick="navigateTo('bazar')"><i class="fas fa-store"></i><h3>কৃষিবাজার</h3></div>
+        <div class="quick-nav-card" onclick="navigateTo('prices')"><i class="fas fa-chart-line"></i><h3>বাজার দর</h3></div>
+        <div class="quick-nav-card" onclick="navigateTo('blog')"><i class="fas fa-newspaper"></i><h3>ব্লগ</h3></div>
+        <div class="quick-nav-card" onclick="navigateTo('forum')"><i class="fas fa-comments"></i><h3>প্রশ্নোত্তর</h3></div>
+      </div>
       <div class="card-grid">
-        <div class="feature-card"><i class="fas fa-store" style="font-size:2.5rem; color:var(--primary);"></i><h3>কৃষিবাজার</h3><p>পণ্য কিনুন-বেচুন</p></div>
-        <div class="feature-card"><i class="fas fa-chart-line" style="font-size:2.5rem; color:var(--primary);"></i><h3>লাইভ বাজার দর</h3><p>এলাকা ভিত্তিক মূল্য</p></div>
-        <div class="feature-card"><i class="fas fa-comments" style="font-size:2.5rem; color:var(--primary);"></i><h3>প্রশ্নোত্তর</h3><p>সমস্যার সমাধান</p></div>
-        <div class="feature-card"><i class="fas fa-newspaper" style="font-size:2.5rem; color:var(--primary);"></i><h3>কৃষি ব্লগ</h3><p>পরামর্শ ও টিপস</p></div>
+        <div class="feature-card"><i class="fas fa-tractor" style="font-size:2.5rem; color:var(--primary);"></i><h3>কৃষি বাজার</h3><p>সরাসরি কৃষকের পণ্য</p></div>
+        <div class="feature-card"><i class="fas fa-money-bill-wave" style="font-size:2.5rem; color:var(--primary);"></i><h3>সঠিক মূল্য</h3><p>এলাকাভিত্তিক লাইভ দর</p></div>
+        <div class="feature-card"><i class="fas fa-users" style="font-size:2.5rem; color:var(--primary);"></i><h3>কমিউনিটি</h3><p>কৃষক-বিশেষজ্ঞ সংযোগ</p></div>
+        <div class="feature-card"><i class="fas fa-bell" style="font-size:2.5rem; color:var(--primary);"></i><h3>নোটিফিকেশন</h3><p>ইমেইল ও অ্যাপ আপডেট</p></div>
       </div>
     </div>
   </div>
 
   <!-- Blog Page -->
-  <div id="blog" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">কৃষি ব্লগ</h2><div id="blogUpload"></div><div class="filter-tabs" id="blogFilterTabs"><button class="filter-tabs active" data-cat="all">সব</button><button class="filter-tabs" data-cat="ফসল">ফসল</button><button class="filter-tabs" data-cat="মৎস্য">মৎস্য</button><button class="filter-tabs" data-cat="পশুপালন">পশুপালন</button><button class="filter-tabs" data-cat="জৈব সার">জৈব সার</button></div><div id="blogGrid" class="card-grid"></div></div></div>
+  <div id="blog" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">কৃষি ব্লগ</h2><div id="blogUpload"></div><div class="filter-tabs" id="blogFilterTabs"><button class="filter-tab active" data-cat="all">সব</button><button class="filter-tab" data-cat="ফসল">ফসল</button><button class="filter-tab" data-cat="মৎস্য">মৎস্য</button><button class="filter-tab" data-cat="পশুপালন">পশুপালন</button><button class="filter-tab" data-cat="জৈব সার">জৈব সার</button></div><div id="blogGrid" class="card-grid"></div></div></div>
 
   <!-- Forum Page -->
   <div id="forum" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">প্রশ্নোত্তর</h2><div id="forumUpload"></div><div id="forumList"></div></div></div>
@@ -159,8 +178,9 @@
   <div id="prices" class="page">
     <div class="container" style="padding:2rem 0;">
       <h2 class="section-title">বাজার দর (এলাকাভিত্তিক)</h2>
+      <div id="priceUpload"></div>
       <div id="priceFilters" style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
-        <select id="locationFilter" class="form-control" style="max-width:200px;" onchange="loadPrices()">
+        <select id="locationFilter" class="form-control" style="max-width:250px;" onchange="loadPrices()">
           <option value="all">সব এলাকা</option>
         </select>
       </div>
@@ -169,7 +189,7 @@
   </div>
 
   <!-- Profile Page -->
-  <div id="profile" class="page"><div class="form-card"><h2>আমার প্রোফাইল</h2><div id="profileInfo"></div><h3 style="margin-top:2rem;">নোটিফিকেশন</h3><div id="notifList"></div></div></div>
+  <div id="profile" class="page"><div class="form-card"><h2>আমার প্রোফাইল</h2><div id="profileInfo"></div><h3 style="margin-top:2rem;">নোটিফিকেশন (সর্বশেষ ৩টি)</h3><div id="notifList"></div></div></div>
 
   <!-- Admin Page -->
   <div id="admin" class="page">
@@ -242,7 +262,7 @@
     <div class="footer-grid">
       <div class="footer-col">
         <h4>কৃষিপথ</h4>
-        <p>কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের ডিজিটাল প্ল্যাটফর্ম। আমাদের লক্ষ্য কৃষক, ব্যবসায়ী, এজেন্ট এবং কৃষিবিদদের একত্রিত করে একটি স্মার্ট কৃষি ইকোসিস্টেম গড়ে তোলা।</p>
+        <p>কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের ডিজিটাল প্ল্যাটফর্ম।</p>
         <div class="social-links">
           <a href="https://youtube.com/@krishipathbd" target="_blank"><i class="fab fa-youtube"></i></a>
           <a href="https://facebook.com/krishipath" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -260,13 +280,13 @@
     <div class="policy-section">
       <details>
         <summary>শর্তাবলী এবং নীতি</summary>
-        <p><strong>শর্তাবলী</strong><br>আমাদের পরিষেবা ব্যবহার করার শর্তে আপনি যে নিয়মগুলি মেনে চলবেন তা এখানে বিস্তারিত বর্ণনা করা হয়েছে। পরিষেবা গ্রহণের শর্তাবলী: আপনি আমাদের পরিষেবা ব্যবহার করার মাধ্যমে এই শর্তাবলী সম্মত হন। এই শর্তাবলী সময়মতো আপডেট করা হতে পারে। আপনি পরিষেবা ব্যবহার করে আমাদের নীতিমালা এবং শর্তাবলী মেনে চলতে সম্মত হন। ব্যবহারকারীর দায়িত্ব: আপনি এই পরিষেবাগুলি শুধুমাত্র আইনি উদ্দেশ্যে ব্যবহার করতে রাজি আছেন। অবৈধ, অপমানজনক, বা অন্য কোন ক্ষতিকর কর্মকাণ্ডের জন্য আমাদের পরিষেবা ব্যবহার করা যাবে না। অধিকার এবং মালিকানা: আমাদের পরিষেবাগুলির সব সত্ত্বাধিকার এবং intellectual property আমাদের মালিকানাধীন। আপনি পরিষেবা ব্যবহার করার মাধ্যমে এই সম্পত্তির প্রতি সম্মান জানাতে সম্মত হন। বিক্রয় বা স্থানান্তর: আমরা আমাদের পরিষেবা বা কোনো অংশের বিক্রয় বা স্থানান্তর করার অধিকার রাখি। তবে আপনার সম্মতি ছাড়া এই শর্তাবলী পরিবর্তন করা হবে না। নির্দিষ্ট বাধ্যবাধকতা: কিছু ক্ষেত্রে, আমরা আপনার পরিষেবার অ্যাক্সেস সীমিত বা বাতিল করতে পারি যদি আপনি শর্তাবলী লঙ্ঘন করেন বা অন্য কোন আইনি বাধ্যবাধকতা থাকে।</p>
+        <p>আমাদের পরিষেবা ব্যবহারের শর্তাবলী এখানে বিস্তারিত বর্ণনা করা হয়েছে...</p>
       </details>
     </div>
     <div class="policy-section">
       <details>
         <summary>গোপনীয়তা নীতি</summary>
-        <p>আপনার তথ্যের গোপনীয়তা আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ। আমরা কীভাবে আপনার তথ্য সংগ্রহ করি: আমরা আপনার ব্যক্তিগত তথ্য বিভিন্ন উপায়ে সংগ্রহ করতে পারি, যেমন নিবন্ধন ফর্ম, যোগাযোগ ফর্ম, এবং আপনার সাইট ব্যবহারের মাধ্যমে। এটি আপনার নাম, ইমেল ঠিকানা, ফোন নম্বর এবং অন্যান্য সম্পর্কিত তথ্য হতে পারে। তথ্য ব্যবহারের উদ্দেশ্য: আমরা আপনার তথ্য ব্যবহার করতে পারি আপনার প্রশ্নের উত্তর দেওয়ার জন্য, আমাদের পরিষেবা উন্নত করার জন্য, এবং আপনার জন্য প্রাসঙ্গিক প্রচার এবং বিজ্ঞাপন প্রেরণ করার জন্য। তথ্য শেয়ারিং: আমরা আপনার ব্যক্তিগত তথ্য তৃতীয় পক্ষের সাথে শেয়ার করি না, সেগুলি কেবল আমাদের পরিষেবা প্রদানকারী অথবা আইনগত কারণে প্রয়োজন হলে। তথ্য সুরক্ষা: আমরা আপনার তথ্য সুরক্ষিত রাখতে এবং অবাঞ্ছিত প্রবেশের হাত থেকে রক্ষা করার জন্য যথাযথ নিরাপত্তা ব্যবস্থা গ্রহণ করি। আপনার অধিকার: আপনি আপনার তথ্য অ্যাক্সেস, সংশোধন বা মুছে ফেলার অধিকার রাখেন। যদি আপনার কোন প্রশ্ন থাকে বা আপনার ব্যক্তিগত তথ্য পরিবর্তন করতে চান, আমাদের সাথে যোগাযোগ করুন।</p>
+        <p>আপনার তথ্যের গোপনীয়তা আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ...</p>
       </details>
     </div>
     <div class="footer-bottom">
@@ -280,7 +300,6 @@
     var SUPABASE_URL = 'https://uskcutjjmtcbgezcfbfm.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     emailjs.init('YOUR_PUBLIC_KEY'); // আপনার পাবলিক কী দিন
 
     var currentUser = null, currentProfile = null;
@@ -340,12 +359,11 @@
       var _a = await supabase.from('notifications').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id).eq('read', false);
       var count = _a.count || 0;
       document.getElementById('notifCount').textContent = count;
-      // ব্যাজ সবসময় লুকানো থাকবে যদি কাউন্ট ০ হয়
       document.getElementById('notifBell').querySelector('.count').style.display = count ? 'flex' : 'none';
     }
 
     function renderUploadForms() {
-      var bUp = document.getElementById('blogUpload'), fUp = document.getElementById('forumUpload'), bazarUp = document.getElementById('bazarUpload');
+      var bUp = document.getElementById('blogUpload'), fUp = document.getElementById('forumUpload'), bazarUp = document.getElementById('bazarUpload'), priceUp = document.getElementById('priceUpload');
       if (currentUser) {
         if (currentProfile.role === 'expert' || currentProfile.role === 'admin') {
           bUp.innerHTML = '<div class="form-card"><h3>ব্লগ লিখুন</h3>' +
@@ -371,8 +389,19 @@
         } else {
           bazarUp.innerHTML = '<p class="text-center">শুধুমাত্র কৃষকগণ পণ্য বিক্রির পোস্ট দিতে পারেন।</p>';
         }
+
+        // Agent price upload form
+        if (currentProfile.role === 'agent' || currentProfile.role === 'admin') {
+          priceUp.innerHTML = '<div class="form-card"><h3>বাজার দর যোগ করুন</h3>' +
+            '<input id="agentLocation" placeholder="এলাকা (যেমন: বালিয়াডাঙ্গী)" class="form-control">' +
+            '<input id="agentCrop" placeholder="ফসলের নাম" class="form-control mt-3">' +
+            '<input id="agentPrice" type="number" placeholder="দাম (টাকা/কেজি)" class="form-control mt-3">' +
+            '<button class="btn btn-primary w-100 mt-3" onclick="uploadAgentPrice()">জমা দিন</button></div>';
+        } else {
+          priceUp.innerHTML = '<p class="text-center">শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যোগ করতে পারেন।</p>';
+        }
       } else {
-        bUp.innerHTML = fUp.innerHTML = bazarUp.innerHTML = '<p class="text-center">কন্টেন্ট জমা দিতে <a href="#" onclick="openAuth(\'login\')">লগইন</a> করুন।</p>';
+        bUp.innerHTML = fUp.innerHTML = bazarUp.innerHTML = priceUp.innerHTML = '<p class="text-center">কন্টেন্ট জমা দিতে <a href="#" onclick="openAuth(\'login\')">লগইন</a> করুন।</p>';
       }
     }
 
@@ -606,17 +635,19 @@
       data.forEach(function(p) {
         var card = document.createElement('div');
         card.className = 'feature-card';
-        card.innerHTML = '<h4>' + p.crop + '</h4><p>' + p.price + ' টাকা / কেজি</p><small>এলাকা: ' + p.location + ' | এজেন্ট: ' + p.user_name + '</small>';
+        card.innerHTML = '<h4>' + p.crop + '</h4><p>দাম: <strong>' + p.price + ' টাকা/কেজি</strong></p><small>এলাকা: ' + p.location + ' | এজেন্ট: ' + p.user_name + '</small>';
         grid.appendChild(card);
       });
       if (!data.length) grid.innerHTML = '<p>কোনো দর তালিকাভুক্ত হয়নি</p>';
     }
     async function uploadAgentPrice() {
       if (currentProfile.role !== 'agent' && currentProfile.role !== 'admin') return alert('শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যোগ করতে পারেন।');
-      var crop = document.getElementById('agentCrop').value, price = document.getElementById('agentPrice').value, location = document.getElementById('agentLocation').value;
-      if (!crop || !price || !location) return alert('সব তথ্য পূরণ করুন');
-      await supabase.from('agent_prices').insert([{ crop: crop, price: parseFloat(price), location: location, user_id: currentUser.id, user_name: currentProfile.name, approved: false }]);
-      alert('জমা হয়েছে'); loadPrices();
+      var location = document.getElementById('agentLocation').value, crop = document.getElementById('agentCrop').value, price = document.getElementById('agentPrice').value;
+      if (!location || !crop || !price) return alert('সব তথ্য পূরণ করুন');
+      await supabase.from('agent_prices').insert([{ location: location, crop: crop, price: parseFloat(price), user_id: currentUser.id, user_name: currentProfile.name, approved: false }]);
+      alert('জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
+      loadPrices();
+      loadLocations(); // refresh locations
     }
 
     // Profile
@@ -633,7 +664,7 @@
       updateNotifBadge();
     }
 
-    // Admin Panel
+    // Admin Panel (unchanged)
     async function loadAdminPanel() {
       if (!currentProfile || currentProfile.role !== 'admin') return navigateTo('home');
       var container = document.getElementById('adminContent');
@@ -644,8 +675,7 @@
         items.forEach(function(b) {
           var div = document.createElement('div'); div.className = 'pending-item';
           div.innerHTML = '<div><strong>' + b.title + '</strong> (' + b.category + ') by ' + b.user_name + '</div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'blogs\',' + b.id + ')">অনুমোদন</button> ' +
-            '<button class="btn btn-outline btn-sm" onclick="cancelItem(\'blogs\',' + b.id + ')">বাতিল</button></div>';
+            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'blogs\',' + b.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'blogs\',' + b.id + ')">বাতিল</button></div>';
           container.appendChild(div);
         });
         if (!items.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
@@ -655,8 +685,7 @@
         prods.forEach(function(p) {
           var div = document.createElement('div'); div.className = 'pending-item';
           div.innerHTML = '<div><strong>' + p.name + '</strong> by ' + p.user_name + '</div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'products\',' + p.id + ')">অনুমোদন</button> ' +
-            '<button class="btn btn-outline btn-sm" onclick="cancelItem(\'products\',' + p.id + ')">বাতিল</button></div>';
+            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'products\',' + p.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'products\',' + p.id + ')">বাতিল</button></div>';
           container.appendChild(div);
         });
         if (!prods.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
@@ -666,8 +695,7 @@
         prices.forEach(function(p) {
           var div = document.createElement('div'); div.className = 'pending-item';
           div.innerHTML = '<div>' + p.crop + ' (' + p.location + ') — ' + p.price + ' টাকা by ' + p.user_name + '</div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'agent_prices\',' + p.id + ')">অনুমোদন</button> ' +
-            '<button class="btn btn-outline btn-sm" onclick="cancelItem(\'agent_prices\',' + p.id + ')">বাতিল</button></div>';
+            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'agent_prices\',' + p.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'agent_prices\',' + p.id + ')">বাতিল</button></div>';
           container.appendChild(div);
         });
         if (!prices.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
@@ -677,15 +705,14 @@
         answers.forEach(function(a) {
           var div = document.createElement('div'); div.className = 'pending-item';
           div.innerHTML = '<div><strong>উত্তর:</strong> ' + a.answer.substring(0, 100) + '...<br><small> দ্বারা ' + a.user_name + '</small></div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveAnswer(' + a.id + ')">অনুমোদন</button> ' +
-            '<button class="btn btn-outline btn-sm" onclick="cancelItem(\'forum_answers\',' + a.id + ')">বাতিল</button></div>';
+            '<div><button class="btn btn-primary btn-sm" onclick="approveAnswer(' + a.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'forum_answers\',' + a.id + ')">বাতিল</button></div>';
           container.appendChild(div);
         });
         if (!answers.length) container.innerHTML = '<p>কোনো পেন্ডিং উত্তর নেই</p>';
       } else if (activeAdminTab === 'notification') {
         container.innerHTML = '<div class="form-card"><h3>🔔 সকলকে নোটিফিকেশন পাঠান</h3><textarea id="notifMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendAdminNotification()">পাঠান</button></div>';
       } else if (activeAdminTab === 'email') {
-        container.innerHTML = '<div class="form-card"><h3>📧 সকলকে ইমেইল পাঠান</h3><textarea id="emailMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendEmailToAll()">ইমেইল পাঠান</button><p class="field-hint mt-2">EmailJS কনফিগার করতে হবে।</p></div>';
+        container.innerHTML = '<div class="form-card"><h3>📧 সকলকে ইমেইল পাঠান</h3><textarea id="emailMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendEmailToAll()">ইমেইল পাঠান</button></div>';
       } else if (activeAdminTab === 'announcement') {
         container.innerHTML = '<div class="form-card"><h3>📢 পপ-আপ ঘোষণা</h3><textarea id="announceMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="createAnnouncement()">পোস্ট করুন</button></div>';
       }
@@ -747,7 +774,7 @@
       var activePage = document.querySelector('.page.active').id;
       if (table === 'blogs' && activePage === 'blog') loadBlogs();
       if (table === 'products' && activePage === 'bazar') loadBazar();
-      if (table === 'agent_prices' && activePage === 'prices') loadPrices();
+      if (table === 'agent_prices' && activePage === 'prices') { loadPrices(); loadLocations(); }
       if (table === 'forum_answers' && activePage === 'forum') loadForum();
     }
 
