@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
-  <!-- PWA Manifest: পরে যোগ করবেন, আপাতত নেই -->
   <meta name="theme-color" content="#2d6a4f">
   <link rel="icon" type="image/png" href="https://i.ibb.co/album/krishipath-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,14 +88,195 @@
 </head>
 <body>
 
-<!-- নেভিগেশন, পেজ, ফুটার ইত্যাদি আগের মতোই, কোনো পরিবর্তন নেই -->
+<nav class="navbar">
+  <div class="logo">
+    <div class="logo-icon">কৃ</div>
+    <div class="logo-text">কৃষিপথ <span>• krishipath</span></div>
+  </div>
+  <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+  <div class="nav-links" id="navLinks">
+    <a href="#" data-page="home">হোম</a>
+    <a href="#" data-page="blog">ব্লগ</a>
+    <a href="#" data-page="forum">প্রশ্নোত্তর</a>
+    <a href="#" data-page="bazar">কৃষিবাজার</a>
+    <a href="#" data-page="prices">বাজার দর</a>
+    <a href="#" data-page="profile" id="profileLink" style="display:none;">প্রোফাইল</a>
+    <a href="#" data-page="admin" id="adminLink" style="display:none;">অ্যাডমিন</a>
+    <div class="notification-badge" id="notifBell" style="display:none;" onclick="navigateTo('profile')">
+      <i class="fas fa-bell" style="font-size:1.4rem; color:var(--primary);"></i>
+      <span class="count" id="notifCount">0</span>
+    </div>
+    <div class="auth-buttons">
+      <button class="btn btn-outline btn-sm" id="loginBtn">লগইন</button>
+      <button class="btn btn-primary btn-sm" id="registerBtn">রেজিস্টার</button>
+      <button class="btn btn-outline btn-sm" id="logoutBtn" style="display:none;">লগআউট</button>
+    </div>
+  </div>
+</nav>
 
-<!-- জাভাস্ক্রিপ্ট: সম্পূর্ণ কনক্যাটেনেশন-ভিত্তিক, কোনো টেমপ্লেট লিটারেল নেই -->
+<main id="app">
+  <!-- Home Page -->
+  <div id="home" class="page active">
+    <section style="background:linear-gradient(135deg,#e6f5e6,#fff); padding:3rem 5%; border-radius:0 0 60px 60px;">
+      <div style="max-width:1300px; margin:0 auto; display:flex; align-items:center; gap:3rem; flex-wrap:wrap;">
+        <div style="flex:1">
+          <h1 style="font-size:clamp(2.2rem,8vw,4rem); color:var(--primary);">কৃষির ডিজিটাল <span style="color:var(--gold); border-bottom:4px dotted var(--gold-light);">পথচলা</span><br>এখন শুরু</h1>
+          <p style="font-size:1.1rem; margin:1.5rem 0;">কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের এক অনন্য প্ল্যাটফর্ম।</p>
+          <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="openAuth('register')"><i class="fas fa-seedling"></i> যুক্ত হোন</button>
+            <button class="btn btn-outline" onclick="navigateTo('bazar')"><i class="fas fa-store"></i> বাজার দেখুন</button>
+          </div>
+        </div>
+        <div style="flex:1; min-height:300px; border-radius:40px; background:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800') center/cover; border:5px solid white; box-shadow:var(--shadow-lg);"></div>
+      </div>
+    </section>
+    <div class="container" style="margin:3rem auto;">
+      <div class="card-grid">
+        <div class="feature-card"><i class="fas fa-store" style="font-size:2.5rem; color:var(--primary);"></i><h3>কৃষিবাজার</h3><p>পণ্য কিনুন-বেচুন</p></div>
+        <div class="feature-card"><i class="fas fa-chart-line" style="font-size:2.5rem; color:var(--primary);"></i><h3>লাইভ বাজার দর</h3><p>এলাকা ভিত্তিক মূল্য</p></div>
+        <div class="feature-card"><i class="fas fa-comments" style="font-size:2.5rem; color:var(--primary);"></i><h3>প্রশ্নোত্তর</h3><p>সমস্যার সমাধান</p></div>
+        <div class="feature-card"><i class="fas fa-newspaper" style="font-size:2.5rem; color:var(--primary);"></i><h3>কৃষি ব্লগ</h3><p>পরামর্শ ও টিপস</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blog Page -->
+  <div id="blog" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">কৃষি ব্লগ</h2><div id="blogUpload"></div><div class="filter-tabs" id="blogFilterTabs"><button class="filter-tab active" data-cat="all">সব</button><button class="filter-tab" data-cat="ফসল">ফসল</button><button class="filter-tab" data-cat="মৎস্য">মৎস্য</button><button class="filter-tab" data-cat="পশুপালন">পশুপালন</button><button class="filter-tab" data-cat="জৈব সার">জৈব সার</button></div><div id="blogGrid" class="card-grid"></div></div></div>
+
+  <!-- Forum Page -->
+  <div id="forum" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">প্রশ্নোত্তর</h2><div id="forumUpload"></div><div id="forumList"></div></div></div>
+
+  <!-- Krishibazar Page (Products) -->
+  <div id="bazar" class="page">
+    <div class="container" style="padding:2rem 0;">
+      <h2 class="section-title">কৃষিবাজার</h2>
+      <div id="bazarUpload"></div>
+      <div id="bazarGrid" class="card-grid"></div>
+    </div>
+  </div>
+
+  <!-- Bazar Dor (Market Prices) Page -->
+  <div id="prices" class="page">
+    <div class="container" style="padding:2rem 0;">
+      <h2 class="section-title">বাজার দর (এলাকাভিত্তিক)</h2>
+      <div id="priceFilters" style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
+        <select id="locationFilter" class="form-control" style="max-width:200px;" onchange="loadPrices()">
+          <option value="all">সব এলাকা</option>
+        </select>
+      </div>
+      <div id="priceGrid" class="card-grid"></div>
+    </div>
+  </div>
+
+  <!-- Profile Page -->
+  <div id="profile" class="page"><div class="form-card"><h2>আমার প্রোফাইল</h2><div id="profileInfo"></div><h3 style="margin-top:2rem;">নোটিফিকেশন</h3><div id="notifList"></div></div></div>
+
+  <!-- Admin Page -->
+  <div id="admin" class="page">
+    <div class="container" style="padding:2rem 0;">
+      <h2 class="section-title">অ্যাডমিন প্যানেল</h2>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="blog">ব্লগ</button>
+        <button class="admin-tab" data-tab="products">পণ্য</button>
+        <button class="admin-tab" data-tab="prices">বাজার দর</button>
+        <button class="admin-tab" data-tab="answers">ফোরাম উত্তর</button>
+        <button class="admin-tab" data-tab="notification">🔔 নোটিফিকেশন</button>
+        <button class="admin-tab" data-tab="email">📧 ইমেইল</button>
+        <button class="admin-tab" data-tab="announcement">📢 ঘোষণা</button>
+      </div>
+      <div id="adminContent"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Answer Modal -->
+<div id="answerModal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeAnswerModal()">&times;</button>
+    <h3>উত্তর লিখুন</h3>
+    <textarea id="answerText" rows="5" class="form-control" placeholder="আপনার উত্তর"></textarea>
+    <button class="btn btn-primary w-100 mt-3" onclick="submitAnswer()">জমা দিন</button>
+  </div>
+</div>
+
+<div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); z-index:2000; align-items:center; justify-content:center; padding:1rem;">
+  <div class="form-card" style="position:relative; max-height:90vh; overflow-y:auto;">
+    <button onclick="closeAuthModal()" style="position:absolute; right:20px; top:20px; background:none; border:none; font-size:1.8rem; cursor:pointer;">&times;</button>
+    <h2 id="authTitle" style="margin-bottom:1.5rem;">লগইন</h2>
+    <form id="authForm">
+      <div class="form-group"><label>ইমেইল</label><input type="email" id="authEmail" class="form-control" required></div>
+      <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="authPassword" class="form-control" required></div>
+      <div class="form-group" id="nameField" style="display:none;"><label>নাম</label><input type="text" id="authName" class="form-control"></div>
+      <div class="form-group" id="phoneField" style="display:none;">
+        <label>ফোন নম্বর</label>
+        <input type="tel" id="authPhone" class="form-control" placeholder="+8801XXXXXXXXX">
+        <div class="field-hint"><i class="fas fa-info-circle"></i> আন্তর্জাতিক ফরম্যাট: +8801XXXXXXXXX</div>
+      </div>
+      <div class="form-group" id="roleField" style="display:none;"><label>রোল</label>
+        <select id="authRole" class="form-control">
+          <option value="farmer">কৃষক</option>
+          <option value="businessman">ব্যবসায়ী</option>
+          <option value="agent">এজেন্ট</option>
+          <option value="expert">কৃষিবিদ</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">সাবমিট</button>
+    </form>
+    <p style="margin-top:1.5rem; text-align:center;" id="authLinks">
+      <a href="#" id="switchAuthLink">রেজিস্টার করুন</a> | 
+      <a href="#" id="forgotPasswordLink">পাসওয়ার্ড ভুলে গেছেন?</a>
+    </p>
+    <div id="forgotPasswordForm" style="display:none;">
+      <hr style="margin:1.5rem 0; border-color:#e2e8f0;">
+      <h3 style="margin-bottom:1rem;">পাসওয়ার্ড রিসেট</h3>
+      <p style="margin-bottom:1rem;">আপনার ইমেইল দিন, আমরা একটি রিসেট লিংক পাঠাবো।</p>
+      <div class="form-group"><label>ইমেইল</label><input type="email" id="resetEmail" class="form-control" required></div>
+      <button class="btn btn-primary w-100" id="sendResetLinkBtn">রিসেট লিংক পাঠান</button>
+      <p style="margin-top:1rem;"><a href="#" id="backToLoginLink">← লগইনে ফিরুন</a></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>কৃষিপথ</h4>
+        <p>কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের ডিজিটাল প্ল্যাটফর্ম। আমাদের লক্ষ্য কৃষক, ব্যবসায়ী, এজেন্ট এবং কৃষিবিদদের একত্রিত করে একটি স্মার্ট কৃষি ইকোসিস্টেম গড়ে তোলা।</p>
+        <div class="social-links">
+          <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>যোগাযোগ</h4>
+        <p><i class="fas fa-phone"></i> +8801796015069</p>
+        <p><i class="fas fa-envelope"></i> krishipathbd@gmail.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> বালিয়াডাঙ্গী সদর, ঠাকুরগাঁও, রংপুর, বাংলাদেশ</p>
+      </div>
+    </div>
+    <div class="policy-section">
+      <details>
+        <summary>শর্তাবলী এবং নীতি</summary>
+        <p><strong>শর্তাবলী</strong><br>আমাদের পরিষেবা ব্যবহার করার শর্তে আপনি যে নিয়মগুলি মেনে চলবেন তা এখানে বিস্তারিত বর্ণনা করা হয়েছে। পরিষেবা গ্রহণের শর্তাবলী: আপনি আমাদের পরিষেবা ব্যবহার করার মাধ্যমে এই শর্তাবলী সম্মত হন। এই শর্তাবলী সময়মতো আপডেট করা হতে পারে। আপনি পরিষেবা ব্যবহার করে আমাদের নীতিমালা এবং শর্তাবলী মেনে চলতে সম্মত হন। ব্যবহারকারীর দায়িত্ব: আপনি এই পরিষেবাগুলি শুধুমাত্র আইনি উদ্দেশ্যে ব্যবহার করতে রাজি আছেন। অবৈধ, অপমানজনক, বা অন্য কোন ক্ষতিকর কর্মকাণ্ডের জন্য আমাদের পরিষেবা ব্যবহার করা যাবে না। অধিকার এবং মালিকানা: আমাদের পরিষেবাগুলির সব সত্ত্বাধিকার এবং intellectual property আমাদের মালিকানাধীন। আপনি পরিষেবা ব্যবহার করার মাধ্যমে এই সম্পত্তির প্রতি সম্মান জানাতে সম্মত হন। বিক্রয় বা স্থানান্তর: আমরা আমাদের পরিষেবা বা কোনো অংশের বিক্রয় বা স্থানান্তর করার অধিকার রাখি। তবে আপনার সম্মতি ছাড়া এই শর্তাবলী পরিবর্তন করা হবে না। নির্দিষ্ট বাধ্যবাধকতা: কিছু ক্ষেত্রে, আমরা আপনার পরিষেবার অ্যাক্সেস সীমিত বা বাতিল করতে পারি যদি আপনি শর্তাবলী লঙ্ঘন করেন বা অন্য কোন আইনি বাধ্যবাধকতা থাকে।</p>
+      </details>
+    </div>
+    <div class="policy-section">
+      <details>
+        <summary>গোপনীয়তা নীতি</summary>
+        <p>আপনার তথ্যের গোপনীয়তা আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ। আমরা কীভাবে আপনার তথ্য সংগ্রহ করি: আমরা আপনার ব্যক্তিগত তথ্য বিভিন্ন উপায়ে সংগ্রহ করতে পারি, যেমন নিবন্ধন ফর্ম, যোগাযোগ ফর্ম, এবং আপনার সাইট ব্যবহারের মাধ্যমে। এটি আপনার নাম, ইমেল ঠিকানা, ফোন নম্বর এবং অন্যান্য সম্পর্কিত তথ্য হতে পারে। তথ্য ব্যবহারের উদ্দেশ্য: আমরা আপনার তথ্য ব্যবহার করতে পারি আপনার প্রশ্নের উত্তর দেওয়ার জন্য, আমাদের পরিষেবা উন্নত করার জন্য, এবং আপনার জন্য প্রাসঙ্গিক প্রচার এবং বিজ্ঞাপন প্রেরণ করার জন্য। তথ্য শেয়ারিং: আমরা আপনার ব্যক্তিগত তথ্য তৃতীয় পক্ষের সাথে শেয়ার করি না, সেগুলি কেবল আমাদের পরিষেবা প্রদানকারী অথবা আইনগত কারণে প্রয়োজন হলে। তথ্য সুরক্ষা: আমরা আপনার তথ্য সুরক্ষিত রাখতে এবং অবাঞ্ছিত প্রবেশের হাত থেকে রক্ষা করার জন্য যথাযথ নিরাপত্তা ব্যবস্থা গ্রহণ করি। আপনার অধিকার: আপনি আপনার তথ্য অ্যাক্সেস, সংশোধন বা মুছে ফেলার অধিকার রাখেন। যদি আপনার কোন প্রশ্ন থাকে বা আপনার ব্যক্তিগত তথ্য পরিবর্তন করতে চান, আমাদের সাথে যোগাযোগ করুন।</p>
+      </details>
+    </div>
+    <div class="footer-bottom">
+      <p>© ২০২৬ কৃষিপথ • সর্বস্বত্ব সংরক্ষিত &nbsp;|&nbsp; Powered by doyox</p>
+    </div>
+  </div>
+</footer>
+
 <script>
-  // Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() { navigator.serviceWorker.register('/sw.js'); });
-  }
+  // PWA service worker সম্পূর্ণভাবে বাদ
 
   (function() {
     var SUPABASE_URL = 'https://uskcutjjmtcbgezcfbfm.supabase.co';
@@ -279,7 +459,7 @@
       checkAnnouncement();
     });
 
-    // Blog functions
+    // Blog functions (unchanged)
     async function loadBlogs() {
       var query = supabase.from('blogs').select('*').eq('approved', true).order('created_at', { ascending: false });
       if (currentBlogCat !== 'all') query = query.eq('category', currentBlogCat);
