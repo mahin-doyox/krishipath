@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
-  <!-- PWA Manifest - replaced with inline JSON to avoid file not found -->
+  <!-- PWA Manifest -->
   <link rel="manifest" href="data:application/json,%7B%22name%22:%22%E0%A6%95%E0%A7%83%E0%A6%B7%E0%A6%BF%E0%A6%AA%E0%A6%A5%22,%22short_name%22:%22krishipath%22,%22start_url%22:%22.%2F%22,%22display%22:%22standalone%22,%22background_color%22:%22%230a2f1f%22,%22theme_color%22:%22%232d6a4f%22,%22icons%22:%5B%7B%22src%22:%22https://i.ibb.co/album/krishipath-logo.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22%7D%5D%7D">
   <meta name="theme-color" content="#2d6a4f">
   <link rel="apple-touch-icon" href="https://i.ibb.co/album/krishipath-logo.png">
@@ -86,10 +86,21 @@
 
     .detail-box { background:#f8fafc; padding:1rem; border-radius:16px; margin-top:1rem; border:1px solid #e2e8f0; white-space:pre-wrap; word-break:break-word; }
 
-    /* Modal for answering */
+    /* Modal styles */
     .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; }
     .modal-content { background:white; padding:2rem; border-radius:24px; max-width:500px; width:90%; box-shadow:var(--shadow-lg); }
     .modal-close { float:right; background:none; border:none; font-size:1.5rem; cursor:pointer; }
+
+    /* Footer */
+    footer { background:var(--primary); color:white; padding:3rem 5% 1rem; margin-top:4rem; border-radius:40px 40px 0 0; }
+    .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; margin-bottom:2rem; }
+    .footer-col h4 { color:var(--gold); margin-bottom:1rem; }
+    .footer-col p, .footer-col a { color:rgba(255,255,255,0.9); font-size:0.95rem; }
+    .social-links a { margin-right:12px; font-size:1.5rem; color:white; transition:color 0.2s; }
+    .social-links a:hover { color:var(--gold); }
+    .policy-section { background:rgba(255,255,255,0.1); border-radius:12px; padding:1rem; margin:1rem 0; }
+    .policy-section summary { font-weight:600; color:var(--gold); cursor:pointer; }
+    .footer-bottom { text-align:center; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.2); padding-top:1rem; }
 
     @media (max-width:768px) {
       .menu-toggle { display:block; }
@@ -213,7 +224,7 @@
 </div>
 
 <div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); z-index:2000; align-items:center; justify-content:center; padding:1rem;">
-  <div class="form-card" style="position:relative;">
+  <div class="form-card" style="position:relative; max-height:90vh; overflow-y:auto;">
     <button onclick="closeAuthModal()" style="position:absolute; right:20px; top:20px; background:none; border:none; font-size:1.8rem; cursor:pointer;">&times;</button>
     <h2 id="authTitle" style="margin-bottom:1.5rem;">লগইন</h2>
     <form id="authForm">
@@ -250,10 +261,45 @@
   </div>
 </div>
 
-<footer style="background:var(--primary); color:white; padding:3rem 5%; margin-top:4rem; text-align:center; border-radius:40px 40px 0 0;">© ২০২৬ কৃষিপথ • সর্বস্বত্ব সংরক্ষিত</footer>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>কৃষিপথ</h4>
+        <p>কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের ডিজিটাল প্ল্যাটফর্ম। আমাদের লক্ষ্য কৃষক, ব্যবসায়ী, এজেন্ট এবং কৃষিবিদদের একত্রিত করে একটি স্মার্ট কৃষি ইকোসিস্টেম গড়ে তোলা।</p>
+        <div class="social-links">
+          <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+          <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>যোগাযোগ</h4>
+        <p><i class="fas fa-phone"></i> +8801796015069</p>
+        <p><i class="fas fa-envelope"></i> krishipathbd@gmail.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> বালিয়াডাঙ্গী সদর, ঠাকুরগাঁও, রংপুর, বাংলাদেশ</p>
+      </div>
+    </div>
+    <div class="policy-section">
+      <details>
+        <summary>শর্তাবলী এবং নীতি</summary>
+        <p><strong>শর্তাবলী</strong><br>আমাদের পরিষেবা ব্যবহার করার শর্তে আপনি যে নিয়মগুলি মেনে চলবেন তা এখানে বিস্তারিত বর্ণনা করা হয়েছে। পরিষেবা গ্রহণের শর্তাবলী: আপনি আমাদের পরিষেবা ব্যবহার করার মাধ্যমে এই শর্তাবলী সম্মত হন। এই শর্তাবলী সময়মতো আপডেট করা হতে পারে। আপনি পরিষেবা ব্যবহার করে আমাদের নীতিমালা এবং শর্তাবলী মেনে চলতে সম্মত হন। ব্যবহারকারীর দায়িত্ব: আপনি এই পরিষেবাগুলি শুধুমাত্র আইনি উদ্দেশ্যে ব্যবহার করতে রাজি আছেন। অবৈধ, অপমানজনক, বা অন্য কোন ক্ষতিকর কর্মকাণ্ডের জন্য আমাদের পরিষেবা ব্যবহার করা যাবে না। অধিকার এবং মালিকানা: আমাদের পরিষেবাগুলির সব সত্ত্বাধিকার এবং intellectual property আমাদের মালিকানাধীন। আপনি পরিষেবা ব্যবহার করার মাধ্যমে এই সম্পত্তির প্রতি সম্মান জানাতে সম্মত হন। বিক্রয় বা স্থানান্তর: আমরা আমাদের পরিষেবা বা কোনো অংশের বিক্রয় বা স্থানান্তর করার অধিকার রাখি। তবে আপনার সম্মতি ছাড়া এই শর্তাবলী পরিবর্তন করা হবে না। নির্দিষ্ট বাধ্যবাধকতা: কিছু ক্ষেত্রে, আমরা আপনার পরিষেবার অ্যাক্সেস সীমিত বা বাতিল করতে পারি যদি আপনি শর্তাবলী লঙ্ঘন করেন বা অন্য কোন আইনি বাধ্যবাধকতা থাকে।</p>
+      </details>
+    </div>
+    <div class="policy-section">
+      <details>
+        <summary>গোপনীয়তা নীতি</summary>
+        <p>আপনার তথ্যের গোপনীয়তা আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ। আমরা কীভাবে আপনার তথ্য সংগ্রহ করি: আমরা আপনার ব্যক্তিগত তথ্য বিভিন্ন উপায়ে সংগ্রহ করতে পারি, যেমন নিবন্ধন ফর্ম, যোগাযোগ ফর্ম, এবং আপনার সাইট ব্যবহারের মাধ্যমে। এটি আপনার নাম, ইমেল ঠিকানা, ফোন নম্বর এবং অন্যান্য সম্পর্কিত তথ্য হতে পারে। তথ্য ব্যবহারের উদ্দেশ্য: আমরা আপনার তথ্য ব্যবহার করতে পারি আপনার প্রশ্নের উত্তর দেওয়ার জন্য, আমাদের পরিষেবা উন্নত করার জন্য, এবং আপনার জন্য প্রাসঙ্গিক প্রচার এবং বিজ্ঞাপন প্রেরণ করার জন্য। তথ্য শেয়ারিং: আমরা আপনার ব্যক্তিগত তথ্য তৃতীয় পক্ষের সাথে শেয়ার করি না, সেগুলি কেবল আমাদের পরিষেবা প্রদানকারী অথবা আইনগত কারণে প্রয়োজন হলে। তথ্য সুরক্ষা: আমরা আপনার তথ্য সুরক্ষিত রাখতে এবং অবাঞ্ছিত প্রবেশের হাত থেকে রক্ষা করার জন্য যথাযথ নিরাপত্তা ব্যবস্থা গ্রহণ করি। আপনার অধিকার: আপনি আপনার তথ্য অ্যাক্সেস, সংশোধন বা মুছে ফেলার অধিকার রাখেন। যদি আপনার কোন প্রশ্ন থাকে বা আপনার ব্যক্তিগত তথ্য পরিবর্তন করতে চান, আমাদের সাথে যোগাযোগ করুন।</p>
+      </details>
+    </div>
+    <div class="footer-bottom">
+      <p>© ২০২৬ কৃষিপথ • সর্বস্বত্ব সংরক্ষিত &nbsp;|&nbsp; Powered by doyox</p>
+    </div>
+  </div>
+</footer>
 
 <script>
-  // Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); });
   }
@@ -263,7 +309,6 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // EmailJS (replace with your own keys)
     emailjs.init('YOUR_PUBLIC_KEY');
 
     let currentUser = null, currentProfile = null;
@@ -271,7 +316,6 @@
     let activeAdminTab = 'blog';
     let currentAnswerQuestionId = null;
 
-    // Mobile menu toggle
     document.getElementById('menuToggle').addEventListener('click', ()=> document.getElementById('navLinks').classList.toggle('active'));
     document.querySelectorAll('#navLinks a, #navLinks button, .notification-badge').forEach(el=> el.addEventListener('click', ()=>{
       if(window.innerWidth<=768) document.getElementById('navLinks').classList.remove('active');
@@ -338,7 +382,6 @@
       }
     }
 
-    // Auth modal
     let authMode='login'; const modal=document.getElementById('authModal');
     window.openAuth = (mode)=> {
       authMode=mode; document.getElementById('authTitle').textContent = mode==='login'?'লগইন':'রেজিস্টার';
@@ -361,7 +404,6 @@
       await supabase.auth.signOut(); currentUser=null; currentProfile=null; updateAuthUI(); navigateTo('home');
     });
 
-    // Forgot password flow
     document.getElementById('forgotPasswordLink').addEventListener('click', e=>{
       e.preventDefault();
       document.getElementById('authTitle').textContent = 'পাসওয়ার্ড রিসেট';
@@ -467,7 +509,6 @@
       alert('প্রশ্ন জমা হয়েছে'); loadForum();
     }
     
-    // Answer modal
     window.openAnswerModal = function(questionId) {
       if(!currentUser) { alert('উত্তর দিতে লগইন করুন।'); return; }
       if(currentProfile?.role !== 'expert' && currentProfile?.role !== 'admin') { alert('শুধুমাত্র কৃষিবিদ ও অ্যাডমিন উত্তর দিতে পারেন।'); return; }
@@ -551,7 +592,7 @@
       if(!currentUser) return navigateTo('home');
       document.getElementById('profileInfo').innerHTML = `<p><strong>নাম:</strong> ${currentProfile.name}</p><p><strong>ইমেইল:</strong> ${currentUser.email}</p><p><strong>ফোন:</strong> ${currentProfile.phone||'N/A'}</p><p><strong>রোল:</strong> ${currentProfile.role}</p>`;
       const { data: notifs } = await supabase.from('notifications').select('*').eq('user_id', currentUser.id).order('created_at', {ascending:false}).limit(5);
-      document.getElementById('notifList').innerHTML = notifs?.map(n=>`<p>🔔 ${n.message} <small>${new Date(n.created_at).toLocaleString()}</small></p>`).join('')||'<p>কোনো নোটিফিকেশন নেই</p>';
+      document.getElementById('notifList').innerHTML = notifs?.map(n=>`<p>🔔 ${n.message} <small>${new Date(n.created_at).toLocaleString()}</small></p>`).join('')||'<p>কোনো নোটিফিকেশন নেই</p>`;
       await supabase.from('notifications').update({ read: true }).eq('user_id', currentUser.id).eq('read', false);
       updateNotifBadge();
     }
@@ -586,16 +627,13 @@
       this.classList.add('active'); activeAdminTab = this.dataset.tab; loadAdminPanel();
     }));
 
-    // Approve item (generic)
     window.approveItem = async (table, id) => {
       const { data: item } = await supabase.from(table).select('*').eq('id', id).single();
       if (!item) return;
       await supabase.from(table).update({ approved: true }).eq('id', id);
-      // Notification to author
       if (item.user_id) {
         await supabase.from('notifications').insert([{ user_id: item.user_id, message: `✅ আপনার কন্টেন্ট (${table}) অনুমোদিত হয়েছে।` }]);
       }
-      // If product approved, notify all businessmen
       if (table === 'products') {
         const { data: businessmen } = await supabase.from('profiles').select('id').eq('role', 'businessman');
         if (businessmen) {
@@ -608,7 +646,6 @@
       refreshPublicPages(table);
     };
 
-    // Cancel item (delete and notify)
     window.cancelItem = async (table, id) => {
       if (!confirm('আপনি কি নিশ্চিত এটি বাতিল করতে চান?')) return;
       const { data: item } = await supabase.from(table).select('*').eq('id', id).single();
@@ -621,7 +658,6 @@
       refreshPublicPages(table);
     };
 
-    // Special approve for forum answers (they need expert notification)
     window.approveAnswer = async (answerId) => {
       const { data: answer } = await supabase.from('forum_answers').select('*').eq('id', answerId).single();
       if (!answer) return;
@@ -686,7 +722,6 @@
     }
     window.closeAnnouncement = () => { document.getElementById('announcePopup').style.display = 'none'; };
 
-    // Expose global functions
     window.navigateTo = navigateTo;
     window.uploadBlog = uploadBlog;
     window.uploadProduct = uploadProduct;
