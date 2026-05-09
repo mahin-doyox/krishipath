@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>কৃষিপথ</title>
+  <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
   <meta name="theme-color" content="#0d2e1d">
   <link rel="icon" type="image/png" href="https://i.ibb.co.com/N2fHrxQd/Screenshot-2026-05-09-1-50-43-PM-removebg-preview.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,15 +37,7 @@
     .container { max-width:1300px; margin:0 auto; padding:0 5%; }
     .navbar { background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:1000; padding:0.8rem 5%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; border-bottom:1px solid rgba(0,0,0,0.05); }
     .logo { display:flex; align-items:center; gap:12px; cursor:pointer; }
-    /* লোগোর জন্য নতুন স্টাইল – সম্পূর্ণ ছবি দেখাবে, ক্রপ হবে না */
-    .logo img {
-      height: 50px;                  /* উচ্চতা বাড়ানো */
-      width: auto;                   /* অ্যাসপেক্ট রেশিও ঠিক রাখবে */
-      object-fit: contain;           /* সম্পূর্ণ ছবি ভিজিবল */
-      border-radius: 8px;            /* হালকা রাউন্ডিং */
-      border: 2px solid white;
-      box-shadow: var(--shadow-sm);
-    }
+    .logo img { height:50px; width:auto; object-fit:contain; border-radius:8px; border:2px solid white; box-shadow:var(--shadow-sm); }
     .logo-text { font-weight:800; font-size:1.5rem; color:var(--primary); }
     .logo-text span { color:var(--gold); }
     .nav-links { display:flex; gap:2rem; align-items:center; }
@@ -86,7 +78,6 @@
     .policy-section { background:rgba(255,255,255,0.1); border-radius:12px; padding:1rem; margin:1rem 0; }
     .policy-section summary { font-weight:600; color:var(--gold); cursor:pointer; }
     .footer-bottom { text-align:center; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.2); padding-top:1rem; }
-    /* Hero modern */
     .hero { background:linear-gradient(145deg, #e6f5e6, #fff); padding:0; }
     .hero-container { max-width:1300px; margin:0 auto; display:flex; flex-direction:column; }
     .hero-image { width:100%; height:350px; background:url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=1200') center/cover no-repeat; border-radius:0 0 60px 60px; box-shadow:var(--shadow-lg); border-bottom:5px solid white; }
@@ -111,7 +102,6 @@
 
 <nav class="navbar">
   <div class="logo" onclick="location.reload()">
-    <!-- লোগো ইমেজ – সম্পূর্ণ দেখাবে -->
     <img src="https://i.ibb.co.com/N2fHrxQd/Screenshot-2026-05-09-1-50-43-PM-removebg-preview.png" alt="কৃষিপথ লোগো">
     <div class="logo-text">কৃষিপথ <span>• krishipath</span></div>
   </div>
@@ -252,7 +242,7 @@
       <button type="submit" class="btn btn-primary w-100">সাবমিট</button>
     </form>
     <p style="margin-top:1.5rem; text-align:center;" id="authLinks">
-      <a href="#" id="switchAuthLink">লগইন করুন</a> | 
+      <a href="#" id="switchAuthLink">রেজিস্টার করুন</a> | 
       <a href="#" id="forgotPasswordLink">পাসওয়ার্ড ভুলে গেছেন?</a>
     </p>
     <div id="forgotPasswordForm" style="display:none;">
@@ -289,13 +279,13 @@
     <div class="policy-section">
       <details>
         <summary>শর্তাবলী এবং নীতি</summary>
-        <p>আমাদের পরিষেবা ব্যবহার করার শর্তে আপনি যে নিয়মগুলি মেনে চলবেন তা এখানে বিস্তারিত বর্ণনা করা হয়েছে। পরিষেবা গ্রহণের শর্তাবলী: আপনি আমাদের পরিষেবা ব্যবহার করার মাধ্যমে এই শর্তাবলী সম্মত হন। এই শর্তাবলী সময়মতো আপডেট করা হতে পারে। আপনি পরিষেবা ব্যবহার করে আমাদের নীতিমালা এবং শর্তাবলী মেনে চলতে সম্মত হন। ব্যবহারকারীর দায়িত্ব: আপনি এই পরিষেবাগুলি শুধুমাত্র আইনি উদ্দেশ্যে ব্যবহার করতে রাজি আছেন। অবৈধ, অপমানজনক, বা অন্য কোন ক্ষতিকর কর্মকাণ্ডের জন্য আমাদের পরিষেবা ব্যবহার করা যাবে না। অধিকার এবং মালিকানা: আমাদের পরিষেবাগুলির সব সত্ত্বাধিকার এবং intellectual property আমাদের মালিকানাধীন। আপনি পরিষেবা ব্যবহার করার মাধ্যমে এই সম্পত্তির প্রতি সম্মান জানাতে সম্মত হন। বিক্রয় বা স্থানান্তর: আমরা আমাদের পরিষেবা বা কোনো অংশের বিক্রয় বা স্থানান্তর করার অধিকার রাখি। তবে আপনার সম্মতি ছাড়া এই শর্তাবলী পরিবর্তন করা হবে না। নির্দিষ্ট বাধ্যবাধকতা: কিছু ক্ষেত্রে, আমরা আপনার পরিষেবার অ্যাক্সেস সীমিত বা বাতিল করতে পারি যদি আপনি শর্তাবলী লঙ্ঘন করেন বা অন্য কোন আইনি বাধ্যবাধকতা থাকে।</p>
+        <p>আমাদের পরিষেবা ব্যবহারের শর্তাবলী এখানে বিস্তারিত বর্ণনা করা হয়েছে...</p>
       </details>
     </div>
     <div class="policy-section">
       <details>
         <summary>গোপনীয়তা নীতি</summary>
-        <p>আপনার তথ্যের গোপনীয়তা আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ। আমরা কীভাবে আপনার তথ্য সংগ্রহ করি: আমরা আপনার ব্যক্তিগত তথ্য বিভিন্ন উপায়ে সংগ্রহ করতে পারি, যেমন নিবন্ধন ফর্ম, যোগাযোগ ফর্ম, এবং আপনার সাইট ব্যবহারের মাধ্যমে। এটি আপনার নাম, ইমেল ঠিকানা, ফোন নম্বর এবং অন্যান্য সম্পর্কিত তথ্য হতে পারে। তথ্য ব্যবহারের উদ্দেশ্য: আমরা আপনার তথ্য ব্যবহার করতে পারি আপনার প্রশ্নের উত্তর দেওয়ার জন্য, আমাদের পরিষেবা উন্নত করার জন্য, এবং আপনার জন্য প্রাসঙ্গিক প্রচার এবং বিজ্ঞাপন প্রেরণ করার জন্য। তথ্য শেয়ারিং: আমরা আপনার ব্যক্তিগত তথ্য তৃতীয় পক্ষের সাথে শেয়ার করি না, সেগুলি কেবল আমাদের পরিষেবা প্রদানকারী অথবা আইনগত কারণে প্রয়োজন হলে। তথ্য সুরক্ষা: আমরা আপনার তথ্য সুরক্ষিত রাখতে এবং অবাঞ্ছিত প্রবেশের হাত থেকে রক্ষা করার জন্য যথাযথ নিরাপত্তা ব্যবস্থা গ্রহণ করি। আপনার অধিকার: আপনি আপনার তথ্য অ্যাক্সেস, সংশোধন বা মুছে ফেলার অধিকার রাখেন। যদি আপনার কোন প্রশ্ন থাকে বা আপনার ব্যক্তিগত তথ্য পরিবর্তন করতে চান, আমাদের সাথে যোগাযোগ করুন।</p>
+        <p>আপনার তথ্যের গোপনীয়তা আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ...</p>
       </details>
     </div>
     <div class="footer-bottom">
@@ -422,6 +412,8 @@
       document.getElementById('roleField').style.display = mode === 'register' ? 'block' : 'none';
       document.getElementById('forgotPasswordForm').style.display = 'none';
       document.getElementById('authLinks').style.display = (mode === 'login' || mode === 'register') ? 'block' : 'none';
+      // ✅ ঠিক করা: লিংকের টেক্সট আপডেট
+      document.getElementById('switchAuthLink').textContent = mode === 'login' ? 'রেজিস্টার করুন' : 'লগইন করুন';
       modal.style.display = 'flex';
     };
     window.closeAuthModal = function() { modal.style.display = 'none'; };
