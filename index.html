@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
-  <!-- PWA Manifest -->
+  <!-- PWA Manifest - replaced with inline JSON to avoid file not found -->
   <link rel="manifest" href="data:application/json,%7B%22name%22:%22%E0%A6%95%E0%A7%83%E0%A6%B7%E0%A6%BF%E0%A6%AA%E0%A6%A5%22,%22short_name%22:%22krishipath%22,%22start_url%22:%22.%2F%22,%22display%22:%22standalone%22,%22background_color%22:%22%230a2f1f%22,%22theme_color%22:%22%232d6a4f%22,%22icons%22:%5B%7B%22src%22:%22https://i.ibb.co/album/krishipath-logo.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22%7D%5D%7D">
   <meta name="theme-color" content="#2d6a4f">
   <link rel="apple-touch-icon" href="https://i.ibb.co/album/krishipath-logo.png">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://i.ibb.co/album/krishipath-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -83,6 +85,11 @@
     .pending-item { background:white; padding:1.5rem; border-radius:24px; box-shadow:var(--shadow-sm); margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
 
     .detail-box { background:#f8fafc; padding:1rem; border-radius:16px; margin-top:1rem; border:1px solid #e2e8f0; white-space:pre-wrap; word-break:break-word; }
+
+    /* Modal for answering */
+    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; }
+    .modal-content { background:white; padding:2rem; border-radius:24px; max-width:500px; width:90%; box-shadow:var(--shadow-lg); }
+    .modal-close { float:right; background:none; border:none; font-size:1.5rem; cursor:pointer; }
 
     @media (max-width:768px) {
       .menu-toggle { display:block; }
@@ -185,7 +192,7 @@
         <button class="admin-tab active" data-tab="blog">ব্লগ</button>
         <button class="admin-tab" data-tab="products">পণ্য</button>
         <button class="admin-tab" data-tab="prices">বাজার দর</button>
-        <button class="admin-tab" data-tab="forum">প্রশ্নোত্তর</button>
+        <button class="admin-tab" data-tab="answers">ফোরাম উত্তর</button>
         <button class="admin-tab" data-tab="notification">🔔 নোটিফিকেশন</button>
         <button class="admin-tab" data-tab="email">📧 ইমেইল</button>
         <button class="admin-tab" data-tab="announcement">📢 ঘোষণা</button>
@@ -195,6 +202,16 @@
   </div>
 </main>
 
+<!-- Answer Modal -->
+<div id="answerModal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeAnswerModal()">&times;</button>
+    <h3>উত্তর লিখুন</h3>
+    <textarea id="answerText" rows="5" class="form-control" placeholder="আপনার উত্তর"></textarea>
+    <button class="btn btn-primary w-100 mt-3" onclick="submitAnswer()">জমা দিন</button>
+  </div>
+</div>
+
 <div id="authModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); z-index:2000; align-items:center; justify-content:center; padding:1rem;">
   <div class="form-card" style="position:relative;">
     <button onclick="closeAuthModal()" style="position:absolute; right:20px; top:20px; background:none; border:none; font-size:1.8rem; cursor:pointer;">&times;</button>
@@ -203,6 +220,11 @@
       <div class="form-group"><label>ইমেইল</label><input type="email" id="authEmail" class="form-control" required></div>
       <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="authPassword" class="form-control" required></div>
       <div class="form-group" id="nameField" style="display:none;"><label>নাম</label><input type="text" id="authName" class="form-control"></div>
+      <div class="form-group" id="phoneField" style="display:none;">
+        <label>ফোন নম্বর</label>
+        <input type="tel" id="authPhone" class="form-control" placeholder="+8801XXXXXXXXX">
+        <div class="field-hint"><i class="fas fa-info-circle"></i> আন্তর্জাতিক ফরম্যাট: +8801XXXXXXXXX</div>
+      </div>
       <div class="form-group" id="roleField" style="display:none;"><label>রোল</label>
         <select id="authRole" class="form-control">
           <option value="farmer">কৃষক</option>
@@ -213,11 +235,10 @@
       </div>
       <button type="submit" class="btn btn-primary w-100">সাবমিট</button>
     </form>
-    <p style="margin-top:1.5rem; text-align:center;">
+    <p style="margin-top:1.5rem; text-align:center;" id="authLinks">
       <a href="#" id="switchAuthLink">রেজিস্টার করুন</a> | 
       <a href="#" id="forgotPasswordLink">পাসওয়ার্ড ভুলে গেছেন?</a>
     </p>
-    <!-- Forgot Password Form (hidden by default) -->
     <div id="forgotPasswordForm" style="display:none;">
       <hr style="margin:1.5rem 0; border-color:#e2e8f0;">
       <h3 style="margin-bottom:1rem;">পাসওয়ার্ড রিসেট</h3>
@@ -242,12 +263,13 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // EmailJS configuration (replace with your own)
-    emailjs.init('YOUR_PUBLIC_KEY'); // TODO: Replace
+    // EmailJS (replace with your own keys)
+    emailjs.init('YOUR_PUBLIC_KEY');
 
     let currentUser = null, currentProfile = null;
     let currentBlogCat = 'all';
     let activeAdminTab = 'blog';
+    let currentAnswerQuestionId = null;
 
     // Mobile menu toggle
     document.getElementById('menuToggle').addEventListener('click', ()=> document.getElementById('navLinks').classList.toggle('active'));
@@ -298,32 +320,18 @@
     function renderUploadForms() {
       const bUp=document.getElementById('blogUpload'), fUp=document.getElementById('forumUpload'), bazarUp=document.getElementById('bazarUpload');
       if(currentUser) {
-        // Role-based upload forms
         if(currentProfile?.role === 'expert' || currentProfile?.role === 'admin') {
           bUp.innerHTML = `<div class="form-card"><h3>ব্লগ লিখুন</h3><input id="blogTitle" placeholder="শিরোনাম" class="form-control"><select id="blogCat" class="form-control mt-3"><option value="ফসল">ফসল</option><option value="মৎস্য">মৎস্য</option><option value="পশুপালন">পশুপালন</option><option value="জৈব সার">জৈব সার</option></select><textarea id="blogContent" rows="5" class="form-control mt-3" placeholder="আপনার লেখা"></textarea><button class="btn btn-primary w-100 mt-3" onclick="uploadBlog()">প্রকাশ করুন</button></div>`;
         } else {
           bUp.innerHTML = `<p class="text-center">শুধুমাত্র কৃষিবিদ ও অ্যাডমিন ব্লগ লিখতে পারেন।</p>`;
         }
 
-        // Forum: anyone can ask, but we'll allow all authenticated for simplicity; answers we'll restrict to expert/admin
         fUp.innerHTML = `<div class="form-card"><h3>প্রশ্ন জিজ্ঞাসা</h3><input id="qTitle" placeholder="বিষয়" class="form-control"><textarea id="qBody" rows="4" class="form-control mt-3" placeholder="বিস্তারিত"></textarea><button class="btn btn-primary w-100 mt-3" onclick="askQuestion()">জিজ্ঞাসা করুন</button></div>`;
 
-        // Krishibazar: only farmer (and admin) can post products
         if(currentProfile?.role === 'farmer' || currentProfile?.role === 'admin') {
           bazarUp.innerHTML = `<div class="form-card"><h3>পণ্য বিক্রি করুন</h3><input id="prodName" placeholder="পণ্যের নাম" class="form-control"><textarea id="prodDesc" rows="3" class="form-control mt-3" placeholder="বিবরণ"></textarea><input type="file" id="prodImage" accept="image/*" class="form-control mt-3"><button class="btn btn-primary w-100 mt-3" onclick="uploadProduct()">পোস্ট করুন</button></div>`;
         } else {
           bazarUp.innerHTML = `<p class="text-center">শুধুমাত্র কৃষকগণ পণ্য বিক্রির পোস্ট দিতে পারেন।</p>`;
-        }
-
-        // Agent price upload form (only agent and admin)
-        if(currentProfile?.role === 'agent' || currentProfile?.role === 'admin') {
-          const priceUp = document.getElementById('priceUpload');
-          if(priceUp) {
-            priceUp.innerHTML = `<div class="form-card"><h3>বাজার দর যুক্ত করুন</h3><input id="agentCrop" placeholder="ফসলের নাম" class="form-control"><input id="agentPrice" type="number" placeholder="দাম (টাকা/কেজি)" class="form-control mt-3"><input id="agentLocation" placeholder="এলাকা" class="form-control mt-3"><button class="btn btn-primary w-100 mt-3" onclick="uploadAgentPrice()">যুগ করুন</button></div>`;
-          }
-        } else {
-          const priceUp = document.getElementById('priceUpload');
-          if(priceUp) priceUp.innerHTML = `<p class="text-center">শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যুক্ত করতে পারেন।</p>`;
         }
       } else {
         bUp.innerHTML = fUp.innerHTML = bazarUp.innerHTML = `<p class="text-center">কন্টেন্ট জমা দিতে <a href="#" onclick="openAuth('login')">লগইন</a> করুন।</p>`;
@@ -335,13 +343,18 @@
     window.openAuth = (mode)=> {
       authMode=mode; document.getElementById('authTitle').textContent = mode==='login'?'লগইন':'রেজিস্টার';
       document.getElementById('nameField').style.display = mode==='register'?'block':'none';
+      document.getElementById('phoneField').style.display = mode==='register'?'block':'none';
       document.getElementById('roleField').style.display = mode==='register'?'block':'none';
       document.getElementById('forgotPasswordForm').style.display = 'none';
+      document.getElementById('authLinks').style.display = mode==='register'||mode==='login'?'block':'none';
       modal.style.display='flex';
     };
     window.closeAuthModal = ()=> modal.style.display='none';
 
-    document.getElementById('switchAuthLink').addEventListener('click', e=>{ e.preventDefault(); openAuth(authMode==='login'?'register':'login'); });
+    document.getElementById('switchAuthLink').addEventListener('click', e=>{
+      e.preventDefault();
+      openAuth(authMode==='login'?'register':'login');
+    });
     document.getElementById('loginBtn').addEventListener('click', ()=> openAuth('login'));
     document.getElementById('registerBtn').addEventListener('click', ()=> openAuth('register'));
     document.getElementById('logoutBtn').addEventListener('click', async ()=>{
@@ -353,11 +366,20 @@
       e.preventDefault();
       document.getElementById('authTitle').textContent = 'পাসওয়ার্ড রিসেট';
       document.getElementById('nameField').style.display = 'none';
+      document.getElementById('phoneField').style.display = 'none';
       document.getElementById('roleField').style.display = 'none';
       document.getElementById('authForm').style.display = 'none';
+      document.getElementById('authLinks').style.display = 'none';
       document.getElementById('forgotPasswordForm').style.display = 'block';
     });
-    document.getElementById('backToLoginLink').addEventListener('click', e=>{ e.preventDefault(); openAuth('login'); });
+    document.getElementById('backToLoginLink').addEventListener('click', e=>{
+      e.preventDefault();
+      document.getElementById('forgotPasswordForm').style.display = 'none';
+      document.getElementById('authForm').style.display = 'block';
+      document.getElementById('authLinks').style.display = 'block';
+      document.getElementById('authTitle').textContent = 'লগইন';
+      authMode = 'login';
+    });
     document.getElementById('sendResetLinkBtn').addEventListener('click', async ()=>{
       const email = document.getElementById('resetEmail').value;
       if (!email) return alert('ইমেইল দিন');
@@ -371,12 +393,12 @@
     document.getElementById('authForm').addEventListener('submit', async e=>{
       e.preventDefault();
       const email = document.getElementById('authEmail').value, password = document.getElementById('authPassword').value;
-      const name = document.getElementById('authName')?.value, role = document.getElementById('authRole')?.value;
+      const name = document.getElementById('authName')?.value, phone = document.getElementById('authPhone')?.value, role = document.getElementById('authRole')?.value;
       if(authMode==='register') {
         const { data, error } = await supabase.auth.signUp({ email, password });
         if(error) return alert('রেজিস্ট্রেশন ত্রুটি: '+error.message);
         if(data.user) {
-          await supabase.from('profiles').insert([{ id: data.user.id, name, role }]);
+          await supabase.from('profiles').insert([{ id: data.user.id, name, phone, role }]);
           alert('রেজিস্ট্রেশন সফল! এখন লগইন করুন।'); closeAuthModal();
         }
       } else {
@@ -429,28 +451,46 @@
       const list = document.getElementById('forumList');
       list.innerHTML = '';
       for (let q of (questions || [])) {
-        const { data: answers } = await supabase.from('forum_answers').select('*').eq('question_id', q.id).order('created_at', {ascending:true});
+        const { data: answers } = await supabase.from('forum_answers').select('*').eq('question_id', q.id).eq('approved', true).order('created_at', {ascending:true});
         const card = document.createElement('div');
         card.className = 'feature-card';
         card.innerHTML = `<h4>${q.title}</h4><p>${q.body}</p><small>— ${q.user_name}</small>
           <div class="mt-3"><strong>উত্তর (${answers?.length||0}):</strong> ${answers?.map(a=>`<p>${a.answer} <small>— ${a.user_name}</small></p>`).join('')||'কোনো উত্তর নেই'}</div>
-          <button class="btn btn-outline btn-sm mt-2" onclick="answerQuestion(${q.id})">উত্তর দিন</button>`;
+          <button class="btn btn-outline btn-sm mt-2" onclick="openAnswerModal(${q.id})">উত্তর দিন</button>`;
         list.appendChild(card);
       }
     }
     async function askQuestion() {
       const title = document.getElementById('qTitle').value, body = document.getElementById('qBody').value;
       if(!title||!body) return alert('বিষয় ও বিবরণ দিন');
-      // Auto-approved for now, admin can moderate later
       await supabase.from('forum_questions').insert([{ title, body, user_id: currentUser.id, user_name: currentProfile.name, approved: true }]);
       alert('প্রশ্ন জমা হয়েছে'); loadForum();
     }
-    window.answerQuestion = async function(qid) {
-      if(!currentUser) return alert('উত্তর দিতে লগইন করুন।');
-      if(currentProfile?.role !== 'expert' && currentProfile?.role !== 'admin') return alert('শুধুমাত্র কৃষিবিদ ও অ্যাডমিন উত্তর দিতে পারেন।');
-      const answer = prompt('আপনার উত্তর লিখুন:');
-      if(!answer) return;
-      await supabase.from('forum_answers').insert([{ question_id: qid, user_id: currentUser.id, user_name: currentProfile.name, answer }]);
+    
+    // Answer modal
+    window.openAnswerModal = function(questionId) {
+      if(!currentUser) { alert('উত্তর দিতে লগইন করুন।'); return; }
+      if(currentProfile?.role !== 'expert' && currentProfile?.role !== 'admin') { alert('শুধুমাত্র কৃষিবিদ ও অ্যাডমিন উত্তর দিতে পারেন।'); return; }
+      currentAnswerQuestionId = questionId;
+      document.getElementById('answerModal').style.display = 'flex';
+    };
+    window.closeAnswerModal = function() {
+      document.getElementById('answerModal').style.display = 'none';
+      document.getElementById('answerText').value = '';
+      currentAnswerQuestionId = null;
+    };
+    window.submitAnswer = async function() {
+      const body = document.getElementById('answerText').value.trim();
+      if(!body) return;
+      await supabase.from('forum_answers').insert([{ 
+        question_id: currentAnswerQuestionId, 
+        user_id: currentUser.id, 
+        user_name: currentProfile.name, 
+        answer: body, 
+        approved: false 
+      }]);
+      alert('উত্তর জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
+      closeAnswerModal();
       loadForum();
     };
 
@@ -500,19 +540,16 @@
     }
     async function uploadAgentPrice() {
       if(currentProfile?.role !== 'agent' && currentProfile?.role !== 'admin') return alert('শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যোগ করতে পারেন।');
-      const crop = document.getElementById('agentCrop').value;
-      const price = document.getElementById('agentPrice').value;
-      const location = document.getElementById('agentLocation').value;
+      const crop = document.getElementById('agentCrop').value, price = document.getElementById('agentPrice').value, location = document.getElementById('agentLocation').value;
       if(!crop || !price || !location) return alert('সব তথ্য পূরণ করুন');
-      await supabase.from('agent_prices').insert([{ crop, price: parseFloat(price), location, user_id: currentUser.id, user_name: currentProfile.name, approved: false }]);
-      alert('দর জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
-      loadPrices();
+      await supabase.from('agent_prices').insert([{ crop, price:parseFloat(price), location, user_id:currentUser.id, user_name:currentProfile.name, approved:false }]);
+      alert('জমা হয়েছে'); loadPrices();
     }
 
     // Profile
     async function loadProfile() {
       if(!currentUser) return navigateTo('home');
-      document.getElementById('profileInfo').innerHTML = `<p><strong>নাম:</strong> ${currentProfile.name}</p><p><strong>ইমেইল:</strong> ${currentUser.email}</p><p><strong>রোল:</strong> ${currentProfile.role}</p>`;
+      document.getElementById('profileInfo').innerHTML = `<p><strong>নাম:</strong> ${currentProfile.name}</p><p><strong>ইমেইল:</strong> ${currentUser.email}</p><p><strong>ফোন:</strong> ${currentProfile.phone||'N/A'}</p><p><strong>রোল:</strong> ${currentProfile.role}</p>`;
       const { data: notifs } = await supabase.from('notifications').select('*').eq('user_id', currentUser.id).order('created_at', {ascending:false}).limit(5);
       document.getElementById('notifList').innerHTML = notifs?.map(n=>`<p>🔔 ${n.message} <small>${new Date(n.created_at).toLocaleString()}</small></p>`).join('')||'<p>কোনো নোটিফিকেশন নেই</p>';
       await supabase.from('notifications').update({ read: true }).eq('user_id', currentUser.id).eq('read', false);
@@ -525,27 +562,16 @@
       const container = document.getElementById('adminContent');
       if(activeAdminTab==='blog') {
         const { data } = await supabase.from('blogs').select('*').eq('approved', false);
-        container.innerHTML = data?.map(b=>`<div class="pending-item"><div><strong>${b.title}</strong> (${b.category}) by ${b.user_name}<br><small>${b.content.substring(0,100)}...</small></div><button class="btn btn-primary btn-sm" onclick="approveItem('blogs',${b.id})">অনুমোদন</button></div>`).join('')||'<p>কোনো পেন্ডিং ব্লগ নেই</p>';
+        container.innerHTML = data?.map(b=>`<div class="pending-item"><div><strong>${b.title}</strong> (${b.category}) by ${b.user_name}</div><div><button class="btn btn-primary btn-sm" onclick="approveItem('blogs',${b.id})">অনুমোদন</button><button class="btn btn-outline btn-sm" onclick="cancelItem('blogs',${b.id})">বাতিল</button></div></div>`).join('')||'<p>কোনো পেন্ডিং নেই</p>';
       } else if(activeAdminTab==='products') {
         const { data } = await supabase.from('products').select('*').eq('approved', false);
-        container.innerHTML = data?.map(p=>`<div class="pending-item"><div><strong>${p.name}</strong> by ${p.user_name}<br><small>${p.description?.substring(0,100)}</small></div><button class="btn btn-primary btn-sm" onclick="approveItem('products',${p.id})">অনুমোদন</button></div>`).join('')||'<p>কোনো পেন্ডিং পণ্য নেই</p>';
+        container.innerHTML = data?.map(p=>`<div class="pending-item"><div><strong>${p.name}</strong> by ${p.user_name}</div><div><button class="btn btn-primary btn-sm" onclick="approveItem('products',${p.id})">অনুমোদন</button><button class="btn btn-outline btn-sm" onclick="cancelItem('products',${p.id})">বাতিল</button></div></div>`).join('')||'<p>কোনো পেন্ডিং নেই</p>';
       } else if(activeAdminTab==='prices') {
         const { data } = await supabase.from('agent_prices').select('*').eq('approved', false);
-        container.innerHTML = data?.map(p=>`<div class="pending-item"><div>${p.crop} (${p.location}) — ${p.price} টাকা by ${p.user_name}</div><button class="btn btn-primary btn-sm" onclick="approveItem('agent_prices',${p.id})">অনুমোদন</button></div>`).join('')||'<p>কোনো পেন্ডিং দর নেই</p>';
-      } else if(activeAdminTab==='forum') {
-        const { data: questions } = await supabase.from('forum_questions').select('*').order('created_at', {ascending:false});
-        container.innerHTML = '';
-        for (let q of (questions || [])) {
-          const { data: answers } = await supabase.from('forum_answers').select('*').eq('question_id', q.id);
-          const card = document.createElement('div');
-          card.className = 'pending-item';
-          card.innerHTML = `<div><strong>${q.title}</strong> by ${q.user_name}<br><small>${q.body}</small><br>উত্তর: ${answers?.length||0}</div>
-            <button class="btn btn-outline btn-sm" onclick="toggleDetail('forum-detail-${q.id}')">বিস্তারিত</button>
-            <div id="forum-detail-${q.id}" class="detail-box" style="display:none;">
-              ${answers?.map(a=>`<p>${a.answer} <small>— ${a.user_name}</small></p>`).join('')||'কোনো উত্তর নেই'}
-            </div>`;
-          container.appendChild(card);
-        }
+        container.innerHTML = data?.map(p=>`<div class="pending-item"><div>${p.crop} (${p.location}) — ${p.price} টাকা by ${p.user_name}</div><div><button class="btn btn-primary btn-sm" onclick="approveItem('agent_prices',${p.id})">অনুমোদন</button><button class="btn btn-outline btn-sm" onclick="cancelItem('agent_prices',${p.id})">বাতিল</button></div></div>`).join('')||'<p>কোনো পেন্ডিং নেই</p>';
+      } else if(activeAdminTab==='answers') {
+        const { data: answers } = await supabase.from('forum_answers').select('*').eq('approved', false).order('created_at', {ascending:false});
+        container.innerHTML = answers?.map(a=>`<div class="pending-item"><div><strong>উত্তর:</strong> ${a.answer.substring(0,100)}...<br><small> দ্বারা ${a.user_name}</small></div><div><button class="btn btn-primary btn-sm" onclick="approveAnswer(${a.id})">অনুমোদন</button><button class="btn btn-outline btn-sm" onclick="cancelItem('forum_answers',${a.id})">বাতিল</button></div></div>`).join('')||'<p>কোনো পেন্ডিং উত্তর নেই</p>';
       } else if(activeAdminTab==='notification') {
         container.innerHTML = `<div class="form-card"><h3>🔔 সকলকে নোটিফিকেশন পাঠান</h3><textarea id="notifMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendAdminNotification()">পাঠান</button></div>`;
       } else if(activeAdminTab==='email') {
@@ -560,21 +586,61 @@
       this.classList.add('active'); activeAdminTab = this.dataset.tab; loadAdminPanel();
     }));
 
-    window.toggleDetail = (id) => {
-      const el = document.getElementById(id);
-      if(el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-    };
-
+    // Approve item (generic)
     window.approveItem = async (table, id) => {
+      const { data: item } = await supabase.from(table).select('*').eq('id', id).single();
+      if (!item) return;
       await supabase.from(table).update({ approved: true }).eq('id', id);
+      // Notification to author
+      if (item.user_id) {
+        await supabase.from('notifications').insert([{ user_id: item.user_id, message: `✅ আপনার কন্টেন্ট (${table}) অনুমোদিত হয়েছে।` }]);
+      }
+      // If product approved, notify all businessmen
+      if (table === 'products') {
+        const { data: businessmen } = await supabase.from('profiles').select('id').eq('role', 'businessman');
+        if (businessmen) {
+          const notifications = businessmen.map(b => ({ user_id: b.id, message: `📢 কৃষিবাজারে নতুন পণ্য: ${item.name}` }));
+          await supabase.from('notifications').insert(notifications);
+        }
+      }
       alert('অনুমোদিত হয়েছে');
       loadAdminPanel();
-      // Reload public pages if visible
-      const activePage = document.querySelector('.page.active').id;
-      if(table==='blogs' && activePage==='blog') loadBlogs();
-      if(table==='products' && activePage==='bazar') loadBazar();
-      if(table==='agent_prices' && activePage==='prices') loadPrices();
+      refreshPublicPages(table);
     };
+
+    // Cancel item (delete and notify)
+    window.cancelItem = async (table, id) => {
+      if (!confirm('আপনি কি নিশ্চিত এটি বাতিল করতে চান?')) return;
+      const { data: item } = await supabase.from(table).select('*').eq('id', id).single();
+      if (item && item.user_id) {
+        await supabase.from('notifications').insert([{ user_id: item.user_id, message: `❌ আপনার কন্টেন্ট (${table}) বাতিল করা হয়েছে।` }]);
+      }
+      await supabase.from(table).delete().eq('id', id);
+      alert('বাতিল করা হয়েছে');
+      loadAdminPanel();
+      refreshPublicPages(table);
+    };
+
+    // Special approve for forum answers (they need expert notification)
+    window.approveAnswer = async (answerId) => {
+      const { data: answer } = await supabase.from('forum_answers').select('*').eq('id', answerId).single();
+      if (!answer) return;
+      await supabase.from('forum_answers').update({ approved: true }).eq('id', answerId);
+      if (answer.user_id) {
+        await supabase.from('notifications').insert([{ user_id: answer.user_id, message: `✅ আপনার উত্তর অনুমোদিত হয়েছে।` }]);
+      }
+      alert('উত্তর অনুমোদিত');
+      loadAdminPanel();
+      loadForum();
+    };
+
+    function refreshPublicPages(table) {
+      const activePage = document.querySelector('.page.active').id;
+      if (table === 'blogs' && activePage === 'blog') loadBlogs();
+      if (table === 'products' && activePage === 'bazar') loadBazar();
+      if (table === 'agent_prices' && activePage === 'prices') loadPrices();
+      if (table === 'forum_answers' && activePage === 'forum') loadForum();
+    }
 
     window.sendAdminNotification = async ()=>{
       const msg = document.getElementById('notifMsg').value;
@@ -587,7 +653,6 @@
     window.sendEmailToAll = async ()=>{
       const msg = document.getElementById('emailMsg').value;
       if(!msg) return alert('মেসেজ লিখুন');
-      // This requires EmailJS template. Replace with your template IDs.
       const { data: users } = await supabase.from('profiles').select('email, name');
       let count = 0;
       for(let u of users) {
@@ -619,7 +684,7 @@
         document.getElementById('announcePopup').style.display = 'flex';
       }
     }
-    window.closeAnnouncement = function() { document.getElementById('announcePopup').style.display = 'none'; };
+    window.closeAnnouncement = () => { document.getElementById('announcePopup').style.display = 'none'; };
 
     // Expose global functions
     window.navigateTo = navigateTo;
@@ -627,9 +692,9 @@
     window.uploadProduct = uploadProduct;
     window.uploadAgentPrice = uploadAgentPrice;
     window.askQuestion = askQuestion;
-    window.answerQuestion = answerQuestion;
     window.openAuth = openAuth;
     window.closeAuthModal = closeAuthModal;
+    window.closeAnnouncement = closeAnnouncement;
 
     renderUploadForms();
   })();
