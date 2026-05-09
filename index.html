@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>কৃষিপথ • কৃষির ডিজিটাল ঠিকানা</title>
-  <!-- PWA Manifest (fixed start_url) -->
-  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%E0%A6%95%E0%A7%83%E0%A6%B7%E0%A6%BF%E0%A6%AA%E0%A6%A5%22%2C%22short_name%22%3A%22krishipath%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a2f1f%22%2C%22theme_color%22%3A%22%232d6a4f%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fi.ibb.co%2Falbum%2Fkrishipath-logo.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#2d6a4f">
   <link rel="apple-touch-icon" href="https://i.ibb.co/album/krishipath-logo.png">
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://i.ibb.co/album/krishipath-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,12 +84,10 @@
 
     .detail-box { background:#f8fafc; padding:1rem; border-radius:16px; margin-top:1rem; border:1px solid #e2e8f0; white-space:pre-wrap; word-break:break-word; }
 
-    /* Modal styles */
     .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; }
     .modal-content { background:white; padding:2rem; border-radius:24px; max-width:500px; width:90%; box-shadow:var(--shadow-lg); }
     .modal-close { float:right; background:none; border:none; font-size:1.5rem; cursor:pointer; }
 
-    /* Footer */
     footer { background:var(--primary); color:white; padding:3rem 5% 1rem; margin-top:4rem; border-radius:40px 40px 0 0; }
     .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2rem; margin-bottom:2rem; }
     .footer-col h4 { color:var(--gold); margin-bottom:1rem; }
@@ -300,7 +296,6 @@
 </footer>
 
 <script>
-  // Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); });
   }
@@ -310,14 +305,13 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    emailjs.init('YOUR_PUBLIC_KEY'); // আপনার নিজস্ব পাবলিক কী দিন
+    emailjs.init('YOUR_PUBLIC_KEY');
 
     let currentUser = null, currentProfile = null;
     let currentBlogCat = 'all';
     let activeAdminTab = 'blog';
     let currentAnswerQuestionId = null;
 
-    // Mobile menu toggle
     document.getElementById('menuToggle').addEventListener('click', ()=> document.getElementById('navLinks').classList.toggle('active'));
     document.querySelectorAll('#navLinks a, #navLinks button, .notification-badge').forEach(el=> el.addEventListener('click', ()=>{
       if(window.innerWidth<=768) document.getElementById('navLinks').classList.remove('active');
@@ -371,9 +365,7 @@
         } else {
           bUp.innerHTML = `<p class="text-center">শুধুমাত্র কৃষিবিদ ও অ্যাডমিন ব্লগ লিখতে পারেন।</p>`;
         }
-
         fUp.innerHTML = `<div class="form-card"><h3>প্রশ্ন জিজ্ঞাসা</h3><input id="qTitle" placeholder="বিষয়" class="form-control"><textarea id="qBody" rows="4" class="form-control mt-3" placeholder="বিস্তারিত"></textarea><button class="btn btn-primary w-100 mt-3" onclick="askQuestion()">জিজ্ঞাসা করুন</button></div>`;
-
         if(currentProfile?.role === 'farmer' || currentProfile?.role === 'admin') {
           bazarUp.innerHTML = `<div class="form-card"><h3>পণ্য বিক্রি করুন</h3><input id="prodName" placeholder="পণ্যের নাম" class="form-control"><textarea id="prodDesc" rows="3" class="form-control mt-3" placeholder="বিবরণ"></textarea><input type="file" id="prodImage" accept="image/*" class="form-control mt-3"><button class="btn btn-primary w-100 mt-3" onclick="uploadProduct()">পোস্ট করুন</button></div>`;
         } else {
@@ -396,15 +388,10 @@
     };
     window.closeAuthModal = ()=> modal.style.display='none';
 
-    document.getElementById('switchAuthLink').addEventListener('click', e=>{
-      e.preventDefault();
-      openAuth(authMode==='login'?'register':'login');
-    });
+    document.getElementById('switchAuthLink').addEventListener('click', e=>{ e.preventDefault(); openAuth(authMode==='login'?'register':'login'); });
     document.getElementById('loginBtn').addEventListener('click', ()=> openAuth('login'));
     document.getElementById('registerBtn').addEventListener('click', ()=> openAuth('register'));
-    document.getElementById('logoutBtn').addEventListener('click', async ()=>{
-      await supabase.auth.signOut(); currentUser=null; currentProfile=null; updateAuthUI(); navigateTo('home');
-    });
+    document.getElementById('logoutBtn').addEventListener('click', async ()=>{ await supabase.auth.signOut(); currentUser=null; currentProfile=null; updateAuthUI(); navigateTo('home'); });
 
     document.getElementById('forgotPasswordLink').addEventListener('click', e=>{
       e.preventDefault();
@@ -427,9 +414,7 @@
     document.getElementById('sendResetLinkBtn').addEventListener('click', async ()=>{
       const email = document.getElementById('resetEmail').value;
       if (!email) return alert('ইমেইল দিন');
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/?reset=true'
-      });
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/?reset=true' });
       if (error) alert('ত্রুটি: ' + error.message);
       else { alert('পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে।'); closeAuthModal(); }
     });
@@ -466,7 +451,7 @@
       checkAnnouncement();
     });
 
-    // ========== Blog ==========
+    // Blog functions
     async function loadBlogs() {
       let query = supabase.from('blogs').select('*').eq('approved', true).order('created_at', {ascending:false});
       if(currentBlogCat!=='all') query = query.eq('category', currentBlogCat);
@@ -489,7 +474,7 @@
       }
     });
 
-    // ========== Forum ==========
+    // Forum functions
     async function loadForum() {
       const { data: questions } = await supabase.from('forum_questions').select('*').eq('approved', true).order('created_at', {ascending:false});
       const list = document.getElementById('forumList');
@@ -510,7 +495,6 @@
       await supabase.from('forum_questions').insert([{ title, body, user_id: currentUser.id, user_name: currentProfile.name, approved: true }]);
       alert('প্রশ্ন জমা হয়েছে'); loadForum();
     }
-    
     window.openAnswerModal = function(questionId) {
       if(!currentUser) { alert('উত্তর দিতে লগইন করুন।'); return; }
       if(currentProfile?.role !== 'expert' && currentProfile?.role !== 'admin') { alert('শুধুমাত্র কৃষিবিদ ও অ্যাডমিন উত্তর দিতে পারেন।'); return; }
@@ -525,19 +509,13 @@
     window.submitAnswer = async function() {
       const body = document.getElementById('answerText').value.trim();
       if(!body) return;
-      await supabase.from('forum_answers').insert([{ 
-        question_id: currentAnswerQuestionId, 
-        user_id: currentUser.id, 
-        user_name: currentProfile.name, 
-        answer: body, 
-        approved: false 
-      }]);
+      await supabase.from('forum_answers').insert([{ question_id: currentAnswerQuestionId, user_id: currentUser.id, user_name: currentProfile.name, answer: body, approved: false }]);
       alert('উত্তর জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
       closeAnswerModal();
       loadForum();
     };
 
-    // ========== Krishibazar (Products) ==========
+    // Krishibazar functions
     async function loadBazar() {
       const { data } = await supabase.from('products').select('*').eq('approved', true).order('created_at', {ascending:false});
       document.getElementById('bazarGrid').innerHTML = data?.map(p=>`<div class="feature-card"><img src="${p.image_url||''}" style="width:100%; height:200px; object-fit:cover; border-radius:16px; margin-bottom:1rem;"><h4>${p.name}</h4><p>${p.description || ''}</p><small>বিক্রেতা: ${p.user_name}</small><br><button class="btn btn-outline btn-sm mt-2" onclick="expressInterest('${p.id}')">আগ্রহী</button></div>`).join('')||'<p>কোনো পণ্য নেই</p>';
@@ -549,7 +527,7 @@
       if(!name) return alert('পণ্যের নাম দিন');
       let imageUrl = null;
       if(file) {
-        const fileName = `products/${Date.now()}_${file.name}`;
+        const fileName = `product_${Date.now()}`;
         const { error: uploadError } = await supabase.storage.from('images').upload(fileName, file);
         if(uploadError) return alert('ছবি আপলোড ত্রুটি: '+uploadError.message);
         const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(fileName);
@@ -567,7 +545,7 @@
       alert('আগ্রহ প্রকাশ করা হয়েছে! কৃষক অবহিত হবেন।');
     };
 
-    // ========== Bazar Dor (Agent Prices) ==========
+    // Agent prices functions
     async function loadLocations() {
       const { data } = await supabase.from('agent_prices').select('location', { distinct: true });
       const locFilter = document.getElementById('locationFilter');
@@ -589,7 +567,7 @@
       alert('জমা হয়েছে'); loadPrices();
     }
 
-    // ========== Profile ==========
+    // Profile functions
     async function loadProfile() {
       if(!currentUser) return navigateTo('home');
       document.getElementById('profileInfo').innerHTML = `<p><strong>নাম:</strong> ${currentProfile.name}</p><p><strong>ইমেইল:</strong> ${currentUser.email}</p><p><strong>ফোন:</strong> ${currentProfile.phone||'N/A'}</p><p><strong>রোল:</strong> ${currentProfile.role}</p>`;
@@ -599,7 +577,7 @@
       updateNotifBadge();
     }
 
-    // ========== Admin Panel ==========
+    // Admin Panel functions
     async function loadAdminPanel() {
       if(!currentProfile||currentProfile.role!=='admin') return navigateTo('home');
       const container = document.getElementById('adminContent');
@@ -629,7 +607,7 @@
       this.classList.add('active'); activeAdminTab = this.dataset.tab; loadAdminPanel();
     }));
 
-    // Approve / Cancel
+    // Approve / Cancel / Answer
     window.approveItem = async (table, id) => {
       const { data: item } = await supabase.from(table).select('*').eq('id', id).single();
       if (!item) return;
