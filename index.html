@@ -37,7 +37,15 @@
     .container { max-width:1300px; margin:0 auto; padding:0 5%; }
     .navbar { background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:1000; padding:0.8rem 5%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; border-bottom:1px solid rgba(0,0,0,0.05); }
     .logo { display:flex; align-items:center; gap:12px; cursor:pointer; }
-    .logo-icon { background:var(--primary); color:white; width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:800; }
+    /* লোগোর জন্য নতুন স্টাইল – সম্পূর্ণ ছবি দেখাবে, ক্রপ হবে না */
+    .logo img {
+      height: 50px;                  /* উচ্চতা বাড়ানো */
+      width: auto;                   /* অ্যাসপেক্ট রেশিও ঠিক রাখবে */
+      object-fit: contain;           /* সম্পূর্ণ ছবি ভিজিবল */
+      border-radius: 8px;            /* হালকা রাউন্ডিং */
+      border: 2px solid white;
+      box-shadow: var(--shadow-sm);
+    }
     .logo-text { font-weight:800; font-size:1.5rem; color:var(--primary); }
     .logo-text span { color:var(--gold); }
     .nav-links { display:flex; gap:2rem; align-items:center; }
@@ -103,9 +111,10 @@
 
 <nav class="navbar">
   <div class="logo" onclick="location.reload()">
-    <img src="https://i.ibb.co.com/N2fHrxQd/Screenshot-2026-05-09-1-50-43-PM-removebg-preview.png" alt="কৃষিপথ লোগো" style="width:20px; height:20px; border-radius:14px; object-fit:cover; border:2px solid white; box-shadow:0 10px 25px -5px rgba(0,0,0,0.05);">
+    <!-- লোগো ইমেজ – সম্পূর্ণ দেখাবে -->
+    <img src="https://i.ibb.co.com/N2fHrxQd/Screenshot-2026-05-09-1-50-43-PM-removebg-preview.png" alt="কৃষিপথ লোগো">
     <div class="logo-text">কৃষিপথ <span>• krishipath</span></div>
-</div>
+  </div>
   <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
   <div class="nav-links" id="navLinks">
     <a href="#" data-page="home">হোম</a>
@@ -390,7 +399,6 @@
           bazarUp.innerHTML = '<p class="text-center">শুধুমাত্র কৃষকগণ পণ্য বিক্রির পোস্ট দিতে পারেন।</p>';
         }
 
-        // Agent price upload form
         if (currentProfile.role === 'agent' || currentProfile.role === 'admin') {
           priceUp.innerHTML = '<div class="form-card"><h3>বাজার দর যোগ করুন</h3>' +
             '<input id="agentLocation" placeholder="এলাকা (যেমন: বালিয়াডাঙ্গী)" class="form-control">' +
