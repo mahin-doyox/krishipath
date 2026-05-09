@@ -1,0 +1,15 @@
+{
+  "name": "কৃষিপথ",
+  "short_name": "krishipath",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0a2f1f",
+  "theme_color": "#2d6a4f",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/album/krishipath-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
