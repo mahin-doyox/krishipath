@@ -141,7 +141,7 @@
   </div>
 
   <!-- Blog Page -->
-  <div id="blog" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">কৃষি ব্লগ</h2><div id="blogUpload"></div><div class="filter-tabs" id="blogFilterTabs"><button class="filter-tab active" data-cat="all">সব</button><button class="filter-tab" data-cat="ফসল">ফসল</button><button class="filter-tab" data-cat="মৎস্য">মৎস্য</button><button class="filter-tab" data-cat="পশুপালন">পশুপালন</button><button class="filter-tab" data-cat="জৈব সার">জৈব সার</button></div><div id="blogGrid" class="card-grid"></div></div></div>
+  <div id="blog" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">কৃষি ব্লগ</h2><div id="blogUpload"></div><div class="filter-tabs" id="blogFilterTabs"><button class="filter-tabs active" data-cat="all">সব</button><button class="filter-tabs" data-cat="ফসল">ফসল</button><button class="filter-tabs" data-cat="মৎস্য">মৎস্য</button><button class="filter-tabs" data-cat="পশুপালন">পশুপালন</button><button class="filter-tabs" data-cat="জৈব সার">জৈব সার</button></div><div id="blogGrid" class="card-grid"></div></div></div>
 
   <!-- Forum Page -->
   <div id="forum" class="page"><div class="container" style="padding:2rem 0;"><h2 class="section-title">প্রশ্নোত্তর</h2><div id="forumUpload"></div><div id="forumList"></div></div></div>
@@ -244,10 +244,10 @@
         <h4>কৃষিপথ</h4>
         <p>কৃষি পণ্য বিক্রয়, বাজার মূল্য, পরামর্শ ও অভিজ্ঞতা শেয়ারের ডিজিটাল প্ল্যাটফর্ম। আমাদের লক্ষ্য কৃষক, ব্যবসায়ী, এজেন্ট এবং কৃষিবিদদের একত্রিত করে একটি স্মার্ট কৃষি ইকোসিস্টেম গড়ে তোলা।</p>
         <div class="social-links">
-          <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
-          <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
-          <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-          <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://youtube.com/@krishipathbd" target="_blank"><i class="fab fa-youtube"></i></a>
+          <a href="https://facebook.com/krishipath" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="https://linkedin.com/company/krishipath" target="_blank"><i class="fab fa-linkedin"></i></a>
+          <a href="https://instagram.com/krishipath" target="_blank"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
       <div class="footer-col">
@@ -270,20 +270,18 @@
       </details>
     </div>
     <div class="footer-bottom">
-      <p>© ২০২৬ কৃষিপথ • সর্বস্বত্ব সংরক্ষিত &nbsp;|&nbsp; Powered by doyox</p>
+      <p>© ২০২৬ কৃষিপথ • সর্বস্বত্ব সংরক্ষিত &nbsp;|&nbsp; Powered by <a href="https://www.doyox.com" target="_blank" style="color:#d4a373; text-decoration:none;">doyox</a></p>
     </div>
   </div>
 </footer>
 
 <script>
-  // PWA service worker সম্পূর্ণভাবে বাদ
-
   (function() {
     var SUPABASE_URL = 'https://uskcutjjmtcbgezcfbfm.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // emailjs.init('YOUR_PUBLIC_KEY'); // আপনার পাবলিক কী দিন
+    emailjs.init('YOUR_PUBLIC_KEY'); // আপনার পাবলিক কী দিন
 
     var currentUser = null, currentProfile = null;
     var currentBlogCat = 'all';
@@ -342,6 +340,7 @@
       var _a = await supabase.from('notifications').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id).eq('read', false);
       var count = _a.count || 0;
       document.getElementById('notifCount').textContent = count;
+      // ব্যাজ সবসময় লুকানো থাকবে যদি কাউন্ট ০ হয়
       document.getElementById('notifBell').querySelector('.count').style.display = count ? 'flex' : 'none';
     }
 
@@ -624,7 +623,7 @@
     async function loadProfile() {
       if (!currentUser) return navigateTo('home');
       document.getElementById('profileInfo').innerHTML = '<p><strong>নাম:</strong> ' + (currentProfile.name || '') + '</p><p><strong>ইমেইল:</strong> ' + currentUser.email + '</p><p><strong>ফোন:</strong> ' + (currentProfile.phone || 'N/A') + '</p><p><strong>রোল:</strong> ' + currentProfile.role + '</p>';
-      var _a = await supabase.from('notifications').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(5);
+      var _a = await supabase.from('notifications').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(3);
       var notifs = _a.data || [];
       var notifList = document.getElementById('notifList');
       notifList.innerHTML = '';
@@ -774,7 +773,7 @@
         var u = users[i];
         if (!u.email) continue;
         try {
-          await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+          await emailjs.send('service_k8w9o6b', 'template_ejptxnx', {
             to_email: u.email,
             to_name: u.name || 'কৃষিপথ সদস্য',
             message: msg
