@@ -335,12 +335,9 @@
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
-    // ✅ EmailJS Public Key (আপনার আসল কী)
     emailjs.init('kkVuwDNcE67OyBMZS');
-    
-    // ✅ ইমেইল জেএস কনফিগারেশন (আপনার দেওয়া আইডি)
     var EMAILJS_SERVICE_ID = 'service_d8fivoo';
-    var EMAILJS_TEMPLATE_ID = 'template_ftfnh5r'; // ⚠️ এখানে আপনার নতুন নোটিফিকেশন টেমপ্লেটের আইডি বসান
+    var EMAILJS_TEMPLATE_ID = 'template_ftfnh5r';
 
     var currentUser = null, currentProfile = null;
     var currentBlogCat = 'all';
@@ -348,7 +345,6 @@
     var currentAnswerQuestionId = null;
     var priceChartInstance = null;
 
-    // Mobile menu toggle
     document.getElementById('menuToggle').addEventListener('click', function() {
       document.getElementById('navLinks').classList.toggle('active');
     });
@@ -500,7 +496,6 @@
       else { alert('পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে।'); closeAuthModal(); }
     });
 
-    // ✅ রেজিস্ট্রেশনে ইমেইল সংরক্ষণ (সমস্যার মূল সমাধান)
     document.getElementById('authForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       var email = document.getElementById('authEmail').value, password = document.getElementById('authPassword').value;
@@ -511,7 +506,6 @@
         var _a = await supabase.auth.signUp({ email: email, password: password });
         if (_a.error) return alert('রেজিস্ট্রেশন ত্রুটি: ' + _a.error.message);
         if (_a.data.user) {
-          // ✅ email ফিল্ডটি যোগ করা হয়েছে
           await supabase.from('profiles').insert([{ id: _a.data.user.id, name: name, phone: phone, role: role, email: email }]);
           alert('রেজিস্ট্রেশন সফল! এখন লগইন করুন।'); closeAuthModal();
         }
@@ -927,7 +921,6 @@
       alert('সকলকে নোটিফিকেশন পাঠানো হয়েছে');
     };
 
-    // ✅ ইমেইল পাঠানোর ফাংশন (কনসোল ডিবাগিং সহ)
     window.sendEmailToAll = async function() {
       var msg = document.getElementById('emailMsg').value;
       if (!msg) return alert('মেসেজ লিখুন');
@@ -935,23 +928,15 @@
       var _a = await supabase.from('profiles').select('email, name');
       var users = _a.data || [];
       
-      // ✅ ডিবাগিং লগ
-      console.log('সর্বমোট ইউজার পাওয়া গেছে:', users.length);
-      if (users.length > 0) {
-        console.log('প্রথম ইউজার ইমেইল:', users[0].email);
-        console.log('সকল ইমেইল:', users.map(function(u) { return u.email; }));
-      } else {
-        alert('কোনো ইউজার পাওয়া যায়নি! দয়া করে Supabase-এ চেক করুন।');
+      if (users.length === 0) {
+        alert('কোনো ইউজার পাওয়া যায়নি!');
         return;
       }
 
       var count = 0;
       for (var i = 0; i < users.length; i++) {
         var u = users[i];
-        if (!u.email) {
-          console.warn('ইমেইল খালি:', u.name);
-          continue;
-        }
+        if (!u.email) continue;
         try {
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
             to_email: u.email,
@@ -959,9 +944,8 @@
             message: msg
           });
           count++;
-          console.log('✅ ইমেইল পাঠানো হয়েছে:', u.email);
         } catch (e) {
-          console.error('❌ ইমেইল ত্রুটি:', u.email, e);
+          // silently ignore errors for user privacy
         }
       }
       alert(count + ' টি ইমেইল পাঠানো হয়েছে');
