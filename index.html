@@ -65,7 +65,6 @@
     .filter-tab { background:#d1e7dd; border:none; padding:0.6rem 1.4rem; border-radius:30px; font-weight:600; cursor:pointer; color:var(--primary); }
     .filter-tab.active { background:var(--primary); color:white; }
     .pending-item { background:white; padding:1.5rem; border-radius:24px; box-shadow:var(--shadow-sm); margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
-    .detail-box { background:#f8fafc; padding:1rem; border-radius:16px; margin-top:1rem; border:1px solid #e2e8f0; white-space:pre-wrap; word-break:break-word; }
     .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; }
     .modal-content { background:white; padding:2rem; border-radius:24px; max-width:500px; width:90%; box-shadow:var(--shadow-lg); }
     .modal-close { float:right; background:none; border:none; font-size:1.5rem; cursor:pointer; }
@@ -348,6 +347,121 @@
     var EMAILJS_SERVICE_ID = 'service_d8fivoo';
     var EMAILJS_TEMPLATE_ID = 'template_ftfnh5r';
 
+    // ---------- বাংলাদেশের প্রশাসনিক কাঠামো (static) ----------
+    var bangladeshData = {
+      "বরিশাল": {
+        "বরগুনা": ["বরগুনা সদর", "আমতলী", "বামনা", "পাথরঘাটা"],
+        "বরিশাল": ["বরিশাল সদর", "গৌরনদী", "মেহেন্দীগঞ্জ", "বাকেরগঞ্জ"],
+        "ভোলা": ["ভোলা সদর", "দৌলতখান", "বোরহানউদ্দিন", "চরফ্যাশন"],
+        "ঝালকাঠি": ["ঝালকাঠি সদর", "কাঁঠালিয়া", "রাজাপুর", "নলছিটি"],
+        "পটুয়াখালী": ["পটুয়াখালী সদর", "গলাচিপা", "দশমিনা", "বাউফল"],
+        "পিরোজপুর": ["পিরোজপুর সদর", "কাউখালী", "মঠবাড়িয়া", "নাজিরপুর"]
+      },
+      "চট্টগ্রাম": {
+        "কক্সবাজার": ["কক্সবাজার সদর", "মহেশখালী", "টেকনাফ", "উখিয়া"],
+        "কুমিল্লা": ["কুমিল্লা সদর", "চৌদ্দগ্রাম", "লাকসাম", "দাউদকান্দি"],
+        "চাঁদপুর": ["চাঁদপুর সদর", "হাইমচর", "মতলব", "ফরিদগঞ্জ"],
+        "চট্টগ্রাম": ["চট্টগ্রাম সদর", "পটিয়া", "আনোয়ারা", "বাঁশখালী"],
+        "নোয়াখালী": ["নোয়াখালী সদর", "সেনবাগ", "বেগমগঞ্জ", "চৌমুহনী"],
+        "ফেনী": ["ফেনী সদর", "ছাগলনাইয়া", "পরশুরাম", "দাগনভূঞা"],
+        "বান্দরবান": ["বান্দরবান সদর", "রুমা", "থানচি", "লামা"],
+        "ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর", "নবীনগর", "আখাউড়া", "কসবা"],
+        "রাঙ্গামাটি": ["রাঙ্গামাটি সদর", "কাপ্তাই", "বিলাইছড়ি", "রাজস্থলী"],
+        "লক্ষ্মীপুর": ["লক্ষ্মীপুর সদর", "রামগঞ্জ", "রায়পুর", "কমলনগর"]
+      },
+      "ঢাকা": {
+        "ঢাকা": ["ধানমন্ডি", "গুলশান", "তেজগাঁও", "মিরপুর"],
+        "গাজীপুর": ["গাজীপুর সদর", "কালিয়াকৈর", "কালীগঞ্জ", "কাপাসিয়া"],
+        "গোপালগঞ্জ": ["গোপালগঞ্জ সদর", "কোটালীপাড়া", "মুকসুদপুর", "টুঙ্গিপাড়া"],
+        "টাঙ্গাইল": ["টাঙ্গাইল সদর", "কালিহাতী", "মির্জাপুর", "নাগরপুর"],
+        "নারায়ণগঞ্জ": ["নারায়ণগঞ্জ সদর", "সোনারগাঁও", "আড়াইহাজার", "রূপগঞ্জ"],
+        "নরসিংদী": ["নরসিংদী সদর", "মনোহরদী", "রায়পুরা", "বেলাবো"],
+        "ফরিদপুর": ["ফরিদপুর সদর", "বোয়ালমারী", "আলফাডাঙ্গা", "মধুখালী"],
+        "মাদারীপুর": ["মাদারীপুর সদর", "কালকিনি", "রাজৈর", "শিবচর"],
+        "মানিকগঞ্জ": ["মানিকগঞ্জ সদর", "দৌলতপুর", "শিবালয়", "সাটুরিয়া"],
+        "মুন্সীগঞ্জ": ["মুন্সীগঞ্জ সদর", "শ্রীনগর", "লৌহজং", "টংগিবাড়ী"],
+        "রাজবাড়ী": ["রাজবাড়ী সদর", "বালিয়াকান্দি", "পাংশা", "গোয়ালন্দ"],
+        "শরীয়তপুর": ["শরীয়তপুর সদর", "ডামুড্যা", "নড়িয়া", "জাজিরা"]
+      },
+      "খুলনা": {
+        "খুলনা": ["খুলনা সদর", "দাকোপ", "বটিয়াঘাটা", "পাইকগাছা"],
+        "কুষ্টিয়া": ["কুষ্টিয়া সদর", "ভেড়ামারা", "মিরপুর", "দৌলতপুর"],
+        "চুয়াডাঙ্গা": ["চুয়াডাঙ্গা সদর", "আলমডাঙ্গা", "দামুড়হুদা", "জীবননগর"],
+        "ঝিনাইদহ": ["ঝিনাইদহ সদর", "মহেশপুর", "কালীগঞ্জ", "কোটচাঁদপুর"],
+        "নড়াইল": ["নড়াইল সদর", "লোহাগড়া", "কালিয়া"],
+        "বাগেরহাট": ["বাগেরহাট সদর", "মোংলা", "মোরেলগঞ্জ", "রামপাল"],
+        "মাগুরা": ["মাগুরা সদর", "শ্রীপুর", "মহম্মদপুর", "শালিখা"],
+        "মেহেরপুর": ["মেহেরপুর সদর", "গাংনী", "মুজিবনগর"],
+        "যশোর": ["যশোর সদর", "ঝিকরগাছা", "কেশবপুর", "মণিরামপুর"],
+        "সাতক্ষীরা": ["সাতক্ষীরা সদর", "কলারোয়া", "আশাশুনি", "দেবহাটা"]
+      },
+      "ময়মনসিংহ": {
+        "ময়মনসিংহ": ["ময়মনসিংহ সদর", "মুক্তাগাছা", "ভালুকা", "ত্রিশাল"],
+        "জামালপুর": ["জামালপুর সদর", "মেলান্দহ", "দেওয়ানগঞ্জ", "ইসলামপুর"],
+        "নেত্রকোণা": ["নেত্রকোণা সদর", "দুর্গাপুর", "কলমাকান্দা", "কেন্দুয়া"],
+        "শেরপুর": ["শেরপুর সদর", "নকলা", "নালিতাবাড়ী", "শ্রীবরদী"]
+      },
+      "রাজশাহী": {
+        "রাজশাহী": ["রাজশাহী সদর", "পবা", "গোদাগাড়ী", "বাগমারা"],
+        "চাঁপাইনবাবগঞ্জ": ["চাঁপাইনবাবগঞ্জ সদর", "গোমস্তাপুর", "নাচোল", "ভোলাহাট"],
+        "জয়পুরহাট": ["জয়পুরহাট সদর", "কালাই", "ক্ষেতলাল", "পাঁচবিবি"],
+        "নওগাঁ": ["নওগাঁ সদর", "আত্রাই", "রাণীনগর", "মান্দা"],
+        "নাটোর": ["নাটোর সদর", "বড়াইগ্রাম", "গুরুদাসপুর", "সিংড়া"],
+        "পাবনা": ["পাবনা সদর", "ঈশ্বরদী", "চাটমোহর", "সাঁথিয়া"],
+        "বগুড়া": ["বগুড়া সদর", "শেরপুর", "শাজাহানপুর", "গাবতলী"],
+        "সিরাজগঞ্জ": ["সিরাজগঞ্জ সদর", "রায়গঞ্জ", "উল্লাপাড়া", "শাহজাদপুর"]
+      },
+      "রংপুর": {
+        "রংপুর": ["রংপুর সদর", "পীরগঞ্জ", "বদরগঞ্জ", "মিঠাপুকুর"],
+        "কুড়িগ্রাম": ["কুড়িগ্রাম সদর", "উলিপুর", "রাজারহাট", "নাগেশ্বরী"],
+        "গাইবান্ধা": ["গাইবান্ধা সদর", "সাদুল্লাপুর", "গোবিন্দগঞ্জ", "পলাশবাড়ী"],
+        "ঠাকুরগাঁও": ["ঠাকুরগাঁও সদর", "পীরগঞ্জ", "বালিয়াডাঙ্গী", "রাণীশংকৈল"],
+        "দিনাজপুর": ["দিনাজপুর সদর", "বিরামপুর", "ফুলবাড়ী", "হাকিমপুর"],
+        "নীলফামারী": ["নীলফামারী সদর", "ডোমার", "ডিমলা", "জলঢাকা"],
+        "পঞ্চগড়": ["পঞ্চগড় সদর", "বোদা", "দেবীগঞ্জ", "আটোয়ারী"],
+        "লালমনিরহাট": ["লালমনিরহাট সদর", "আদিতমারী", "কালীগঞ্জ", "হাতীবান্ধা"]
+      },
+      "সিলেট": {
+        "সিলেট": ["সিলেট সদর", "বিয়ানীবাজার", "গোলাপগঞ্জ", "কানাইঘাট"],
+        "সুনামগঞ্জ": ["সুনামগঞ্জ সদর", "দিরাই", "জামালগঞ্জ", "ছাতক"],
+        "হবিগঞ্জ": ["হবিগঞ্জ সদর", "নবীগঞ্জ", "মাধবপুর", "চুনারুঘাট"],
+        "মৌলভীবাজার": ["মৌলভীবাজার সদর", "শ্রীমঙ্গল", "কমলগঞ্জ", "বড়লেখা"]
+      }
+    };
+
+    // হেল্পার ফাংশন: যেকোনো সিলেক্টে বিভাগ বসানো
+    function populateDivisions(selectId) {
+      var sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '<option value="">বিভাগ</option>';
+      for (var div in bangladeshData) {
+        sel.innerHTML += '<option value="'+div+'">'+div+'</option>';
+      }
+    }
+
+    // হেল্পার: জেলা বসানো
+    function populateDistricts(selectId, divisionValue) {
+      var sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '<option value="">জেলা</option>';
+      if (!divisionValue || !bangladeshData[divisionValue]) return;
+      for (var dist in bangladeshData[divisionValue]) {
+        sel.innerHTML += '<option value="'+dist+'">'+dist+'</option>';
+      }
+    }
+
+    // হেল্পার: উপজেলা বসানো
+    function populateUpazilas(selectId, divisionValue, districtValue) {
+      var sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '<option value="">উপজেলা</option>';
+      if (!divisionValue || !districtValue || !bangladeshData[divisionValue] || !bangladeshData[divisionValue][districtValue]) return;
+      var upazs = bangladeshData[divisionValue][districtValue];
+      upazs.forEach(function(u) {
+        sel.innerHTML += '<option value="'+u+'">'+u+'</option>';
+      });
+    }
+
     var currentUser = null, currentProfile = null;
     var currentBlogCat = 'all';
     var activeAdminTab = 'blog';
@@ -373,9 +487,9 @@
       else if (pageId === 'forum') loadForum();
       else if (pageId === 'bazar') loadBazar();
       else if (pageId === 'prices') {
-        // Reset all filters and load initial divisions
         resetPriceFilters();
-        loadDivisions();
+        populateDivisions('divFilter');
+        document.getElementById('priceDashboard').style.display = 'none';
       }
       else if (pageId === 'profile') loadProfile();
       else if (pageId === 'admin') loadAdminPanel();
@@ -390,47 +504,27 @@
       document.getElementById('cropFilter').value = '';
       document.getElementById('cropFilter').style.display = 'none';
       document.getElementById('priceDashboard').style.display = 'none';
-      // clear options except first
       ['distFilter','upazFilter','areaFilter','cropFilter'].forEach(function(id) {
-        var sel = document.getElementById(id);
-        sel.innerHTML = '<option value="">' + (id==='cropFilter'?'ফসল':id==='areaFilter'?'এলাকা':id==='upazFilter'?'উপজেলা':'জেলা') + '</option>';
+        document.getElementById(id).innerHTML = '<option value="">' + (id==='cropFilter'?'ফসল':id==='areaFilter'?'এলাকা':id==='upazFilter'?'উপজেলা':'জেলা') + '</option>';
       });
-    }
-
-    async function loadDivisions() {
-      var _a = await supabase.from('agent_prices').select('division', { distinct: true }).eq('approved', true);
-      var divisions = _a.data || [];
-      var divSelect = document.getElementById('divFilter');
-      divSelect.innerHTML = '<option value="">বিভাগ</option>';
-      divisions.forEach(function(d) { if (d.division) divSelect.innerHTML += '<option value="'+d.division+'">'+d.division+'</option>'; });
     }
 
     window.onDivisionChange = async function() {
       var div = document.getElementById('divFilter').value;
-      var distSelect = document.getElementById('distFilter');
-      distSelect.innerHTML = '<option value="">জেলা</option>';
+      populateDistricts('distFilter', div);
       document.getElementById('upazFilter').innerHTML = '<option value="">উপজেলা</option>';
       document.getElementById('areaFilter').innerHTML = '<option value="">এলাকা</option>';
       document.getElementById('cropFilter').style.display = 'none';
       document.getElementById('priceDashboard').style.display = 'none';
-      if (!div) return;
-      var _a = await supabase.from('agent_prices').select('district', { distinct: true }).eq('division', div).eq('approved', true);
-      var districts = _a.data || [];
-      districts.forEach(function(d) { if (d.district) distSelect.innerHTML += '<option value="'+d.district+'">'+d.district+'</option>'; });
     };
 
     window.onDistrictChange = async function() {
       var div = document.getElementById('divFilter').value;
       var dist = document.getElementById('distFilter').value;
-      var upazSelect = document.getElementById('upazFilter');
-      upazSelect.innerHTML = '<option value="">উপজেলা</option>';
+      populateUpazilas('upazFilter', div, dist);
       document.getElementById('areaFilter').innerHTML = '<option value="">এলাকা</option>';
       document.getElementById('cropFilter').style.display = 'none';
       document.getElementById('priceDashboard').style.display = 'none';
-      if (!div || !dist) return;
-      var _a = await supabase.from('agent_prices').select('upazila', { distinct: true }).eq('division', div).eq('district', dist).eq('approved', true);
-      var upazilas = _a.data || [];
-      upazilas.forEach(function(u) { if (u.upazila) upazSelect.innerHTML += '<option value="'+u.upazila+'">'+u.upazila+'</option>'; });
     };
 
     window.onUpazilaChange = async function() {
@@ -442,7 +536,9 @@
       document.getElementById('cropFilter').style.display = 'none';
       document.getElementById('priceDashboard').style.display = 'none';
       if (!div || !dist || !upaz) return;
-      var _a = await supabase.from('agent_prices').select('area', { distinct: true }).eq('division', div).eq('district', dist).eq('upazila', upaz).eq('approved', true);
+      // ডাটাবেজ থেকে এই পাথে থাকা এলাকাগুলো লোড করুন
+      var _a = await supabase.from('agent_prices').select('area', { distinct: true })
+        .eq('division', div).eq('district', dist).eq('upazila', upaz).eq('approved', true);
       var areas = _a.data || [];
       areas.forEach(function(a) { if (a.area) areaSelect.innerHTML += '<option value="'+a.area+'">'+a.area+'</option>'; });
     };
@@ -460,7 +556,8 @@
         return;
       }
       cropSelect.style.display = 'inline-block';
-      var _a = await supabase.from('agent_prices').select('crop', { distinct: true }).eq('division', div).eq('district', dist).eq('upazila', upaz).eq('area', area).eq('approved', true);
+      var _a = await supabase.from('agent_prices').select('crop', { distinct: true })
+        .eq('division', div).eq('district', dist).eq('upazila', upaz).eq('area', area).eq('approved', true);
       var crops = _a.data || [];
       crops.forEach(function(c) { if (c.crop) cropSelect.innerHTML += '<option value="'+c.crop+'">'+c.crop+'</option>'; });
     };
@@ -588,7 +685,6 @@
         } else {
           bUp.innerHTML = '<p class="text-center">শুধুমাত্র কৃষিবিদ ও অ্যাডমিন ব্লগ লিখতে পারেন।</p>';
         }
-
         fUp.innerHTML = '<div class="form-card"><h3>প্রশ্ন জিজ্ঞাসা</h3>' +
           '<input id="qTitle" placeholder="বিষয়" class="form-control">' +
           '<textarea id="qBody" rows="4" class="form-control mt-3" placeholder="বিস্তারিত"></textarea>' +
@@ -606,15 +702,14 @@
 
         if (role === 'agent' || role === 'admin') {
           priceUp.innerHTML = '<div class="form-card"><h3>বাজার দর যোগ করুন</h3>' +
-            '<select id="agentDiv" class="form-control" onchange="loadAgentDistricts()"><option value="">বিভাগ নির্বাচন করুন</option></select>' +
-            '<select id="agentDist" class="form-control mt-3" onchange="loadAgentUpazilas()"><option value="">জেলা নির্বাচন করুন</option></select>' +
+            '<select id="agentDiv" class="form-control" onchange="agentDivisionChange()"><option value="">বিভাগ নির্বাচন করুন</option></select>' +
+            '<select id="agentDist" class="form-control mt-3" onchange="agentDistrictChange()"><option value="">জেলা নির্বাচন করুন</option></select>' +
             '<select id="agentUpaz" class="form-control mt-3"><option value="">উপজেলা নির্বাচন করুন</option></select>' +
             '<input id="agentArea" placeholder="এলাকার নাম (যেমন: বালিয়াডাঙ্গী)" class="form-control mt-3">' +
             '<input id="agentCrop" placeholder="ফসলের নাম (যেমন: ধান)" class="form-control mt-3">' +
             '<input id="agentPrice" type="number" placeholder="দাম (টাকা/কেজি)" class="form-control mt-3">' +
             '<button class="btn btn-primary w-100 mt-3" onclick="uploadAgentPrice()">জমা দিন</button></div>';
-          // preload agent divisions
-          loadAgentDivisions();
+          populateDivisions('agentDiv');
         } else {
           priceUp.innerHTML = '<p class="text-center">শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যোগ করতে পারেন।</p>';
         }
@@ -623,41 +718,15 @@
       }
     }
 
-    // Agent upload helper functions
-    async function loadAgentDivisions() {
-      // We'll fetch divisions from agent_prices for reference, but also allow new ones? 
-      // We'll just hit a distinct query on division, but if none exist, we should allow manual input.
-      // For simplicity, we'll populate from existing approved data.
-      var _a = await supabase.from('agent_prices').select('division', { distinct: true }).eq('approved', true);
-      var divs = _a.data || [];
-      var sel = document.getElementById('agentDiv');
-      sel.innerHTML = '<option value="">বিভাগ নির্বাচন করুন</option>';
-      divs.forEach(function(d) { if (d.division) sel.innerHTML += '<option value="'+d.division+'">'+d.division+'</option>'; });
-      // Also allow writing new? Not in dropdown; they must select existing or type? We'll add an option to type manually if they want? 
-      // The user said "bivag select korbe" – so a dropdown is fine. If they need a new division, they can type? 
-      // We'll leave as dropdown only for simplicity. They can add entry via some other way? Not critical now.
-    }
-
-    window.loadAgentDistricts = async function() {
+    window.agentDivisionChange = function() {
       var div = document.getElementById('agentDiv').value;
-      var sel = document.getElementById('agentDist');
-      sel.innerHTML = '<option value="">জেলা নির্বাচন করুন</option>';
+      populateDistricts('agentDist', div);
       document.getElementById('agentUpaz').innerHTML = '<option value="">উপজেলা নির্বাচন করুন</option>';
-      if (!div) return;
-      var _a = await supabase.from('agent_prices').select('district', { distinct: true }).eq('division', div).eq('approved', true);
-      var dists = _a.data || [];
-      dists.forEach(function(d) { if (d.district) sel.innerHTML += '<option value="'+d.district+'">'+d.district+'</option>'; });
     };
-
-    window.loadAgentUpazilas = async function() {
+    window.agentDistrictChange = function() {
       var div = document.getElementById('agentDiv').value;
       var dist = document.getElementById('agentDist').value;
-      var sel = document.getElementById('agentUpaz');
-      sel.innerHTML = '<option value="">উপজেলা নির্বাচন করুন</option>';
-      if (!div || !dist) return;
-      var _a = await supabase.from('agent_prices').select('upazila', { distinct: true }).eq('division', div).eq('district', dist).eq('approved', true);
-      var upazs = _a.data || [];
-      upazs.forEach(function(u) { if (u.upazila) sel.innerHTML += '<option value="'+u.upazila+'">'+u.upazila+'</option>'; });
+      populateUpazilas('agentUpaz', div, dist);
     };
 
     async function uploadAgentPrice() {
@@ -675,203 +744,15 @@
         price: parseFloat(price), user_id: currentUser.id, user_name: currentProfile.name, approved: false
       }]);
       alert('জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
-      // reload if currently viewing same location?
       if (document.getElementById('prices').classList.contains('active')) {
-        // reset and refresh
         resetPriceFilters();
-        loadDivisions();
+        populateDivisions('divFilter');
       }
     }
 
-    // Profile
-    async function loadProfile() {
-      if (!currentUser) return navigateTo('home');
-      document.getElementById('profileInfo').innerHTML = '<p><strong>নাম:</strong> ' + (currentProfile ? currentProfile.name : '') + '</p><p><strong>ইমেইল:</strong> ' + currentUser.email + '</p><p><strong>ফোন:</strong> ' + (currentProfile ? currentProfile.phone || 'N/A' : 'N/A') + '</p><p><strong>রোল:</strong> ' + (currentProfile ? currentProfile.role : '') + '</p>';
-      var _a = await supabase.from('notifications').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(3);
-      var notifs = _a.data || [];
-      var notifList = document.getElementById('notifList');
-      notifList.innerHTML = '';
-      notifs.forEach(function(n) { notifList.innerHTML += '<p>🔔 ' + n.message + ' <small>' + new Date(n.created_at).toLocaleString() + '</small></p>'; });
-      if (!notifs.length) notifList.innerHTML = '<p>কোনো নোটিফিকেশন নেই</p>';
-      await supabase.from('notifications').update({ read: true }).eq('user_id', currentUser.id).eq('read', false);
-      updateNotifBadge();
-    }
+    // ========== বাকি কোড (ব্লগ, ফোরাম, বাজার, প্রোফাইল, অ্যাডমিন) অপরিবর্তিত ==========
+    // (নিচে পূর্বের সমস্ত ফাংশন অপরিবর্তিত রেখে দেওয়া হল)
 
-    // Admin Panel
-    async function loadAdminPanel() {
-      if (!currentProfile || currentProfile.role !== 'admin') return navigateTo('home');
-      var container = document.getElementById('adminContent');
-      container.innerHTML = '';
-      if (activeAdminTab === 'blog') {
-        var _a = await supabase.from('blogs').select('*').eq('approved', false);
-        var items = _a.data || [];
-        items.forEach(function(b) {
-          var div = document.createElement('div'); div.className = 'pending-item';
-          div.innerHTML = '<div><strong>' + b.title + '</strong> (' + b.category + ') by ' + b.user_name + '</div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'blogs\',' + b.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'blogs\',' + b.id + ')">বাতিল</button></div>';
-          container.appendChild(div);
-        });
-        if (!items.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
-      } else if (activeAdminTab === 'products') {
-        var _b = await supabase.from('products').select('*').eq('approved', false);
-        var prods = _b.data || [];
-        prods.forEach(function(p) {
-          var div = document.createElement('div'); div.className = 'pending-item';
-          div.innerHTML = '<div><strong>' + p.name + '</strong> by ' + p.user_name + '</div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'products\',' + p.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'products\',' + p.id + ')">বাতিল</button></div>';
-          container.appendChild(div);
-        });
-        if (!prods.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
-      } else if (activeAdminTab === 'prices') {
-        var _c = await supabase.from('agent_prices').select('*').eq('approved', false);
-        var prices = _c.data || [];
-        prices.forEach(function(p) {
-          var div = document.createElement('div'); div.className = 'pending-item';
-          div.innerHTML = '<div>' + p.division + ' → ' + p.district + ' → ' + p.upazila + ' → ' + p.area + ', <strong>' + p.crop + '</strong>: ' + p.price + ' টাকা by ' + p.user_name + '</div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'agent_prices\',' + p.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'agent_prices\',' + p.id + ')">বাতিল</button></div>';
-          container.appendChild(div);
-        });
-        if (!prices.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
-      } else if (activeAdminTab === 'answers') {
-        var _d = await supabase.from('forum_answers').select('*').eq('approved', false).order('created_at', { ascending: false });
-        var answers = _d.data || [];
-        answers.forEach(function(a) {
-          var div = document.createElement('div'); div.className = 'pending-item';
-          div.innerHTML = '<div><strong>উত্তর:</strong> ' + a.answer.substring(0, 100) + '...<br><small> দ্বারা ' + a.user_name + '</small></div>' +
-            '<div><button class="btn btn-primary btn-sm" onclick="approveAnswer(' + a.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'forum_answers\',' + a.id + ')">বাতিল</button></div>';
-          container.appendChild(div);
-        });
-        if (!answers.length) container.innerHTML = '<p>কোনো পেন্ডিং উত্তর নেই</p>';
-      } else if (activeAdminTab === 'notification') {
-        container.innerHTML = '<div class="form-card"><h3>🔔 সকলকে নোটিফিকেশন পাঠান</h3><textarea id="notifMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendAdminNotification()">পাঠান</button></div>';
-      } else if (activeAdminTab === 'email') {
-        container.innerHTML = '<div class="form-card"><h3>📧 সকলকে ইমেইল পাঠান</h3><textarea id="emailMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendEmailToAll()">ইমেইল পাঠান</button></div>';
-      } else if (activeAdminTab === 'announcement') {
-        container.innerHTML = '<div class="form-card"><h3>📢 পপ-আপ ঘোষণা</h3><textarea id="announceMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="createAnnouncement()">পোস্ট করুন</button></div>';
-      }
-    }
-
-    // ... remaining admin functions same as before ...
-    // (I'll include the rest of the script unchanged.)
-    document.querySelectorAll('.admin-tab').forEach(function(t) {
-      t.addEventListener('click', function() {
-        document.querySelectorAll('.admin-tab').forEach(function(tab) { tab.classList.remove('active'); });
-        this.classList.add('active');
-        activeAdminTab = this.dataset.tab;
-        loadAdminPanel();
-      });
-    });
-
-    window.approveItem = async function(table, id) {
-      var _a = await supabase.from(table).select('*').eq('id', id).single();
-      if (!_a.data) return;
-      await supabase.from(table).update({ approved: true }).eq('id', id);
-      if (_a.data.user_id) {
-        await supabase.from('notifications').insert([{ user_id: _a.data.user_id, message: '✅ আপনার কন্টেন্ট (' + table + ') অনুমোদিত হয়েছে।' }]);
-      }
-      if (table === 'products') {
-        var _b = await supabase.from('profiles').select('id').eq('role', 'businessman');
-        if (_b.data) {
-          var notifs = _b.data.map(function(b) { return { user_id: b.id, message: '📢 কৃষিবাজারে নতুন পণ্য: ' + _a.data.name }; });
-          await supabase.from('notifications').insert(notifs);
-        }
-      }
-      alert('অনুমোদিত হয়েছে');
-      loadAdminPanel();
-      refreshPublicPages(table);
-    };
-
-    window.cancelItem = async function(table, id) {
-      if (!confirm('আপনি কি নিশ্চিত এটি বাতিল করতে চান?')) return;
-      var _a = await supabase.from(table).select('*').eq('id', id).single();
-      if (_a.data && _a.data.user_id) {
-        await supabase.from('notifications').insert([{ user_id: _a.data.user_id, message: '❌ আপনার কন্টেন্ট (' + table + ') বাতিল করা হয়েছে।' }]);
-      }
-      await supabase.from(table).delete().eq('id', id);
-      alert('বাতিল করা হয়েছে');
-      loadAdminPanel();
-      refreshPublicPages(table);
-    };
-
-    window.approveAnswer = async function(answerId) {
-      var _a = await supabase.from('forum_answers').select('*').eq('id', answerId).single();
-      if (!_a.data) return;
-      await supabase.from('forum_answers').update({ approved: true }).eq('id', answerId);
-      if (_a.data.user_id) {
-        await supabase.from('notifications').insert([{ user_id: _a.data.user_id, message: '✅ আপনার উত্তর অনুমোদিত হয়েছে।' }]);
-      }
-      alert('উত্তর অনুমোদিত');
-      loadAdminPanel();
-      loadForum();
-    };
-
-    function refreshPublicPages(table) {
-      var activePage = document.querySelector('.page.active').id;
-      if (table === 'blogs' && activePage === 'blog') loadBlogs();
-      if (table === 'products' && activePage === 'bazar') loadBazar();
-      if (table === 'agent_prices' && activePage === 'prices') {
-        resetPriceFilters();
-        loadDivisions();
-      }
-      if (table === 'forum_answers' && activePage === 'forum') loadForum();
-    }
-
-    window.sendAdminNotification = async function() {
-      var msg = document.getElementById('notifMsg').value;
-      if (!msg) return alert('মেসেজ লিখুন');
-      var _a = await supabase.from('profiles').select('id');
-      if (_a.data) {
-        for (var i = 0; i < _a.data.length; i++) {
-          await supabase.from('notifications').insert([{ user_id: _a.data[i].id, message: '🔔 অ্যাডমিন: ' + msg }]);
-        }
-      }
-      alert('সকলকে নোটিফিকেশন পাঠানো হয়েছে');
-    };
-
-    window.sendEmailToAll = async function() {
-      var msg = document.getElementById('emailMsg').value;
-      if (!msg) return alert('মেসেজ লিখুন');
-      var _a = await supabase.from('profiles').select('email, name');
-      var users = _a.data || [];
-      if (users.length === 0) {
-        alert('কোনো ইউজার পাওয়া যায়নি!');
-        return;
-      }
-      var count = 0;
-      for (var i = 0; i < users.length; i++) {
-        var u = users[i];
-        if (!u.email) continue;
-        try {
-          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            to_email: u.email,
-            to_name: u.name || 'কৃষিপথ সদস্য',
-            message: msg
-          });
-          count++;
-        } catch (e) { }
-      }
-      alert(count + ' টি ইমেইল পাঠানো হয়েছে');
-    };
-
-    window.createAnnouncement = async function() {
-      var msg = document.getElementById('announceMsg').value;
-      if (!msg) return alert('মেসেজ লিখুন');
-      await supabase.from('announcements').delete().neq('id', 0);
-      await supabase.from('announcements').insert([{ message: msg }]);
-      alert('ঘোষণা সেট হয়েছে');
-    };
-
-    async function checkAnnouncement() {
-      var _a = await supabase.from('announcements').select('*').order('created_at', { ascending: false }).limit(1);
-      if (_a.data && _a.data.length) {
-        document.getElementById('announceText').innerText = _a.data[0].message;
-        document.getElementById('announcePopup').style.display = 'flex';
-      }
-    }
-    window.closeAnnouncement = function() { document.getElementById('announcePopup').style.display = 'none'; };
-
-    // ========= existing functions for blog, forum, bazar (unchanged) ==========
-    // I'll keep them as they were.
     async function loadBlogs() {
       var query = supabase.from('blogs').select('*').eq('approved', true).order('created_at', { ascending: false });
       if (currentBlogCat !== 'all') query = query.eq('category', currentBlogCat);
@@ -939,7 +820,7 @@
       alert('প্রশ্ন জমা হয়েছে'); loadForum();
     }
     window.openAnswerModal = function(questionId) {
-      if (!currentUser) { alert('উত্তর দিতে লগইন করুন।'); return; }
+      if (!currentUser) { alert('উত্তর দতে লগইন করুন।'); return; }
       if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       if (currentProfile.role !== 'expert' && currentProfile.role !== 'admin') { alert('শুধুমাত্র কৃষিবিদ ও অ্যাডমিন উত্তর দিতে পারেন।'); return; }
       currentAnswerQuestionId = questionId;
@@ -1002,7 +883,190 @@
       alert('আগ্রহ প্রকাশ করা হয়েছে! কৃষক অবহিত হবেন।');
     };
 
-    // auth
+    async function loadProfile() {
+      if (!currentUser) return navigateTo('home');
+      document.getElementById('profileInfo').innerHTML = '<p><strong>নাম:</strong> ' + (currentProfile ? currentProfile.name : '') + '</p><p><strong>ইমেইল:</strong> ' + currentUser.email + '</p><p><strong>ফোন:</strong> ' + (currentProfile ? currentProfile.phone || 'N/A' : 'N/A') + '</p><p><strong>রোল:</strong> ' + (currentProfile ? currentProfile.role : '') + '</p>';
+      var _a = await supabase.from('notifications').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(3);
+      var notifs = _a.data || [];
+      var notifList = document.getElementById('notifList');
+      notifList.innerHTML = '';
+      notifs.forEach(function(n) { notifList.innerHTML += '<p>🔔 ' + n.message + ' <small>' + new Date(n.created_at).toLocaleString() + '</small></p>'; });
+      if (!notifs.length) notifList.innerHTML = '<p>কোনো নোটিফিকেশন নেই</p>';
+      await supabase.from('notifications').update({ read: true }).eq('user_id', currentUser.id).eq('read', false);
+      updateNotifBadge();
+    }
+
+    async function loadAdminPanel() {
+      if (!currentProfile || currentProfile.role !== 'admin') return navigateTo('home');
+      var container = document.getElementById('adminContent');
+      container.innerHTML = '';
+      if (activeAdminTab === 'blog') {
+        var _a = await supabase.from('blogs').select('*').eq('approved', false);
+        var items = _a.data || [];
+        items.forEach(function(b) {
+          var div = document.createElement('div'); div.className = 'pending-item';
+          div.innerHTML = '<div><strong>' + b.title + '</strong> (' + b.category + ') by ' + b.user_name + '</div>' +
+            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'blogs\',' + b.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'blogs\',' + b.id + ')">বাতিল</button></div>';
+          container.appendChild(div);
+        });
+        if (!items.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
+      } else if (activeAdminTab === 'products') {
+        var _b = await supabase.from('products').select('*').eq('approved', false);
+        var prods = _b.data || [];
+        prods.forEach(function(p) {
+          var div = document.createElement('div'); div.className = 'pending-item';
+          div.innerHTML = '<div><strong>' + p.name + '</strong> by ' + p.user_name + '</div>' +
+            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'products\',' + p.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'products\',' + p.id + ')">বাতিল</button></div>';
+          container.appendChild(div);
+        });
+        if (!prods.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
+      } else if (activeAdminTab === 'prices') {
+        var _c = await supabase.from('agent_prices').select('*').eq('approved', false);
+        var prices = _c.data || [];
+        prices.forEach(function(p) {
+          var div = document.createElement('div'); div.className = 'pending-item';
+          div.innerHTML = '<div>' + p.division + ' → ' + p.district + ' → ' + p.upazila + ' → ' + p.area + ', <strong>' + p.crop + '</strong>: ' + p.price + ' টাকা by ' + p.user_name + '</div>' +
+            '<div><button class="btn btn-primary btn-sm" onclick="approveItem(\'agent_prices\',' + p.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'agent_prices\',' + p.id + ')">বাতিল</button></div>';
+          container.appendChild(div);
+        });
+        if (!prices.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
+      } else if (activeAdminTab === 'answers') {
+        var _d = await supabase.from('forum_answers').select('*').eq('approved', false).order('created_at', { ascending: false });
+        var answers = _d.data || [];
+        answers.forEach(function(a) {
+          var div = document.createElement('div'); div.className = 'pending-item';
+          div.innerHTML = '<div><strong>উত্তর:</strong> ' + a.answer.substring(0, 100) + '...<br><small> দ্বারা ' + a.user_name + '</small></div>' +
+            '<div><button class="btn btn-primary btn-sm" onclick="approveAnswer(' + a.id + ')">অনুমোদন</button> <button class="btn btn-outline btn-sm" onclick="cancelItem(\'forum_answers\',' + a.id + ')">বাতিল</button></div>';
+          container.appendChild(div);
+        });
+        if (!answers.length) container.innerHTML = '<p>কোনো পেন্ডিং উত্তর নেই</p>';
+      } else if (activeAdminTab === 'notification') {
+        container.innerHTML = '<div class="form-card"><h3>🔔 সকলকে নোটিফিকেশন পাঠান</h3><textarea id="notifMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendAdminNotification()">পাঠান</button></div>';
+      } else if (activeAdminTab === 'email') {
+        container.innerHTML = '<div class="form-card"><h3>📧 সকলকে ইমেইল পাঠান</h3><textarea id="emailMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="sendEmailToAll()">ইমেইল পাঠান</button></div>';
+      } else if (activeAdminTab === 'announcement') {
+        container.innerHTML = '<div class="form-card"><h3>📢 পপ-আপ ঘোষণা</h3><textarea id="announceMsg" class="form-control" placeholder="মেসেজ"></textarea><button class="btn btn-primary w-100 mt-3" onclick="createAnnouncement()">পোস্ট করুন</button></div>';
+      }
+    }
+
+    document.querySelectorAll('.admin-tab').forEach(function(t) {
+      t.addEventListener('click', function() {
+        document.querySelectorAll('.admin-tab').forEach(function(tab) { tab.classList.remove('active'); });
+        this.classList.add('active');
+        activeAdminTab = this.dataset.tab;
+        loadAdminPanel();
+      });
+    });
+
+    window.approveItem = async function(table, id) {
+      var _a = await supabase.from(table).select('*').eq('id', id).single();
+      if (!_a.data) return;
+      await supabase.from(table).update({ approved: true }).eq('id', id);
+      if (_a.data.user_id) {
+        await supabase.from('notifications').insert([{ user_id: _a.data.user_id, message: '✅ আপনার কন্টেন্ট (' + table + ') অনুমোদিত হয়েছে।' }]);
+      }
+      if (table === 'products') {
+        var _b = await supabase.from('profiles').select('id').eq('role', 'businessman');
+        if (_b.data) {
+          var notifs = _b.data.map(function(b) { return { user_id: b.id, message: '📢 কৃষিবাজারে নতুন পণ্য: ' + _a.data.name }; });
+          await supabase.from('notifications').insert(notifs);
+        }
+      }
+      alert('অনুমোদিত হয়েছে');
+      loadAdminPanel();
+      refreshPublicPages(table);
+    };
+
+    window.cancelItem = async function(table, id) {
+      if (!confirm('আপনি কি নিশ্চিত এটি বাতিল করতে চান?')) return;
+      var _a = await supabase.from(table).select('*').eq('id', id).single();
+      if (_a.data && _a.data.user_id) {
+        await supabase.from('notifications').insert([{ user_id: _a.data.user_id, message: '❌ আপনার কন্টেন্ট (' + table + ') বাতিল করা হয়েছে।' }]);
+      }
+      await supabase.from(table).delete().eq('id', id);
+      alert('বাতিল করা হয়েছে');
+      loadAdminPanel();
+      refreshPublicPages(table);
+    };
+
+    window.approveAnswer = async function(answerId) {
+      var _a = await supabase.from('forum_answers').select('*').eq('id', answerId).single();
+      if (!_a.data) return;
+      await supabase.from('forum_answers').update({ approved: true }).eq('id', answerId);
+      if (_a.data.user_id) {
+        await supabase.from('notifications').insert([{ user_id: _a.data.user_id, message: '✅ আপনার উত্তর অনুমোদিত হয়েছে।' }]);
+      }
+      alert('উত্তর অনুমোদিত');
+      loadAdminPanel();
+      loadForum();
+    };
+
+    function refreshPublicPages(table) {
+      var activePage = document.querySelector('.page.active').id;
+      if (table === 'blogs' && activePage === 'blog') loadBlogs();
+      if (table === 'products' && activePage === 'bazar') loadBazar();
+      if (table === 'agent_prices' && activePage === 'prices') {
+        resetPriceFilters();
+        populateDivisions('divFilter');
+      }
+      if (table === 'forum_answers' && activePage === 'forum') loadForum();
+    }
+
+    window.sendAdminNotification = async function() {
+      var msg = document.getElementById('notifMsg').value;
+      if (!msg) return alert('মেসেজ লিখুন');
+      var _a = await supabase.from('profiles').select('id');
+      if (_a.data) {
+        for (var i = 0; i < _a.data.length; i++) {
+          await supabase.from('notifications').insert([{ user_id: _a.data[i].id, message: '🔔 অ্যাডমিন: ' + msg }]);
+        }
+      }
+      alert('সকলকে নোটিফিকেশন পাঠানো হয়েছে');
+    };
+
+    window.sendEmailToAll = async function() {
+      var msg = document.getElementById('emailMsg').value;
+      if (!msg) return alert('মেসেজ লিখুন');
+      var _a = await supabase.from('profiles').select('email, name');
+      var users = _a.data || [];
+      if (users.length === 0) {
+        alert('কোনো ইউজার পাওয়া যায়নি!');
+        return;
+      }
+      var count = 0;
+      for (var i = 0; i < users.length; i++) {
+        var u = users[i];
+        if (!u.email) continue;
+        try {
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: u.email,
+            to_name: u.name || 'কৃষিপথ সদস্য',
+            message: msg
+          });
+          count++;
+        } catch (e) { }
+      }
+      alert(count + ' টি ইমেইল পাঠানো হয়েছে');
+    };
+
+    window.createAnnouncement = async function() {
+      var msg = document.getElementById('announceMsg').value;
+      if (!msg) return alert('মেসেজ লিখুন');
+      await supabase.from('announcements').delete().neq('id', 0);
+      await supabase.from('announcements').insert([{ message: msg }]);
+      alert('ঘোষণা সেট হয়েছে');
+    };
+
+    async function checkAnnouncement() {
+      var _a = await supabase.from('announcements').select('*').order('created_at', { ascending: false }).limit(1);
+      if (_a.data && _a.data.length) {
+        document.getElementById('announceText').innerText = _a.data[0].message;
+        document.getElementById('announcePopup').style.display = 'flex';
+      }
+    }
+    window.closeAnnouncement = function() { document.getElementById('announcePopup').style.display = 'none'; };
+
+    // অথেনটিকেশন ও অন্যান্য পুরনো কোড
     var authMode = 'login', modal = document.getElementById('authModal');
     window.openAuth = function(mode) {
       authMode = mode;
