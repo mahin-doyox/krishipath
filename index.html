@@ -78,7 +78,6 @@
     .policy-section { background:rgba(255,255,255,0.1); border-radius:12px; padding:1rem; margin:1rem 0; }
     .policy-section summary { font-weight:600; color:var(--gold); cursor:pointer; }
     .footer-bottom { text-align:center; font-size:0.85rem; border-top:1px solid rgba(255,255,255,0.2); padding-top:1rem; }
-    /* হিরো ইমেজ */
     .hero { background:linear-gradient(145deg, #e6f5e6, #fff); padding:0; }
     .hero-container { max-width:1300px; margin:0 auto; display:flex; flex-direction:column; }
     .hero-image { width:100%; max-height:450px; object-fit:contain; display:block; border-radius:0 0 60px 60px; box-shadow:var(--shadow-lg); border-bottom:5px solid white; }
@@ -97,7 +96,6 @@
     .quick-nav-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-md); border-color:var(--gold-light); }
     .quick-nav-card i { font-size:2.2rem; color:var(--primary); margin-bottom:1rem; }
     .quick-nav-card h3 { font-size:1.1rem; }
-    /* Dashboard */
     .dashboard-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; margin:2rem 0; }
     .stat-card { background:white; padding:1.8rem; border-radius:28px; box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); }
     .stat-card h3 { font-size:1.1rem; margin-bottom:0.5rem; }
@@ -330,13 +328,19 @@
     </div>
   </div>
 </footer>
-<!-- Scripts -->
+
 <script>
   (function() {
     var SUPABASE_URL = 'https://uskcutjjmtcbgezcfbfm.supabase.co';
     var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza2N1dGpqbXRjYmdlemNmYmZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTYyOTUsImV4cCI6MjA5MzgzMjI5NX0.q9OtdrTrkS7b465O4lMuxQ3GObO_mkU7bM4UxrsCNOA';
     var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    emailjs.init('kkVuwDNcE67OyBMZS'); // আপনার পাবলিক কী
+    
+    // ✅ EmailJS Public Key (আপনার আসল কী)
+    emailjs.init('kkVuwDNcE67OyBMZS');
+    
+    // ✅ ইমেইল জেএস কনফিগারেশন (আপনার দেওয়া আইডি)
+    var EMAILJS_SERVICE_ID = 'service_d8fivoo';
+    var EMAILJS_TEMPLATE_ID = 'template_ftfnh5r'; // ⚠️ এখানে আপনার নতুন নোটিফিকেশন টেমপ্লেটের আইডি বসান
 
     var currentUser = null, currentProfile = null;
     var currentBlogCat = 'all';
@@ -405,7 +409,6 @@
       document.getElementById('notifBell').querySelector('.count').style.display = count ? 'flex' : 'none';
     }
 
-    // ✅ currentProfile null চেক সহ renderUploadForms
     function renderUploadForms() {
       var bUp = document.getElementById('blogUpload'), fUp = document.getElementById('forumUpload'), bazarUp = document.getElementById('bazarUpload'), priceUp = document.getElementById('priceUpload');
       if (currentUser) {
@@ -497,6 +500,7 @@
       else { alert('পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে।'); closeAuthModal(); }
     });
 
+    // ✅ রেজিস্ট্রেশনে ইমেইল সংরক্ষণ (সমস্যার মূল সমাধান)
     document.getElementById('authForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       var email = document.getElementById('authEmail').value, password = document.getElementById('authPassword').value;
@@ -507,7 +511,8 @@
         var _a = await supabase.auth.signUp({ email: email, password: password });
         if (_a.error) return alert('রেজিস্ট্রেশন ত্রুটি: ' + _a.error.message);
         if (_a.data.user) {
-          await supabase.from('profiles').insert([{ id: _a.data.user.id, name: name, phone: phone, role: role }]);
+          // ✅ email ফিল্ডটি যোগ করা হয়েছে
+          await supabase.from('profiles').insert([{ id: _a.data.user.id, name: name, phone: phone, role: role, email: email }]);
           alert('রেজিস্ট্রেশন সফল! এখন লগইন করুন।'); closeAuthModal();
         }
       } else {
@@ -617,7 +622,7 @@
       if (!body) return;
       if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       await supabase.from('forum_answers').insert([{ question_id: currentAnswerQuestionId, user_id: currentUser.id, user_name: currentProfile.name, answer: body, approved: false }]);
-      alert('উত্তর জমা হয়েছে, অ্য়াডমিন অনুমোদনের অপেক্ষায়।');
+      alert('উত্তর জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
       closeAnswerModal();
       loadForum();
     };
@@ -922,24 +927,42 @@
       alert('সকলকে নোটিফিকেশন পাঠানো হয়েছে');
     };
 
+    // ✅ ইমেইল পাঠানোর ফাংশন (কনসোল ডিবাগিং সহ)
     window.sendEmailToAll = async function() {
       var msg = document.getElementById('emailMsg').value;
       if (!msg) return alert('মেসেজ লিখুন');
+      
       var _a = await supabase.from('profiles').select('email, name');
       var users = _a.data || [];
+      
+      // ✅ ডিবাগিং লগ
+      console.log('সর্বমোট ইউজার পাওয়া গেছে:', users.length);
+      if (users.length > 0) {
+        console.log('প্রথম ইউজার ইমেইল:', users[0].email);
+        console.log('সকল ইমেইল:', users.map(function(u) { return u.email; }));
+      } else {
+        alert('কোনো ইউজার পাওয়া যায়নি! দয়া করে Supabase-এ চেক করুন।');
+        return;
+      }
+
       var count = 0;
       for (var i = 0; i < users.length; i++) {
         var u = users[i];
-        if (!u.email) continue;
+        if (!u.email) {
+          console.warn('ইমেইল খালি:', u.name);
+          continue;
+        }
         try {
-          // আপনার ইমেইল জেএস কনফিগ (service_k8w9o6b, template_ejptxnx) ব্যবহার করছি
-          await emailjs.send('service_d8fivoo', 'template_ftfnh5r', {
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
             to_email: u.email,
             to_name: u.name || 'কৃষিপথ সদস্য',
             message: msg
           });
           count++;
-        } catch (e) { console.error(e); }
+          console.log('✅ ইমেইল পাঠানো হয়েছে:', u.email);
+        } catch (e) {
+          console.error('❌ ইমেইল ত্রুটি:', u.email, e);
+        }
       }
       alert(count + ' টি ইমেইল পাঠানো হয়েছে');
     };
