@@ -29,10 +29,11 @@
     .section-title { font-size:clamp(2rem,6vw,2.8rem); font-weight:800; text-align:center; margin:2.5rem 0; position:relative; padding-bottom:1.2rem; }
     .section-title::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:90px; height:4px; background:linear-gradient(90deg,var(--primary),var(--gold)); border-radius:4px; }
     .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-weight:600; padding:14px 32px; border-radius:60px; font-size:1rem; cursor:pointer; transition:all 0.25s; border:none; text-decoration:none; white-space:nowrap; box-shadow:var(--shadow-sm); min-height:52px; }
+    .btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
     .btn-primary { background:var(--primary); color:white; }
-    .btn-primary:hover { background:#0a1f14; transform:translateY(-2px); }
+    .btn-primary:hover:not(:disabled) { background:#0a1f14; transform:translateY(-2px); }
     .btn-outline { background:transparent; border:2px solid var(--primary); color:var(--primary); }
-    .btn-outline:hover { background:var(--primary); color:white; }
+    .btn-outline:hover:not(:disabled) { background:var(--primary); color:white; }
     .btn-sm { padding:10px 20px; font-size:0.9rem; min-height:44px; }
     .container { max-width:1300px; margin:0 auto; padding:0 5%; }
     .navbar { background:rgba(255,255,255,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:1000; padding:0.8rem 5%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; border-bottom:1px solid rgba(0,0,0,0.05); }
@@ -180,7 +181,7 @@
     </div>
   </div>
 
-  <!-- Bazar Dor (Market Prices) Page – NEW HIERARCHICAL DASHBOARD -->
+  <!-- Bazar Dor (Market Prices) Page -->
   <div id="prices" class="page">
     <div class="container" style="padding:2rem 0;">
       <h2 class="section-title">বাজার দর (এলাকাভিত্তিক)</h2>
@@ -429,7 +430,6 @@
       }
     };
 
-    // হেল্পার ফাংশন: যেকোনো সিলেক্টে বিভাগ বসানো
     function populateDivisions(selectId) {
       var sel = document.getElementById(selectId);
       if (!sel) return;
@@ -439,7 +439,6 @@
       }
     }
 
-    // হেল্পার: জেলা বসানো
     function populateDistricts(selectId, divisionValue) {
       var sel = document.getElementById(selectId);
       if (!sel) return;
@@ -450,7 +449,6 @@
       }
     }
 
-    // হেল্পার: উপজেলা বসানো
     function populateUpazilas(selectId, divisionValue, districtValue) {
       var sel = document.getElementById(selectId);
       if (!sel) return;
@@ -467,6 +465,7 @@
     var activeAdminTab = 'blog';
     var currentAnswerQuestionId = null;
     var priceChartInstance = null;
+    var isSubmittingPrice = false; // ডাবল সাবমিট প্রতিরোধ
 
     document.getElementById('menuToggle').addEventListener('click', function() {
       document.getElementById('navLinks').classList.toggle('active');
@@ -536,11 +535,14 @@
       document.getElementById('cropFilter').style.display = 'none';
       document.getElementById('priceDashboard').style.display = 'none';
       if (!div || !dist || !upaz) return;
-      // ডাটাবেজ থেকে এই পাথে থাকা এলাকাগুলো লোড করুন
       var _a = await supabase.from('agent_prices').select('area', { distinct: true })
         .eq('division', div).eq('district', dist).eq('upazila', upaz).eq('approved', true);
       var areas = _a.data || [];
-      areas.forEach(function(a) { if (a.area) areaSelect.innerHTML += '<option value="'+a.area+'">'+a.area+'</option>'; });
+      // ডুপ্লিকেট ও ফাঁকা বাদ দিন
+      var uniqueAreas = [...new Set(areas.map(a => a.area && a.area.trim()).filter(Boolean))];
+      uniqueAreas.forEach(function(a) {
+        areaSelect.innerHTML += '<option value="'+a+'">'+a+'</option>';
+      });
     };
 
     window.onAreaChange = async function() {
@@ -708,7 +710,7 @@
             '<input id="agentArea" placeholder="এলাকার নাম (যেমন: বালিয়াডাঙ্গী)" class="form-control mt-3">' +
             '<input id="agentCrop" placeholder="ফসলের নাম (যেমন: ধান)" class="form-control mt-3">' +
             '<input id="agentPrice" type="number" placeholder="দাম (টাকা/কেজি)" class="form-control mt-3">' +
-            '<button class="btn btn-primary w-100 mt-3" onclick="uploadAgentPrice()">জমা দিন</button></div>';
+            '<button id="submitPriceBtn" class="btn btn-primary w-100 mt-3" onclick="uploadAgentPrice()">জমা দিন</button></div>';
           populateDivisions('agentDiv');
         } else {
           priceUp.innerHTML = '<p class="text-center">শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যোগ করতে পারেন।</p>';
@@ -730,8 +732,10 @@
     };
 
     async function uploadAgentPrice() {
+      if (isSubmittingPrice) return; // ইতিমধ্যে জমা হচ্ছে
       if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       if (currentProfile.role !== 'agent' && currentProfile.role !== 'admin') return alert('শুধুমাত্র এজেন্ট ও অ্যাডমিন বাজার দর যোগ করতে পারেন।');
+      var btn = document.getElementById('submitPriceBtn');
       var division = document.getElementById('agentDiv').value;
       var district = document.getElementById('agentDist').value;
       var upazila = document.getElementById('agentUpaz').value;
@@ -739,20 +743,36 @@
       var crop = document.getElementById('agentCrop').value.trim();
       var price = document.getElementById('agentPrice').value;
       if (!division || !district || !upazila || !area || !crop || !price) return alert('সব তথ্য পূরণ করুন');
-      await supabase.from('agent_prices').insert([{
-        division: division, district: district, upazila: upazila, area: area, crop: crop,
-        price: parseFloat(price), user_id: currentUser.id, user_name: currentProfile.name, approved: false
-      }]);
-      alert('জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
-      if (document.getElementById('prices').classList.contains('active')) {
-        resetPriceFilters();
-        populateDivisions('divFilter');
+      isSubmittingPrice = true;
+      btn.disabled = true;
+      btn.textContent = 'জমা হচ্ছে...';
+      try {
+        await supabase.from('agent_prices').insert([{
+          division: division, district: district, upazila: upazila, area: area, crop: crop,
+          price: parseFloat(price), user_id: currentUser.id, user_name: currentProfile.name, approved: false
+        }]);
+        alert('জমা হয়েছে, অ্যাডমিন অনুমোদনের অপেক্ষায়।');
+        if (document.getElementById('prices').classList.contains('active')) {
+          resetPriceFilters();
+          populateDivisions('divFilter');
+        }
+        // ফর্ম রিসেট
+        document.getElementById('agentDiv').value = '';
+        document.getElementById('agentDist').innerHTML = '<option value="">জেলা নির্বাচন করুন</option>';
+        document.getElementById('agentUpaz').innerHTML = '<option value="">উপজেলা নির্বাচন করুন</option>';
+        document.getElementById('agentArea').value = '';
+        document.getElementById('agentCrop').value = '';
+        document.getElementById('agentPrice').value = '';
+      } catch (err) {
+        alert('ত্রুটি: ' + err.message);
+      } finally {
+        isSubmittingPrice = false;
+        btn.disabled = false;
+        btn.textContent = 'জমা দিন';
       }
     }
 
-    // ========== বাকি কোড (ব্লগ, ফোরাম, বাজার, প্রোফাইল, অ্যাডমিন) অপরিবর্তিত ==========
-    // (নিচে পূর্বের সমস্ত ফাংশন অপরিবর্তিত রেখে দেওয়া হল)
-
+    // ========== বাকি ফাংশন (ব্লগ, ফোরাম, বাজার, প্রোফাইল, অ্যাডমিন) অপরিবর্তিত ==========
     async function loadBlogs() {
       var query = supabase.from('blogs').select('*').eq('approved', true).order('created_at', { ascending: false });
       if (currentBlogCat !== 'all') query = query.eq('category', currentBlogCat);
@@ -820,7 +840,7 @@
       alert('প্রশ্ন জমা হয়েছে'); loadForum();
     }
     window.openAnswerModal = function(questionId) {
-      if (!currentUser) { alert('উত্তর দতে লগইন করুন।'); return; }
+      if (!currentUser) { alert('উত্তর দিতে লগইন করুন।'); return; }
       if (!currentProfile) return alert('প্রোফাইল লোড হয়নি।');
       if (currentProfile.role !== 'expert' && currentProfile.role !== 'admin') { alert('শুধুমাত্র কৃষিবিদ ও অ্যাডমিন উত্তর দিতে পারেন।'); return; }
       currentAnswerQuestionId = questionId;
@@ -921,7 +941,7 @@
         });
         if (!prods.length) container.innerHTML = '<p>কোনো পেন্ডিং নেই</p>';
       } else if (activeAdminTab === 'prices') {
-        var _c = await supabase.from('agent_prices').select('*').eq('approved', false);
+        var _c = await supabase.from('agent_prices').select('*').eq('approved', false).order('created_at', { ascending: false });
         var prices = _c.data || [];
         prices.forEach(function(p) {
           var div = document.createElement('div'); div.className = 'pending-item';
@@ -1066,7 +1086,7 @@
     }
     window.closeAnnouncement = function() { document.getElementById('announcePopup').style.display = 'none'; };
 
-    // অথেনটিকেশন ও অন্যান্য পুরনো কোড
+    // অথেনটিকেশন
     var authMode = 'login', modal = document.getElementById('authModal');
     window.openAuth = function(mode) {
       authMode = mode;
